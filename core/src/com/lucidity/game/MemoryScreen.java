@@ -45,6 +45,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
     int score;
     int trial;
+    int attemps;
 
     Rectangle[][] grid;
     int[][] selected;
@@ -61,7 +62,6 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
     private SpriteBatch batch;
     public BitmapFont font;
-
 
 
     private float elapsed;
@@ -181,7 +181,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
             font.draw(batch, "Remember the position of light colored blocks",screenWidth/8, screenHeight/2);
             batch.end();
-        } else if (elapsed > 2.25 && elapsed <3.25) {
+        } else if (elapsed > 2 && elapsed <3) {
             Gdx.gl.glClearColor(1, 1, 1, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -286,8 +286,13 @@ public class MemoryScreen extends InputAdapter implements Screen {
                 //font.draw(batch, "You are correct", screenWidth /4, screenHeight / 10);
                 correct = false;
                 score++;
-                trial++;
+
                 suppressed = true;
+                if(trial == 5){
+                    game.dispose();
+                    game.setScreen(new EndScreen(game, score, trial));
+                }
+                trial++;
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {
@@ -342,6 +347,11 @@ public class MemoryScreen extends InputAdapter implements Screen {
             onSubmit = true;
             if (Arrays.deepEquals(selected, toRemember)) {
                 correct = true;
+            } else {
+                attemps++;
+                if(attemps >= 3) {
+                    game.setScreen(new MemoryScreen(game, difficulty, score, trial));
+                }
             }
         } else {
             for (int i = 0; i < numOfBlocks; i++) {
