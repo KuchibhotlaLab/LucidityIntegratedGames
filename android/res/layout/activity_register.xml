@@ -7,17 +7,22 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="10dp"
+    android:background="@drawable/login_background"
     tools:context="com.lucidity.game.RegisterActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="473dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
         android:orientation="vertical"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        tools:layout_editor_absoluteX="4dp"
-        tools:layout_editor_absoluteY="19dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <android.support.design.widget.TextInputLayout
@@ -25,25 +30,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp">
+
             <EditText
                 android:id="@+id/signup_input_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="@string/prompt_name"/>
+                android:gravity="center"
+                android:hint="@string/prompt_name"
+                android:textColor="@color/colorWhite"
+                android:textSize="30sp" />
         </android.support.design.widget.TextInputLayout>
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/signup_input_layout_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp">
+
             <EditText
                 android:id="@+id/signup_input_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="@string/prompt_username" />
+                android:gravity="center"
+                android:hint="@string/prompt_username"
+                android:textColor="@color/colorWhite"
+                android:textSize="30sp" />
         </android.support.design.widget.TextInputLayout>
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/signup_input_layout_password"
             android:layout_width="match_parent"
@@ -55,8 +70,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:gravity="center"
                 android:hint="@string/prompt_password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:textColor="@color/colorWhite"
+                android:textSize="30sp" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -70,8 +88,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="@string/prompt_password"
-                android:inputType="textPassword" />
+                android:gravity="center"
+                android:hint="@string/prompt_password_confirm"
+                android:inputType="textPassword"
+                android:textColor="@color/colorWhite"
+                android:textSize="30sp" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -85,15 +106,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:gravity="center"
                 android:hint="@string/prompt_caregiver_password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:textColor="@color/colorWhite"
+                android:textSize="30sp" />
         </android.support.design.widget.TextInputLayout>
 
         <Button
             android:id="@+id/register_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Register" />
+            android:layout_marginTop="24dp"
+            android:background="@drawable/longbutton"
+            android:fontFamily="@font/ostrich_sans_rounded_medium"
+            android:text="Register"
+            android:textColor="@color/colorWhite"
+            android:textSize="36sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

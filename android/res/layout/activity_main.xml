@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/BackgroundMain"
     tools:context="com.lucidity.game.MainActivity">
 
 
@@ -14,59 +15,68 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="473dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="vertical"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
+            android:paddingTop="50dp"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="19dp">
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="30dp">
-
-                <Button
-                    android:id="@+id/main"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:background="#ca0068"
-                    android:text="Main page"
-                    android:textColor="#fff" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="30dp">
+                android:layout_height="wrap_content">
 
                 <Button
                     android:id="@+id/lucid"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="300dp"
                     android:layout_gravity="center"
-                    android:background="#ca0068"
-                    android:text="I feel good"
+                    android:background="@drawable/feelgoodbutton"
                     android:textColor="#fff" />
             </FrameLayout>
 
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="30dp">
+                android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/caregiver"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:background="#ca0068"
-                    android:text="I'm a caregiver"
-                    android:textColor="#fff" />
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:paddingRight="20dp"
+                    android:paddingTop="30dp">
 
-            </FrameLayout>
+                    <Button
+                        android:id="@+id/main"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_gravity="left"
+                        android:background="@drawable/mainbutton"
+                        android:textColor="#fff" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="30dp">
+
+                    <Button
+                        android:id="@+id/caregiver"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_gravity="right"
+                        android:background="@drawable/carebutton"
+                        android:textColor="#fff" />
+
+                </FrameLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
@@ -75,10 +85,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:fontFamily="@font/ostrich_sans_rounded_medium"
         android:text="TextView"
         android:textAlignment="center"
-        android:textColor="@color/colorAccent"
-        android:textSize="30sp"
+        android:textColor="#4b4b4b"
+        android:textSize="48sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/scrollView2" />

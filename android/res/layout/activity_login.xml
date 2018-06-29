@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/ostrich_sans_rounded_medium"
-            android:text="Lucidity"
+            android:text="@string/app_name"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat"
             android:textColor="@color/colorWhite"
@@ -63,7 +63,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/colorWhiteTransparent"
-                        android:fontFamily="@font/kayak_sans_regular"
                         android:gravity="center_horizontal"
                         android:hint="@string/prompt_username"
                         android:inputType="text"
@@ -71,7 +70,7 @@
                         android:singleLine="true"
                         android:textColor="@color/colorWhite"
                         android:textColorHint="@color/colorWhite"
-                        android:textSize="30sp" />
+                        android:textSize="36sp" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -83,7 +82,6 @@
                         android:id="@+id/password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/kayak_sans_regular"
                         android:gravity="center_horizontal"
                         android:hint="@string/prompt_password"
                         android:imeActionId="6"
@@ -94,7 +92,7 @@
                         android:singleLine="true"
                         android:textColor="@color/colorWhite"
                         android:textColorHint="@color/colorWhite"
-                        android:textSize="30sp" />
+                        android:textSize="36sp" />
 
                 </android.support.design.widget.TextInputLayout>
 

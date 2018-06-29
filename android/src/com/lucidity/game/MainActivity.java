@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
             pDialog.dismiss();
             // display name at top of page
             nameDisplay = (TextView) findViewById(R.id.name_display);
-            nameDisplay.setText("Hi " + name);
+            nameDisplay.setText("Hello, " + name);
         }
     }
 

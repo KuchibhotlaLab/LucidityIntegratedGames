@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/BackgroundMain"
     tools:context="com.lucidity.game.SettingsActivity">
 
     <LinearLayout
@@ -11,40 +12,83 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:orientation="vertical"
-        android:paddingTop="50dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/upload_test_material"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@color/colorWhite"
-            android:text="Test Material" />
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/MH"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@color/colorWhite"
-            android:text="Medical History and Demographics" />
+            <TextView
+                android:id="@+id/settings_menu_display"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/ostrich_sans_rounded_medium"
+                android:paddingTop="24dp"
+                android:paddingBottom="24dp"
+                android:text="@string/settings_menu"
+                android:textAlignment="center"
+                android:textColor="#4b4b4b"
+                android:textSize="48sp" />
+        </FrameLayout>
 
-        <Button
-            android:id="@+id/wearable"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@color/colorWhite"
-            android:text="Link device" />
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingTop="20dp">
 
-        <Button
-            android:id="@+id/External"
+            <Button
+                android:id="@+id/External"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom|left"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/externaldatabutton" />
+
+            <Button
+                android:id="@+id/upload_test_material"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom|right"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/testmaterialbutton" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@color/colorWhite"
-            android:text="External information" />
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:paddingBottom="20dp"
+            android:paddingTop="10dp">
+
+            <Button
+                android:id="@+id/MH"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="top|left"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/medhistorybutton" />
+
+            <Button
+                android:id="@+id/wearable"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="top|right"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/wearablebutton" />
+        </LinearLayout>
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
