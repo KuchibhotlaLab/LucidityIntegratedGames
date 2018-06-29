@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_gravity="center"
+    android:gravity="center_horizontal"
+    android:background="@color/colorWhite"
+    android:stretchColumns="1"
+    android:layout_width="300dp"
+    android:layout_height="400dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Select all applies"/>
+
+        <TableRow>
+            <CheckBox
+                android:id="@+id/high_bp"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="20dp"
+                android:text="High \n blood pressure" />
+            <CheckBox
+                android:id="@+id/diabetes"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="20dp"
+                android:text="Diabetes" />
+
+        </TableRow>
+        <TableRow>
+            <CheckBox
+                android:id="@+id/goiter"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="20dp"
+                android:text="Goiter" />
+            <CheckBox
+                android:id="@+id/cancer"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="20dp"
+                android:text="Cancer" />
+        </TableRow>
+
+        <TableRow>
+            <CheckBox
+                android:id="@+id/leukemia"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="20dp"
+                android:text="Leukemia" />
+            <CheckBox
+                android:id="@+id/psoriasis"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="20dp"
+                android:text="Psoriasis" />
+        </TableRow>
+
+
+        <TableRow>
+            <CheckBox
+                android:id="@+id/high_ch"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="20dp"
+                android:text="High cholesterol" />
+            <CheckBox
+                android:id="@+id/ht_prob"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="20dp"
+                android:text="Heart \n problems" />
+        </TableRow>
+
+
+
+        <TableRow
+            android:layout_marginTop="10dp">
+            <Button
+                android:layout_width="0dip"
+                android:id="@+id/save"
+                android:layout_weight="1"
+                android:text="Save"/>
+            <Button
+                android:layout_width="0dip"
+                android:id="@+id/dismiss"
+                android:layout_weight="1"
+                android:text="Cancel"/>
+        </TableRow>
+</TableLayout>

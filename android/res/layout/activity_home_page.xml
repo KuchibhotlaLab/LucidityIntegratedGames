@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.lucidity.game.HomePageActivity">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:paddingTop="100dp"
+        tools:layout_editor_absoluteX="4dp"
+        tools:layout_editor_absoluteY="19dp">
+
+        <TableRow>
+    <FrameLayout android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button android:id="@+id/game_button"
+            android:background="@android:color/transparent"
+            android:text="@string/games"
+            android:textColor="#fff"
+            android:layout_width="150dp"
+            android:layout_height="150dp" />
+        <ImageView android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/roundcustombutton"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+
+
+
+    <FrameLayout android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+        <Button android:id="@+id/Photos"
+            android:background="@android:color/transparent"
+            android:text="@string/photos"
+            android:textColor="#fff"
+            android:layout_width="150dp"
+            android:layout_height="150dp" />
+        <ImageView android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/roundcustombutton"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+        </TableRow>
+
+    <TableRow>
+        <FrameLayout android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <Button android:id="@+id/reminders"
+                android:background="@android:color/transparent"
+                android:text="@string/reminders"
+                android:textColor="#fff"
+                android:layout_width="150dp"
+                android:layout_height="150dp" />
+            <ImageView android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/roundcustombutton"
+                android:layout_gravity="center"/>
+        </FrameLayout>
+    </TableRow>
+
+
+
+
+    </TableLayout>
+
+</android.support.constraint.ConstraintLayout>

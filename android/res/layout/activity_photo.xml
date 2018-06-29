@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.lucidity.game.PhotoActivity">
+
+    <!--<android.support.design.widget.FloatingActionButton
+        android:id="@+id/loadimage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        app:srcCompat="@android:drawable/ic_menu_add"
+        app:layout_editor_absoluteX="350dp"/>
+
+    <android.support.v7.widget.RecyclerView
+       android:id="@+id/photoGalary"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+      <GridView
+           android:id="@+id/photoGalary"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:columnWidth="280dp"
+           android:gravity="center"
+           android:horizontalSpacing="2dp"
+           android:numColumns="2"
+           android:padding="2dp"
+           android:stretchMode="columnWidth"
+           android:verticalSpacing="2dp">
+
+       </GridView>
+   </android.support.v7.widget.RecyclerView>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/targetimage"
+            android:layout_width="300dp"
+            android:layout_height="400dp" />
+
+    <Button
+        android:id="@+id/btn_to_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="63dp"
+        android:text="Confirm"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/targetimage"/>
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
