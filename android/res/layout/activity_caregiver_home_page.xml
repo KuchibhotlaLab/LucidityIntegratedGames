@@ -38,7 +38,7 @@
             android:layout_weight="1">
 
             <Button
-                android:id="@+id/administer_gamess"
+                android:id="@+id/administer_games"
                 android:layout_width="300dp"
                 android:layout_height="100dp"
                 android:layout_gravity="bottom|center_horizontal"

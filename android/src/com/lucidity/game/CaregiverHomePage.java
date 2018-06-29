@@ -32,5 +32,12 @@ public class CaregiverHomePage extends AppCompatActivity {
             }
         });
 
+        Button btnGame = findViewById(R.id.administer_games);
+        btnGame.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                startActivity(new Intent(getBaseContext(), AndroidLauncher.class));
+            }
+        });
+
     }
 }

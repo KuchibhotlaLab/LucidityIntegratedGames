@@ -3,6 +3,7 @@ package com.lucidity.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -23,6 +24,7 @@ public class DifficultyScreen extends InputAdapter implements Screen {
     FitViewport viewport;
 
     BitmapFont font;
+    private float elapsed;
 
     public DifficultyScreen(MemoryGame game) {
         this.game = game;
@@ -43,39 +45,55 @@ public class DifficultyScreen extends InputAdapter implements Screen {
 
     @Override
     public void render(float delta) {
+        elapsed += delta;
         viewport.apply();
-        Gdx.gl.glClearColor(Constants.BACKGROUND_COLOR.r, Constants.BACKGROUND_COLOR.g, Constants.BACKGROUND_COLOR.b, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        if(elapsed < 2) {
+            Gdx.gl.glClearColor(1.0f,0.98f,0.78f, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        renderer.setProjectionMatrix(viewport.getCamera().combined);
+            batch.begin();
+            font.setColor(new Color(0.01f, 0.4f, 0.44f, 1));
+            font.getData().setScale(5f);
+            font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-        renderer.begin(ShapeRenderer.ShapeType.Filled);
+            font.draw(batch, "Remember the position of light colored blocks",Constants.DIFFICULTY_WORLD_SIZE/8, Constants.DIFFICULTY_WORLD_SIZE/2);
+            batch.end();
 
-        renderer.setColor(Constants.EASY_COLOR);
-        renderer.circle(Constants.EASY_CENTER.x, Constants.EASY_CENTER.y, Constants.DIFFICULTY_BUBBLE_RADIUS);
+        } else {
+            Gdx.gl.glClearColor(Constants.BACKGROUND_COLOR.r, Constants.BACKGROUND_COLOR.g, Constants.BACKGROUND_COLOR.b, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        renderer.setColor(Constants.MEDIUM_COLOR);
-        renderer.circle(Constants.MEDIUM_CENTER.x, Constants.MEDIUM_CENTER.y, Constants.DIFFICULTY_BUBBLE_RADIUS);
+            renderer.setProjectionMatrix(viewport.getCamera().combined);
 
-        renderer.setColor(Constants.HARD_COLOR);
-        renderer.circle(Constants.HARD_CENTER.x, Constants.HARD_CENTER.y, Constants.DIFFICULTY_BUBBLE_RADIUS);
+            renderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        renderer.end();
+            renderer.setColor(Constants.EASY_COLOR);
+            renderer.circle(Constants.EASY_CENTER.x, Constants.EASY_CENTER.y, Constants.DIFFICULTY_BUBBLE_RADIUS);
 
-        batch.setProjectionMatrix(viewport.getCamera().combined);
+            renderer.setColor(Constants.MEDIUM_COLOR);
+            renderer.circle(Constants.MEDIUM_CENTER.x, Constants.MEDIUM_CENTER.y, Constants.DIFFICULTY_BUBBLE_RADIUS);
 
-        batch.begin();
+            renderer.setColor(Constants.HARD_COLOR);
+            renderer.circle(Constants.HARD_CENTER.x, Constants.HARD_CENTER.y, Constants.DIFFICULTY_BUBBLE_RADIUS);
 
-        final GlyphLayout easyLayout = new GlyphLayout(font, Constants.EASY_LABEL);
-        font.draw(batch, Constants.EASY_LABEL, Constants.EASY_CENTER.x, Constants.EASY_CENTER.y + easyLayout.height / 2, 0, Align.center, false);
+            renderer.end();
 
-        final GlyphLayout mediumLayout = new GlyphLayout(font, Constants.MEDIUM_LABEL);
-        font.draw(batch, Constants.MEDIUM_LABEL, Constants.MEDIUM_CENTER.x, Constants.MEDIUM_CENTER.y + mediumLayout.height / 2, 0, Align.center, false);
+            batch.setProjectionMatrix(viewport.getCamera().combined);
 
-        final GlyphLayout hardLayout = new GlyphLayout(font, Constants.HARD_LABEL);
-        font.draw(batch, Constants.HARD_LABEL, Constants.HARD_CENTER.x, Constants.HARD_CENTER.y + hardLayout.height / 2, 0, Align.center, false);
+            batch.begin();
+            font.getData().setScale(1f);
 
-        batch.end();
+            final GlyphLayout easyLayout = new GlyphLayout(font, Constants.EASY_LABEL);
+            font.draw(batch, Constants.EASY_LABEL, Constants.EASY_CENTER.x, Constants.EASY_CENTER.y + easyLayout.height / 2, 0, Align.center, false);
+
+            final GlyphLayout mediumLayout = new GlyphLayout(font, Constants.MEDIUM_LABEL);
+            font.draw(batch, Constants.MEDIUM_LABEL, Constants.MEDIUM_CENTER.x, Constants.MEDIUM_CENTER.y + mediumLayout.height / 2, 0, Align.center, false);
+
+            final GlyphLayout hardLayout = new GlyphLayout(font, Constants.HARD_LABEL);
+            font.draw(batch, Constants.HARD_LABEL, Constants.HARD_CENTER.x, Constants.HARD_CENTER.y + hardLayout.height / 2, 0, Align.center, false);
+
+            batch.end();
+        }
     }
 
     @Override

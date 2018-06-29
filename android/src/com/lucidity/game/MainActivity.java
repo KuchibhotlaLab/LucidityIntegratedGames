@@ -82,6 +82,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Button btnGame = findViewById(R.id.lucid);
+        btnGame.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                startActivity(new Intent(getBaseContext(), AndroidLauncher.class));
+            }
+        });
+
     }
 
     public void showDialog()

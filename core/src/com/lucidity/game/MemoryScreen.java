@@ -54,6 +54,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
     Rectangle btnSubmit;
     boolean onSubmit = false;
     boolean correct = false;
+    boolean suppressed = false;
 
     Rectangle btnEnd;
     boolean onEnd = false;
@@ -156,7 +157,9 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
     @Override
     public void dispose() {
+
         font.dispose();
+        batch.dispose();
     }
 
     @Override
@@ -231,8 +234,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
                 //END THE GAME
                 renderer.setColor(Color.valueOf("#9FEDD7"));
                 game.dispose();
-                game.setScreen(new DifficultyScreen(game));
-                //TODO: properly dispose screen
+                game.setScreen(new EndScreen(game, score, trial));
 
             } else {
                 renderer.setColor(Color.valueOf("#026670"));
@@ -276,19 +278,24 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
 
             //prints the correct/incorrect message when the person clicks submit
-            if (correct && onSubmit) {
+            //TODO: FIGURE OUT THE CORRECT WAY TO DO THIS PREFERABLY USING PAUSE
+            if(suppressed){
                 font.draw(batch, "You are correct", screenWidth /4, screenHeight / 10);
+            }
+            if (correct && onSubmit) {
+                //font.draw(batch, "You are correct", screenWidth /4, screenHeight / 10);
+                correct = false;
+                score++;
+                trial++;
+                suppressed = true;
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {
-                                       correct = false;
-                                       score++;
-                                       trial++;
                                        game.setScreen(new MemoryScreen(game, difficulty, score, trial));
                                    }
                                },
                         15/30.0f);
-            } else if (!correct && onSubmit) {
+            } else if (!correct && onSubmit && !suppressed) {
                 //TODO: fix printing incorrect here
                 selected =new int[numOfBlocks][numOfBlocks];
                 font.draw(batch, "You are Incorrect", screenWidth/4, screenHeight / 10);
