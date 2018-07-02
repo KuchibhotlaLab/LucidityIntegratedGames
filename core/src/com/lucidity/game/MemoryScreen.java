@@ -119,7 +119,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
 
         batch = new SpriteBatch();
-        font = new BitmapFont();
+        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular.fnt"), false);
     }
 
     @Override
@@ -176,8 +176,8 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
             batch.begin();
             font.setColor(Color.valueOf("#9FEDD7"));
-            font.getData().setScale(5f);
-            font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+            font.getData().setScale(2.5f);
+            font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 
             font.draw(batch, "Remember the position of light colored blocks",screenWidth/8, screenHeight/2);
             batch.end();
@@ -187,8 +187,8 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
             batch.begin();
             font.setColor(Color.valueOf("#9FEDD7"));
-            font.getData().setScale(5f);
-            font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+            font.getData().setScale(3f);
+            font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 
             font.draw(batch, "This is the blank screen",screenWidth/4, screenHeight/2);
             batch.end();
@@ -261,8 +261,9 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
             //draws all the texts (submit and correct/incorrect message)
             batch.begin();
-            font.getData().setScale(5f);
-            font.setColor(Color.valueOf("#9FEDD7"));
+            font.getData().setScale(2f);
+            //font.setColor(Color.valueOf("#9FEDD7"));
+            font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 
             //prints text on submit button

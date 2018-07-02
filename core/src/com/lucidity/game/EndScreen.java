@@ -46,7 +46,7 @@ public class EndScreen extends InputAdapter implements Screen {
         screenHeight = Gdx.graphics.getHeight();
 
         batch = new SpriteBatch();
-        font = new BitmapFont();
+        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular.fnt"), false);
     }
 
     @Override
@@ -77,8 +77,8 @@ public class EndScreen extends InputAdapter implements Screen {
 
         batch.begin();
         font.setColor(Color.valueOf("#9FEDD7"));
-        font.getData().setScale(5f);
-        font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        font.getData().setScale(4f);
+        font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         font.draw(batch, "Your score is " + Integer.toString(score) + "/" + Integer.toString(trial),screenWidth/4, screenHeight/2);
         batch.end();

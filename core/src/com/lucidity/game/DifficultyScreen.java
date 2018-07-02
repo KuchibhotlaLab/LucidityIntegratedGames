@@ -38,7 +38,7 @@ public class DifficultyScreen extends InputAdapter implements Screen {
         viewport = new FitViewport(Constants.DIFFICULTY_WORLD_SIZE, Constants.DIFFICULTY_WORLD_SIZE);
         Gdx.input.setInputProcessor(this);
 
-        font = new BitmapFont();
+        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular.fnt"), false);
         font.getData().setScale(Constants.DIFFICULTY_LABEL_SCALE);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
@@ -53,8 +53,8 @@ public class DifficultyScreen extends InputAdapter implements Screen {
 
             batch.begin();
             font.setColor(new Color(0.01f, 0.4f, 0.44f, 1));
-            font.getData().setScale(5f);
-            font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+            font.getData().setScale(3f);
+            font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 
             font.draw(batch, "Remember the position of light colored blocks",Constants.DIFFICULTY_WORLD_SIZE/8, Constants.DIFFICULTY_WORLD_SIZE/2);
             batch.end();
