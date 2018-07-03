@@ -1,5 +1,7 @@
 package com.lucidity.game;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -11,10 +13,14 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -178,9 +184,56 @@ public class GalleryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
-                intent.putExtra("username", username);
-                startActivity(intent);
+                AlertDialog.Builder builder = new AlertDialog.Builder(GalleryActivity.this);
+                LayoutInflater inflater = ((Activity) GalleryActivity.this).getLayoutInflater();
+                View dialogLayout = inflater.inflate(R.layout.add_image_dialog_short,
+                        null);
+
+                final AlertDialog dialog = builder.create();
+                dialog.getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                dialog.setView(dialogLayout, 0, 0, 0, 0);
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.setCancelable(true);
+                WindowManager.LayoutParams wlmp = dialog.getWindow()
+                        .getAttributes();
+                wlmp.gravity = Gravity.BOTTOM;
+
+                Button btnGallery = (Button) dialogLayout.findViewById(R.id.btn_add_gallery);
+                Button btnCamera = (Button) dialogLayout.findViewById(R.id.btn_add_camera);
+                Button btnDismiss = (Button) dialogLayout.findViewById(R.id.btn_cancel_img_dialog);
+
+
+                btnGallery.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
+                        intent.putExtra("username", username);
+                        startActivity(intent);
+                    }
+                });
+
+                btnCamera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
+                        intent.putExtra("username", username);
+                        startActivity(intent);
+                    }
+                });
+
+                btnDismiss.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setView(dialogLayout);
+
+                dialog.show();
             }
         });
 
@@ -193,7 +246,6 @@ public class GalleryActivity extends AppCompatActivity {
             intent.putExtra("image", l.getUrl());
             intent.putExtra("username", username);
             startActivity(intent);
-            //TODO: figure out why the newly added picture doesn't show up(bug can be deleted)
         }
     };
 
