@@ -27,4 +27,7 @@
     <string name="title_activity_med_history_demo">MedHistoryDemo</string>
     <string name="care_menu">Caregiver Menu</string>
     <string name="settings_menu">Settings Menu</string>
+    <string name="confirm">Confirm</string>
+    <string name="prompt_name_image">Name</string>
+    <string name="prompt_relation_image">Relation</string>
 </resources>

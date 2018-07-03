@@ -15,9 +15,16 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DisplayImageActivity extends AppCompatActivity {
 
@@ -27,6 +34,17 @@ public class DisplayImageActivity extends AppCompatActivity {
     //For communicating with AWS S3 storage
     private TransferHelper transferHelper;
     private AmazonS3Client s3;
+
+    // JSON parser class
+    JSONParser jsonParser = new JSONParser();
+
+    // JSON Node names
+    private static final String TAG_SUCCESS = "success";
+    private static final String TAG_MESSAGE = "message";
+
+    // url to add image data
+    private static String url_delete_image = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/delete_image.php";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +92,9 @@ public class DisplayImageActivity extends AppCompatActivity {
                 //Delete the file in AWS S3 storage
                 DeleteS3 deleteS3 = new DeleteS3(f.getName());
                 deleteS3.execute();
+                //Delete the file in MySQL database
+                DeleteMySQL deleteMySQL = new DeleteMySQL(username, f.getName());
+                deleteMySQL.execute();
                 Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
                 intent.putExtra("username", username);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -114,5 +135,52 @@ public class DisplayImageActivity extends AppCompatActivity {
             return null;
         }
 
+    }
+
+    /**
+     * Background Async Task to delete the file in MySQL
+     * */
+    class DeleteMySQL extends AsyncTask<String, String, String> {
+
+        private String uname;
+        private String filename;
+
+        public DeleteMySQL(String username, String file) {
+            uname = username;
+            filename = file;
+        }
+
+        /**
+         * Delete the file in background
+         * */
+        protected String doInBackground(String... args) {
+
+            // Building Parameters
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("username", uname));
+            params.add(new BasicNameValuePair("filename", filename));
+
+            // getting product details by making HTTP request
+            JSONObject json = jsonParser.makeHttpRequest(
+                    url_delete_image, "POST", params);
+
+            // check your log for json response
+            Log.d("Delete Image", json.toString());
+
+            // Check for success tag
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+                String msg = json.getString(TAG_MESSAGE);
+
+                if (success == 1) {
+                    Log.d("Image Deleted", "Success");
+                } else {
+                    Log.d("Image Deleted", msg);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 }

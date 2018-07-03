@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,7 +50,7 @@ public class PhotoActivity extends AppCompatActivity {
 
     private static int RESULT_LOAD_IMAGE = 1;
     private Bitmap bmp = null;
-    private String imageName;
+    private String image;
     ImageView targetImage;
     //reference: stackoverflow.com/questions/13023788
 
@@ -93,25 +94,35 @@ public class PhotoActivity extends AppCompatActivity {
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //reference: stackoverflow.com/questions/11010386
-                //Write file
-                try {
+                EditText imName = (EditText)findViewById(R.id.image_name_input);
+                EditText imRelation = (EditText)findViewById(R.id.image_relation_input);
 
+                if(imName.getText().toString().trim().length() == 0){
+                    imName.setError("Please enter the name of the person/object pictured");
+                } else if(imRelation.getText().toString().trim().length() == 0){
+                    imRelation.setError("Please enter the user's relation to the person/object pictured");
+                } else {
 
-                    FileOutputStream stream = getApplicationContext().openFileOutput(imageName, Context.MODE_PRIVATE);
-                    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    //reference: stackoverflow.com/questions/11010386
+                    //Write file
+                    try {
+
+                        FileOutputStream stream = getApplicationContext().openFileOutput(image, Context.MODE_PRIVATE);
+                        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
+                    intent.putExtra("image", image);
+                    intent.putExtra("username", username);
+                    intent.putExtra("image-name", imName.getText().toString());
+                    intent.putExtra("image-relation", imRelation.getText().toString());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    //Close Page
+                    finish();
                 }
-
-                Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
-                intent.putExtra("image", imageName);
-                intent.putExtra("username", username);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                //Close Page
-                finish();
-
             }
         });
 
@@ -133,7 +144,7 @@ public class PhotoActivity extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             File imageFile = new File(picturePath);
-            imageName = imageFile.getName();
+            image = imageFile.getName();
             cursor.close();
 
             try {
