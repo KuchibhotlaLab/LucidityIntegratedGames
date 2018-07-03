@@ -3,7 +3,7 @@ package com.lucidity.game.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import com.lucidity.game.MemoryGame;
+import com.lucidity.game.WorkingMemoryGame;
 
 public class HtmlLauncher extends GwtApplication {
 
@@ -46,6 +46,6 @@ public class HtmlLauncher extends GwtApplication {
 
         @Override
         public ApplicationListener createApplicationListener () {
-                return new MemoryGame();
+                return new WorkingMemoryGame();
         }
 }

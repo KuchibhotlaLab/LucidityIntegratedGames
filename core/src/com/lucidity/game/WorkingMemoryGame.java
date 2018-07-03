@@ -2,7 +2,7 @@ package com.lucidity.game;
 
 import com.badlogic.gdx.Game;
 
-public class MemoryGame extends Game {
+public class WorkingMemoryGame extends Game {
 	@Override
 	public void create() {
 		showDifficultyScreen();
@@ -12,7 +12,7 @@ public class MemoryGame extends Game {
 		setScreen(new DifficultyScreen(this));
 	}
 
-	public void showMemoryScreen(Constants.Difficulty difficulty) {
+	public void showMemoryScreen(GameOneConstants.Difficulty difficulty) {
 		setScreen(new MemoryScreen(this, difficulty, 0, 1));
 	}
 

@@ -8,32 +8,23 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 //import com.sun.tools.internal.jxc.ap.Const;
 
 import java.util.Arrays;
-import java.util.Random;
 
-import sun.rmi.runtime.Log;
-
-import static com.lucidity.game.Constants.BACKGROUND_COLOR;
+import static com.lucidity.game.GameOneConstants.BACKGROUND_COLOR;
 
 public class MemoryScreen extends InputAdapter implements Screen {
     public static final String TAG = MemoryScreen.class.getName();
-    MemoryGame game;
-    Constants.Difficulty difficulty;
+    WorkingMemoryGame game;
+    GameOneConstants.Difficulty difficulty;
 
     ExtendViewport memoryViewport;
     ScreenViewport hudViewport;
@@ -50,7 +41,9 @@ public class MemoryScreen extends InputAdapter implements Screen {
     Rectangle[][] grid;
     int[][] selected;
     int[][] toRemember;
-    int numOfBlocks;
+    /*int numOfBlocks;*/
+    int blocksHorizontal;
+    int blocksVertical;
 
     Rectangle btnSubmit;
     boolean onSubmit = false;
@@ -65,66 +58,72 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
 
     private float elapsed;
-    private float incorrectOffset;
+    private boolean disableTouchDown=true;
+    //cheap temporary fix
 
-    public MemoryScreen(MemoryGame game, Constants.Difficulty difficulty, int points, int trials) {
+    public MemoryScreen(WorkingMemoryGame game, GameOneConstants.Difficulty difficulty, int points, int trials) {
         this.game = game;
 
         this.difficulty = difficulty;
         if(this.difficulty.label.equals("Easy")){
-            numOfBlocks = 2;
+            blocksVertical = 1;
+            blocksHorizontal = 2;
         } else if(this.difficulty.label.equals("Medium")){
-            numOfBlocks = 3;
+            blocksHorizontal = 2;
+            blocksVertical = 2;
         } else {
-            numOfBlocks = 4;
+            blocksHorizontal = 3;
+            blocksVertical = 3;
         }
 
 
 
+        //changed for portrait
         screenWidth = Gdx.graphics.getWidth();
         screenHeight = Gdx.graphics.getHeight();
 
-        grid = new Rectangle[numOfBlocks][numOfBlocks];
-        selected = new int[numOfBlocks][numOfBlocks];
-        toRemember = new int[numOfBlocks][numOfBlocks];
+        grid = new Rectangle[blocksHorizontal][blocksVertical];
+        selected = new int[blocksHorizontal][blocksVertical];
+        toRemember = new int[blocksHorizontal][blocksVertical];
 
-
-        //for landscape layout
-        for (int i = 0; i < numOfBlocks; i++) {
-            for (int j = 0; j < numOfBlocks; j++) {
+        for (int i = 0; i < blocksHorizontal; i++) {
+            for (int j = 0; j < blocksVertical; j++) {
                 Rectangle block = new Rectangle();
-                block.width = (screenHeight * 2 / 3) / numOfBlocks;
+                block.width = (screenWidth * 5 / 6) / blocksHorizontal;
                 block.height = block.width;
-                block.x = i * block.width + screenHeight / 3;
-                block.y = j * block.height + screenHeight / 6;
+                block.x = i * block.width + screenWidth / 12;
+                block.y = j * block.height + screenHeight * 5 / 12;
                 grid[i][j] = block;
-                toRemember[i][j] = (int) (Math.random() * 2);
             }
         }
 
         this.score = points;
         this.trial = trials;
 
+
         btnSubmit = new Rectangle();
-        btnSubmit.width = screenWidth / 6;
-        btnSubmit.height = screenHeight / 3 - screenHeight / 24;
-        btnSubmit.x = screenWidth * 3 / 4;
-        btnSubmit.y = screenHeight / 2 + screenHeight / 24;
+        btnSubmit.width = screenWidth / 3;
+        btnSubmit.height = screenHeight / 12;
+        btnSubmit.x = screenWidth * 13 / 24;
+        btnSubmit.y = screenHeight / 6;
 
         btnEnd = new Rectangle();
-        btnEnd.width = screenWidth / 6;
-        btnEnd.height = screenHeight / 3 - screenHeight / 24;
-        btnEnd.x = screenWidth * 3 / 4;
+        btnEnd.width = screenWidth / 3;
+        btnEnd.height = screenHeight / 12;
+        btnEnd.x = screenWidth / 8;
         btnEnd.y = screenHeight / 6;
 
 
         batch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular.fnt"), false);
+
+        generateTrial(this.difficulty);
+
     }
 
     @Override
     public void show() {
-        memoryViewport = new ExtendViewport(Constants.WORLD_SIZE, Constants.WORLD_SIZE);
+        memoryViewport = new ExtendViewport(GameOneConstants.WORLD_SIZE, GameOneConstants.WORLD_SIZE);
         hudViewport = new ScreenViewport();
 
         renderer = new ShapeRenderer();
@@ -137,10 +136,10 @@ public class MemoryScreen extends InputAdapter implements Screen {
         Timer.schedule(new Timer.Task() {
                            @Override
                            public void run() {
-                               selected = new int[numOfBlocks][numOfBlocks];
+                               selected = new int[blocksHorizontal][blocksVertical];
                            }
                        },
-                2);
+                4);
         //30 / 30.0f
 
 
@@ -151,15 +150,10 @@ public class MemoryScreen extends InputAdapter implements Screen {
     public void resize(int width, int height) {
         memoryViewport.update(width, height, true);
         hudViewport.update(width, height, true);
-        System.out.print("resize");
-
     }
 
     @Override
     public void dispose() {
-
-        font.dispose();
-        batch.dispose();
     }
 
     @Override
@@ -175,25 +169,25 @@ public class MemoryScreen extends InputAdapter implements Screen {
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
             batch.begin();
-            font.setColor(Color.valueOf("#9FEDD7"));
-            font.getData().setScale(2.5f);
-            font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-            font.draw(batch, "Remember the position of light colored blocks",screenWidth/8, screenHeight/2);
+            font.setColor(Color.valueOf("#026670"));
+            font.getData().setScale(GameOneConstants.NOTIFICATION_SCALE);
+            font.draw(batch, "Remember the position",screenWidth/12, screenHeight * 2/3);
+            font.draw(batch, "of the lit up boxes.",screenWidth/12, screenHeight / 3);
             batch.end();
-        } else if (elapsed > 2 && elapsed <3) {
+        } else if (elapsed > 4 && elapsed <6) {
             Gdx.gl.glClearColor(1, 1, 1, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
             batch.begin();
-            font.setColor(Color.valueOf("#9FEDD7"));
+            /*font.setColor(Color.valueOf("#9FEDD7"));
             font.getData().setScale(3f);
             font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-            font.draw(batch, "This is the blank screen",screenWidth/4, screenHeight/2);
+            font.draw(batch, "This is the blank screen",screenWidth/8, screenHeight/2);*/
             batch.end();
 
         } else {
+            disableTouchDown = false;
             Gdx.gl.glClearColor(BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -201,8 +195,8 @@ public class MemoryScreen extends InputAdapter implements Screen {
             //This draws the grid in its two conditions:
             //selected or not-selected
             renderer.begin(ShapeRenderer.ShapeType.Filled);
-            for (int i = 0; i < numOfBlocks; i++) {
-                for (int j = 0; j < numOfBlocks; j++) {
+            for (int i = 0; i < blocksHorizontal; i++) {
+                for (int j = 0; j < blocksVertical; j++) {
                     if (selected[i][j] == 1) {
                         renderer.setColor(Color.valueOf("#9FEDD7"));
                     } else {
@@ -212,7 +206,8 @@ public class MemoryScreen extends InputAdapter implements Screen {
                 }
             }
 
-            //change the color of the submit button when it is pressed
+
+                //change the color of the submit button when it is pressed
             if (onSubmit) {
                 renderer.setColor(Color.valueOf("#9FEDD7"));
 
@@ -233,7 +228,6 @@ public class MemoryScreen extends InputAdapter implements Screen {
             if (onEnd) {
                 //END THE GAME
                 renderer.setColor(Color.valueOf("#9FEDD7"));
-                game.dispose();
                 game.setScreen(new EndScreen(game, score, trial));
 
             } else {
@@ -245,23 +239,23 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
             //draw the outline of the blocks
             renderer.begin(ShapeRenderer.ShapeType.Line);
-
-            for (int i = 0; i < numOfBlocks; i++) {
-                for (int j = 0; j < numOfBlocks; j++) {
-                    if (selected[i][j] == 1) {
-                        renderer.setColor(Color.valueOf("#026670"));
-                    } else {
-                        renderer.setColor(Color.valueOf("#9FEDD7"));
+                for (int i = 0; i < blocksHorizontal; i++) {
+                    for (int j = 0; j < blocksVertical; j++) {
+                        if (selected[i][j] == 1) {
+                            renderer.setColor(Color.valueOf("#026670"));
+                        } else {
+                            renderer.setColor(Color.valueOf("#9FEDD7"));
+                        }
+                        renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                     }
-                    renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                 }
-            }
+
             renderer.end();
 
 
             //draws all the texts (submit and correct/incorrect message)
             batch.begin();
-            font.getData().setScale(2f);
+            font.getData().setScale(GameOneConstants.LABEL_SCALE);
             //font.setColor(Color.valueOf("#9FEDD7"));
             font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -281,16 +275,15 @@ public class MemoryScreen extends InputAdapter implements Screen {
             //prints the correct/incorrect message when the person clicks submit
             //TODO: FIGURE OUT THE CORRECT WAY TO DO THIS PREFERABLY USING PAUSE
             if(suppressed){
-                font.draw(batch, "You are correct", screenWidth /4, screenHeight / 10);
+                font.draw(batch, "You are correct", screenWidth /3, screenHeight / 10);
             }
             if (correct && onSubmit) {
-                //font.draw(batch, "You are correct", screenWidth /4, screenHeight / 10);
                 correct = false;
                 score++;
 
                 suppressed = true;
+                disableTouchDown = true;
                 if(trial == 5){
-                    game.dispose();
                     game.setScreen(new EndScreen(game, score, trial));
                 }
                 trial++;
@@ -300,20 +293,19 @@ public class MemoryScreen extends InputAdapter implements Screen {
                                        game.setScreen(new MemoryScreen(game, difficulty, score, trial));
                                    }
                                },
-                        15/30.0f);
+                        30/30.0f);
             } else if (!correct && onSubmit && !suppressed) {
-                //TODO: fix printing incorrect here
-                selected =new int[numOfBlocks][numOfBlocks];
-                font.draw(batch, "You are Incorrect", screenWidth/4, screenHeight / 10);
+                selected = new int[blocksHorizontal][blocksVertical];
+                font.draw(batch, "You are Incorrect", screenWidth/3, screenHeight / 10);
             }
 
 
             //prints the score on the screen of game
-            font.draw(batch, Constants.SCORE_LABEL + Integer.toString(score),
-                    Constants.SCORE_CENTER, screenHeight - Constants.SCORE_CENTER);
+            font.draw(batch, GameOneConstants.SCORE_LABEL + Integer.toString(score),
+                    GameOneConstants.SCORE_CENTER, screenHeight - GameOneConstants.SCORE_CENTER);
 
-            font.draw(batch, Constants.TRIAL_LABEL + Integer.toString(trial),
-                    Constants.TRIAL_CENTER, screenHeight - Constants.SCORE_CENTER);
+            font.draw(batch, GameOneConstants.TRIAL_LABEL + Integer.toString(trial),
+                    GameOneConstants.TRIAL_CENTER, screenHeight - GameOneConstants.SCORE_CENTER);
 
 
             batch.end();
@@ -334,35 +326,62 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
     @Override
     public void hide() {
-
-
+        font.dispose();
+        batch.dispose();
+        renderer.dispose();
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
-        //landscape
-        onEnd = btnEnd.contains(screenX, screenHeight - screenY);
+        if(!disableTouchDown) {
+            onEnd = btnEnd.contains(screenX, screenHeight - screenY);
 
-        if (btnSubmit.contains(screenX, screenHeight - screenY)) {
-            onSubmit = true;
-            if (Arrays.deepEquals(selected, toRemember)) {
-                correct = true;
-            } else {
-                attemps++;
-                if(attemps >= 3) {
-                    game.setScreen(new MemoryScreen(game, difficulty, score, trial));
+            if (btnSubmit.contains(screenX, screenHeight - screenY)) {
+                onSubmit = true;
+                if (Arrays.deepEquals(selected, toRemember)) {
+                    correct = true;
+                } else {
+                    attemps++;
+                    if (attemps >= 3) {
+                        ++trial;
+                        game.setScreen(new MemoryScreen(game, difficulty, score, trial));
+                    }
                 }
-            }
-        } else {
-            for (int i = 0; i < numOfBlocks; i++) {
-                for (int j = 0; j < numOfBlocks; j++) {
-                    if (grid[i][j].contains(screenX, screenHeight - screenY)) {
-                        selected[i][j] = 1 - selected[i][j];
+            } else {
+                for (int i = 0; i < blocksHorizontal; i++) {
+                    for (int j = 0; j < blocksVertical; j++) {
+                        if (grid[i][j].contains(screenX, screenHeight - screenY)) {
+                            selected[i][j] = 1 - selected[i][j];
+                        }
                     }
                 }
             }
         }
+
         return true;
+    }
+
+    private void generateTrial(GameOneConstants.Difficulty difficulty){
+        int blocks;
+        int predicted = 0;
+        if(this.difficulty.label.equals("Easy")){
+            blocks = 1;
+        } else if(this.difficulty.label.equals("Medium")){
+            blocks = 2;
+        } else {
+            blocks = 4;
+        }
+
+        while(predicted < blocks){
+            int on = (int)(Math.random()*blocksHorizontal*blocksVertical + 1);
+            System.out.println(on);
+            System.out.println(on/blocksVertical - 1);
+            System.out.println(on%blocksVertical);
+            if(toRemember[on/blocksVertical - 1][on%blocksVertical] != 1){
+                ++predicted;
+                toRemember[on/blocksVertical - 1][on%blocksVertical] = 1;
+            }
+        }
     }
 }

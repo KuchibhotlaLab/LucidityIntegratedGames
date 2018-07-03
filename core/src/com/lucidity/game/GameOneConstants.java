@@ -3,7 +3,7 @@ package com.lucidity.game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
-public class Constants {
+public class GameOneConstants {
     public static final float WORLD_SIZE = 10.0f;
     public static final Color BACKGROUND_COLOR = new Color(0.93f,0.92f,0.9f, 1);
 
@@ -51,15 +51,15 @@ public class Constants {
     public static final String TOP_SCORE_LABEL = "Top Score: ";
     public static final int SCORE_CENTER = 70;
 
+    public static final float TITLE_SCALE = 4f;
+    public static final float NOTIFICATION_SCALE = 3f;
+    public static final float LABEL_SCALE = 2f;
+
     public static final String TRIAL_LABEL = "Trial: ";
     public static final int TRIAL_CENTER = 400;
 
     public static final int SECONDS_DElAYED = 1;
 
-    /*public static final float SUBMIT_BUTTON_WIDTH = DIFFICULTY_WORLD_SIZE  / 3;
-    public static final float SUBMIT_BUTTON_HEIGHT = DIFFICULTY_WORLD_SIZE / 6;
-    public static final Vector2 SUBMIT_BUTTON_CENTER = new Vector2(DIFFICULTY_WORLD_SIZE / 2, DIFFICULTY_WORLD_SIZE * 5 / 6);
-    public static final Color SUBMIT_BUTTON_COLOR =  new Color(1, 1, 1, 0);*/
 
 
     public enum Difficulty {

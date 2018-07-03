@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public class DifficultyScreen extends InputAdapter implements Screen {
     public static final String TAG = DifficultyScreen.class.getName();
 
-    MemoryGame game;
+    WorkingMemoryGame game;
 
     ShapeRenderer renderer;
     SpriteBatch batch;
@@ -26,7 +26,7 @@ public class DifficultyScreen extends InputAdapter implements Screen {
     BitmapFont font;
     private float elapsed;
 
-    public DifficultyScreen(MemoryGame game) {
+    public DifficultyScreen(WorkingMemoryGame game) {
         this.game = game;
     }
 
@@ -35,11 +35,11 @@ public class DifficultyScreen extends InputAdapter implements Screen {
         renderer = new ShapeRenderer();
         batch = new SpriteBatch();
 
-        viewport = new FitViewport(Constants.DIFFICULTY_WORLD_SIZE, Constants.DIFFICULTY_WORLD_SIZE);
+        viewport = new FitViewport(GameOneConstants.DIFFICULTY_WORLD_SIZE, GameOneConstants.DIFFICULTY_WORLD_SIZE);
         Gdx.input.setInputProcessor(this);
 
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular.fnt"), false);
-        font.getData().setScale(Constants.DIFFICULTY_LABEL_SCALE);
+        font.getData().setScale(GameOneConstants.DIFFICULTY_LABEL_SCALE);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
 
@@ -47,34 +47,35 @@ public class DifficultyScreen extends InputAdapter implements Screen {
     public void render(float delta) {
         elapsed += delta;
         viewport.apply();
-        if(elapsed < 2) {
+        if(elapsed < 4) {
             Gdx.gl.glClearColor(1.0f,0.98f,0.78f, 1);
+            Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
             batch.begin();
             font.setColor(new Color(0.01f, 0.4f, 0.44f, 1));
-            font.getData().setScale(3f);
-            font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-            font.draw(batch, "Remember the position of light colored blocks",Constants.DIFFICULTY_WORLD_SIZE/8, Constants.DIFFICULTY_WORLD_SIZE/2);
+            font.getData().setScale(GameOneConstants.TITLE_SCALE);
+            //TODO: fix the font printing locations here
+            font.draw(batch, "Short Term", GameOneConstants.DIFFICULTY_WORLD_SIZE/6, GameOneConstants.DIFFICULTY_WORLD_SIZE *2);
+            font.draw(batch, "Memory Test", GameOneConstants.DIFFICULTY_WORLD_SIZE/6, GameOneConstants.DIFFICULTY_WORLD_SIZE);
             batch.end();
 
         } else {
-            Gdx.gl.glClearColor(Constants.BACKGROUND_COLOR.r, Constants.BACKGROUND_COLOR.g, Constants.BACKGROUND_COLOR.b, 1);
+            Gdx.gl.glClearColor(GameOneConstants.BACKGROUND_COLOR.r, GameOneConstants.BACKGROUND_COLOR.g, GameOneConstants.BACKGROUND_COLOR.b, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
             renderer.setProjectionMatrix(viewport.getCamera().combined);
 
             renderer.begin(ShapeRenderer.ShapeType.Filled);
 
-            renderer.setColor(Constants.EASY_COLOR);
-            renderer.circle(Constants.EASY_CENTER.x, Constants.EASY_CENTER.y, Constants.DIFFICULTY_BUBBLE_RADIUS);
+            renderer.setColor(GameOneConstants.EASY_COLOR);
+            renderer.circle(GameOneConstants.EASY_CENTER.x, GameOneConstants.EASY_CENTER.y, GameOneConstants.DIFFICULTY_BUBBLE_RADIUS);
 
-            renderer.setColor(Constants.MEDIUM_COLOR);
-            renderer.circle(Constants.MEDIUM_CENTER.x, Constants.MEDIUM_CENTER.y, Constants.DIFFICULTY_BUBBLE_RADIUS);
+            renderer.setColor(GameOneConstants.MEDIUM_COLOR);
+            renderer.circle(GameOneConstants.MEDIUM_CENTER.x, GameOneConstants.MEDIUM_CENTER.y, GameOneConstants.DIFFICULTY_BUBBLE_RADIUS);
 
-            renderer.setColor(Constants.HARD_COLOR);
-            renderer.circle(Constants.HARD_CENTER.x, Constants.HARD_CENTER.y, Constants.DIFFICULTY_BUBBLE_RADIUS);
+            renderer.setColor(GameOneConstants.HARD_COLOR);
+            renderer.circle(GameOneConstants.HARD_CENTER.x, GameOneConstants.HARD_CENTER.y, GameOneConstants.DIFFICULTY_BUBBLE_RADIUS);
 
             renderer.end();
 
@@ -82,15 +83,16 @@ public class DifficultyScreen extends InputAdapter implements Screen {
 
             batch.begin();
             font.getData().setScale(1f);
+            font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-            final GlyphLayout easyLayout = new GlyphLayout(font, Constants.EASY_LABEL);
-            font.draw(batch, Constants.EASY_LABEL, Constants.EASY_CENTER.x, Constants.EASY_CENTER.y + easyLayout.height / 2, 0, Align.center, false);
+            final GlyphLayout easyLayout = new GlyphLayout(font, GameOneConstants.EASY_LABEL);
+            font.draw(batch, GameOneConstants.EASY_LABEL, GameOneConstants.EASY_CENTER.x, GameOneConstants.EASY_CENTER.y + easyLayout.height / 2, 0, Align.center, false);
 
-            final GlyphLayout mediumLayout = new GlyphLayout(font, Constants.MEDIUM_LABEL);
-            font.draw(batch, Constants.MEDIUM_LABEL, Constants.MEDIUM_CENTER.x, Constants.MEDIUM_CENTER.y + mediumLayout.height / 2, 0, Align.center, false);
+            final GlyphLayout mediumLayout = new GlyphLayout(font, GameOneConstants.MEDIUM_LABEL);
+            font.draw(batch, GameOneConstants.MEDIUM_LABEL, GameOneConstants.MEDIUM_CENTER.x, GameOneConstants.MEDIUM_CENTER.y + mediumLayout.height / 2, 0, Align.center, false);
 
-            final GlyphLayout hardLayout = new GlyphLayout(font, Constants.HARD_LABEL);
-            font.draw(batch, Constants.HARD_LABEL, Constants.HARD_CENTER.x, Constants.HARD_CENTER.y + hardLayout.height / 2, 0, Align.center, false);
+            final GlyphLayout hardLayout = new GlyphLayout(font, GameOneConstants.HARD_LABEL);
+            font.draw(batch, GameOneConstants.HARD_LABEL, GameOneConstants.HARD_CENTER.x, GameOneConstants.HARD_CENTER.y + hardLayout.height / 2, 0, Align.center, false);
 
             batch.end();
         }
@@ -127,16 +129,16 @@ public class DifficultyScreen extends InputAdapter implements Screen {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Vector2 worldTouch = viewport.unproject(new Vector2(screenX, screenY));
 
-        if (worldTouch.dst(Constants.EASY_CENTER) < Constants.DIFFICULTY_BUBBLE_RADIUS) {
-            game.showMemoryScreen(Constants.Difficulty.EASY);
+        if (worldTouch.dst(GameOneConstants.EASY_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
+            game.showMemoryScreen(GameOneConstants.Difficulty.EASY);
         }
 
-        if (worldTouch.dst(Constants.MEDIUM_CENTER) < Constants.DIFFICULTY_BUBBLE_RADIUS) {
-            game.showMemoryScreen(Constants.Difficulty.MEDIUM);
+        if (worldTouch.dst(GameOneConstants.MEDIUM_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
+            game.showMemoryScreen(GameOneConstants.Difficulty.MEDIUM);
         }
 
-        if (worldTouch.dst(Constants.HARD_CENTER) < Constants.DIFFICULTY_BUBBLE_RADIUS) {
-            game.showMemoryScreen(Constants.Difficulty.HARD);
+        if (worldTouch.dst(GameOneConstants.HARD_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
+            game.showMemoryScreen(GameOneConstants.Difficulty.HARD);
         }
 
         return true;

@@ -17,7 +17,8 @@ public class HomePageActivity extends AppCompatActivity {
         Button btnGame = findViewById(R.id.game_button);
         btnGame.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), AndroidLauncher.class));
+                //startActivity(new Intent(getBaseContext(), AndroidLauncher.class));
+                startActivity(new Intent(getBaseContext(), PersonDependentGameLauncher.class));
             }
         });
     }

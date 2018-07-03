@@ -7,22 +7,20 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.util.Arrays;
-
-import static com.lucidity.game.Constants.BACKGROUND_COLOR;
+import static com.lucidity.game.GameOneConstants.BACKGROUND_COLOR;
 
 /**
  * Created by lixiaoyan on 6/29/18.
  */
 
+
 //TODO: properly dispose screen
 public class EndScreen extends InputAdapter implements Screen {
     public static final String TAG = EndScreen.class.getName();
-    MemoryGame game;
+    WorkingMemoryGame game;
 
     ExtendViewport memoryViewport;
     ScreenViewport hudViewport;
@@ -37,7 +35,9 @@ public class EndScreen extends InputAdapter implements Screen {
     private SpriteBatch batch;
     public BitmapFont font;
 
-    public EndScreen(MemoryGame game, int points, int trials) {
+    private boolean exit = false;
+
+    public EndScreen(WorkingMemoryGame game, int points, int trials) {
         this.game = game;
         this.score = points;
         this.trial = trials;
@@ -51,7 +51,7 @@ public class EndScreen extends InputAdapter implements Screen {
 
     @Override
     public void show() {
-        memoryViewport = new ExtendViewport(Constants.WORLD_SIZE, Constants.WORLD_SIZE);
+        memoryViewport = new ExtendViewport(GameOneConstants.WORLD_SIZE, GameOneConstants.WORLD_SIZE);
         hudViewport = new ScreenViewport();
     }
     @Override
@@ -64,8 +64,6 @@ public class EndScreen extends InputAdapter implements Screen {
 
     @Override
     public void dispose() {
-        font.dispose();
-        batch.dispose();
     }
 
     @Override
@@ -83,6 +81,10 @@ public class EndScreen extends InputAdapter implements Screen {
         font.draw(batch, "Your score is " + Integer.toString(score) + "/" + Integer.toString(trial),screenWidth/4, screenHeight/2);
         batch.end();
 
+        if(exit){
+            Gdx.app.exit();
+        }
+
     }
 
     @Override
@@ -97,12 +99,14 @@ public class EndScreen extends InputAdapter implements Screen {
 
     @Override
     public void hide() {
+        font.dispose();
+        batch.dispose();
     }
 
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Gdx.app.exit();
+        exit = true;
         return true;
     }
 
