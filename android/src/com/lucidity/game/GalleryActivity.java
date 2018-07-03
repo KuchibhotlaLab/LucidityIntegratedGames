@@ -1,18 +1,27 @@
 package com.lucidity.game;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -21,6 +30,11 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,6 +55,16 @@ public class GalleryActivity extends AppCompatActivity {
     //For uploading to AWS S3 storage
     private TransferHelper transferHelper;
     private TransferUtility transferUtility;
+
+    // JSON parser class
+    JSONParser jsonParser = new JSONParser();
+
+    // url to add image data
+    private static String url_add_image = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_image.php";
+
+    // JSON Node names
+    private static final String TAG_SUCCESS = "success";
+    private static final String TAG_MESSAGE = "message";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +166,12 @@ public class GalleryActivity extends AppCompatActivity {
 
             });
 
+            //Save image name and tags in MySQL
+            String imageName = getIntent().getStringExtra("image-name");
+            String imageRelation = getIntent().getStringExtra("image-relation");
+            SaveImage saveTask = new SaveImage(username, filename, imageName, imageRelation);
+            saveTask.execute();
+
         }
 
         gridAdapter = new BitmapAdapter(getBaseContext(), images, listOfImages);
@@ -154,9 +184,56 @@ public class GalleryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
-                intent.putExtra("username", username);
-                startActivity(intent);
+                AlertDialog.Builder builder = new AlertDialog.Builder(GalleryActivity.this);
+                LayoutInflater inflater = ((Activity) GalleryActivity.this).getLayoutInflater();
+                View dialogLayout = inflater.inflate(R.layout.add_image_dialog_short,
+                        null);
+
+                final AlertDialog dialog = builder.create();
+                dialog.getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                dialog.setView(dialogLayout, 0, 0, 0, 0);
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.setCancelable(true);
+                WindowManager.LayoutParams wlmp = dialog.getWindow()
+                        .getAttributes();
+                wlmp.gravity = Gravity.BOTTOM;
+
+                Button btnGallery = (Button) dialogLayout.findViewById(R.id.btn_add_gallery);
+                Button btnCamera = (Button) dialogLayout.findViewById(R.id.btn_add_camera);
+                Button btnDismiss = (Button) dialogLayout.findViewById(R.id.btn_cancel_img_dialog);
+
+
+                btnGallery.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
+                        intent.putExtra("username", username);
+                        startActivity(intent);
+                    }
+                });
+
+                btnCamera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
+                        intent.putExtra("username", username);
+                        startActivity(intent);
+                    }
+                });
+
+                btnDismiss.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setView(dialogLayout);
+
+                dialog.show();
             }
         });
 
@@ -169,7 +246,6 @@ public class GalleryActivity extends AppCompatActivity {
             intent.putExtra("image", l.getUrl());
             intent.putExtra("username", username);
             startActivity(intent);
-            //TODO: figure out why the newly added picture doesn't show up(bug can be deleted)
         }
     };
 
@@ -290,5 +366,60 @@ public class GalleryActivity extends AppCompatActivity {
 
         return b;
 
+    }
+
+    /**
+     * Background Async Task to save image details to MySQL
+     * */
+    class SaveImage extends AsyncTask<String, String, String> {
+
+        private String uname;
+        private String fname;
+        private String iname;
+        private String irelation;
+
+        public SaveImage(String username, String filename, String imageName, String imageRelation)
+        {
+            uname = username;
+            fname = filename;
+            iname = imageName;
+            irelation = imageRelation;
+        }
+
+        /**
+         * Save information
+         * */
+        protected String doInBackground(String... args) {
+
+            // Building Parameters
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("username", uname));
+            params.add(new BasicNameValuePair("filename", fname));
+            params.add(new BasicNameValuePair("imagename", iname));
+            params.add(new BasicNameValuePair("imagerelation", irelation));
+
+            // getting JSON Object
+            JSONObject json = jsonParser.makeHttpRequest(url_add_image,
+                    "POST", params);
+
+            // check log cat for response
+            Log.d("Create Response", json.toString());
+
+            // check for success tag
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+                String msg = json.getString(TAG_MESSAGE);
+
+                if (success == 1) {
+                    Log.d("Check Image Added", "Success");
+                } else {
+                    Log.d("Check Image Added", msg);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
     }
 }

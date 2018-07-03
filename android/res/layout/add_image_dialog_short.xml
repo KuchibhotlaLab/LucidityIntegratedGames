@@ -22,14 +22,6 @@
         android:text="Add from Camera" />
 
     <Button
-        android:id="@+id/btn_current_gal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/longbutton"
-        android:text="Show Current Gallery" />
-
-    <Button
         android:id="@+id/btn_cancel_img_dialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

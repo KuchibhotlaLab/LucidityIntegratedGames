@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -36,7 +37,7 @@ public class CameraActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_CAMERA = 2;
     File photo = null;
     private Bitmap bmp = null;
-    private String imageName;
+    private String image;
     private String timeS;
     ImageView targetImage;
     private Uri uri;
@@ -71,24 +72,35 @@ public class CameraActivity extends AppCompatActivity {
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //reference: stackoverflow.com/questions/11010386
-                //Write file
-                try {
-                    FileOutputStream stream = getApplicationContext().openFileOutput(imageName, Context.MODE_PRIVATE);
-                    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                EditText imName = (EditText)findViewById(R.id.image_name_input);
+                EditText imRelation = (EditText)findViewById(R.id.image_relation_input);
+
+                if(imName.getText().toString().trim().length() == 0){
+                    imName.setError("Please enter the name of the person/object pictured");
+                } else if(imRelation.getText().toString().trim().length() == 0){
+                    imRelation.setError("Please enter the user's relation to the person/object pictured");
+                } else {
+
+                    //reference: stackoverflow.com/questions/11010386
+                    //Write file
+                    try {
+
+                        FileOutputStream stream = getApplicationContext().openFileOutput(image, Context.MODE_PRIVATE);
+                        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
+                    intent.putExtra("image", image);
+                    intent.putExtra("username", username);
+                    intent.putExtra("image-name", imName.getText().toString());
+                    intent.putExtra("image-relation", imRelation.getText().toString());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    //Close Page
+                    finish();
                 }
-
-                //Go to gallery and add the image
-                Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
-                intent.putExtra("image", imageName);
-                intent.putExtra("username", username);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                //Close Page
-                finish();
-
             }
         });
     }
@@ -143,7 +155,7 @@ public class CameraActivity extends AppCompatActivity {
             //delete temperorary photo file
             photo.delete();
             targetImage.setImageBitmap(bmp);
-            imageName = timeS + ".jpg";
+            image = timeS + ".jpg";
         }
 
     }

@@ -78,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
                 Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
+                //Pass username through to other activities
+                intent.putExtra("username", username);
+                intent.putExtra("name", name);
                 startActivity(intent);
             }
         });
