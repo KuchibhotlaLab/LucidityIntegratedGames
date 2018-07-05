@@ -397,13 +397,13 @@ public class MemoryScreen extends InputAdapter implements Screen {
         }
 
         while(predicted < blocks){
-            int on = (int)(Math.random()*blocksHorizontal*blocksVertical + 1);
+            int on = (int)(Math.random()*blocksHorizontal*blocksVertical);
             System.out.println(on);
-            System.out.println(on/blocksVertical - 1);
+            System.out.println(on/blocksVertical%blocksHorizontal);
             System.out.println(on%blocksVertical);
-            if(toRemember[on/blocksVertical - 1][on%blocksVertical] != 1){
+            if(toRemember[on/blocksVertical%blocksHorizontal][on%blocksVertical] != 1){
                 ++predicted;
-                toRemember[on/blocksVertical - 1][on%blocksVertical] = 1;
+                toRemember[on/blocksVertical%blocksHorizontal][on%blocksVertical] = 1;
             }
         }
     }

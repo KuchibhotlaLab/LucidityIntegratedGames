@@ -55,12 +55,12 @@ public class EndScreen extends InputAdapter implements Screen {
         memoryViewport = new ExtendViewport(GameOneConstants.WORLD_SIZE, GameOneConstants.WORLD_SIZE);
         hudViewport = new ScreenViewport();
     }
+
     @Override
     public void resize(int width, int height) {
         memoryViewport.update(width, height, true);
         hudViewport.update(width, height, true);
         System.out.print("resize");
-
     }
 
     @Override
@@ -91,12 +91,10 @@ public class EndScreen extends InputAdapter implements Screen {
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
