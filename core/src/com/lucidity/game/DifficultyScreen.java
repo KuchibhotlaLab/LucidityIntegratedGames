@@ -151,4 +151,5 @@ public class DifficultyScreen extends InputAdapter implements Screen {
 
         return true;
     }
+
 }

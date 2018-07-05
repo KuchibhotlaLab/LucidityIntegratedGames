@@ -306,11 +306,12 @@ public class MemoryScreen extends InputAdapter implements Screen {
                 if(trial == 5){
                     game.setScreen(new EndScreen(game, score, trial));
                 }
+                //TODO: fix this?
                 trial++;
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {
-                                       game.setScreen(new MemoryScreen(game, difficulty, score, trial));
+
                                    }
                                },
                         30/30.0f);
@@ -355,6 +356,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
+        //TODO: make sure this actually disables touch
         if(!disableTouchDown) {
             onEnd = btnEnd.contains(screenX, screenHeight - screenY);
 

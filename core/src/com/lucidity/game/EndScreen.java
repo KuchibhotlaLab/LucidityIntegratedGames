@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -77,8 +78,9 @@ public class EndScreen extends InputAdapter implements Screen {
         font.setColor(Color.valueOf("#9FEDD7"));
         font.getData().setScale(4f);
         font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-        font.draw(batch, "Your score is " + Integer.toString(score) + "/" + Integer.toString(trial),screenWidth/4, screenHeight/2);
+        final GlyphLayout promptLayout = new GlyphLayout(font, "Your score is " + Integer.toString(score) + "/" + Integer.toString(trial));
+        font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2,
+                screenHeight / 2);
         batch.end();
 
         if(exit){
