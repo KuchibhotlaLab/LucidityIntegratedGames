@@ -22,11 +22,16 @@ public class GameTwoConstants {
     public static final Color BUTTON_COLOR = new Color(0.21f, 0.36f, 0.49f, 1);
     public static final Color OUTLINE_COLOR = new Color(0.42f, 0.36f, 0.48f, 1);
 
+    public static final float TITLE_SCALE = 4f;
+    public static final String TITLE_ONE = "FACIAL";
+    public static final String TITLE_TWO = "RECOGNITION";
+    public static final String TITLE_THREE = "MEMORY TEST";
+
 
     public static final Vector2 F2W_CENTER = new Vector2(MODE_WORLD_SIZE/4,MODE_WORLD_SIZE/2);
     public static final Vector2 W2F_CENTER = new Vector2(MODE_WORLD_SIZE * 3 /4,MODE_WORLD_SIZE/2);
 
-    public static final String PROMPT = "Who is this";
+    public static final String PROMPT = "Who is ";
     public static final float PROMPT_SCALE = 3f;
 
 
@@ -41,4 +46,7 @@ public class GameTwoConstants {
 
     public static final String PROMPT_ONE = "Please identify the";
     public static final String PROMPT_TWO = "person in the picture.";
+    public static final String PROMPT_THREE = "person whose ";
+    public static final String PROMPT_FOUR = "you see on the screen";
+
 }

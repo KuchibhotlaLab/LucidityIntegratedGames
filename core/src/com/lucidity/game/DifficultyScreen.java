@@ -47,6 +47,8 @@ public class DifficultyScreen extends InputAdapter implements Screen {
     public void render(float delta) {
         elapsed += delta;
         viewport.apply();
+
+
         if(elapsed < 4) {
             Gdx.gl.glClearColor(1.0f,0.98f,0.78f, 1);
             Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

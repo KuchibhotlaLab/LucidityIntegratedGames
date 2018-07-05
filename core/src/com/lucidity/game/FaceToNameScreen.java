@@ -1,6 +1,5 @@
 package com.lucidity.game;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
@@ -11,22 +10,17 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 /**
  * Created by lixiaoyan on 7/3/18.
  */
 
-public class FaceRecogScreen extends InputAdapter implements Screen {
+public class FaceToNameScreen extends InputAdapter implements Screen {
     private FacialMemoryGame game;
 
     ExtendViewport viewport;
@@ -37,8 +31,9 @@ public class FaceRecogScreen extends InputAdapter implements Screen {
 
     ShapeRenderer renderer;
 
-    Rectangle answer1, answer2, end;
+    Rectangle answer1, answer2, end, back;
     boolean onSelect1, onSelect2 = false;
+    boolean onEnd, onBack = false;
     String name1, name2;
     String correct;
 
@@ -48,7 +43,7 @@ public class FaceRecogScreen extends InputAdapter implements Screen {
 
     float elapsed;
 
-    public FaceRecogScreen(FacialMemoryGame game, int points, int trials) {
+    public FaceToNameScreen(FacialMemoryGame game, int points, int trials) {
         this.game = game;
         answer1 = answer2 = new Rectangle();
         score = points;
@@ -62,8 +57,17 @@ public class FaceRecogScreen extends InputAdapter implements Screen {
         answer1.height = answer2.height = screenHeight / 12;
         answer1.width = answer2.width = screenWidth / 2;
         answer1.x = answer2.x = screenWidth / 4;
-        answer1.y = screenHeight / 8;
+        answer1.y = screenHeight / 6;
         answer2.y = answer1.y + answer1.height;
+
+        //TODO: finish end
+        end = new Rectangle();
+        back = new Rectangle();
+        end.y = back.y = screenHeight/ 16;
+        end.height = back.height = screenHeight / 12;
+        end.width = back.width = screenWidth / 5;
+        end.x = screenWidth / 4;
+        back.x = screenWidth * 11 / 20;
 
 
         File folder = new File("/");
@@ -125,7 +129,7 @@ public class FaceRecogScreen extends InputAdapter implements Screen {
                                        public void run() {
                                            ++score;
                                            ++trial;
-                                           game.setScreen(new FaceRecogScreen(game, score, trial));
+                                           game.setScreen(new FaceToNameScreen(game, score, trial));
                                        }
                                    },
                             30/30.0f);
@@ -139,7 +143,7 @@ public class FaceRecogScreen extends InputAdapter implements Screen {
                                        @Override
                                        public void run() {
                                            ++trial;
-                                           game.setScreen(new FaceRecogScreen(game, score, trial));
+                                           game.setScreen(new FaceToNameScreen(game, score, trial));
                                        }
                                    },
                             30/30.0f);
@@ -164,7 +168,7 @@ public class FaceRecogScreen extends InputAdapter implements Screen {
                                        public void run() {
                                            ++score;
                                            ++trial;
-                                           game.setScreen(new FaceRecogScreen(game, score, trial));
+                                           game.setScreen(new FaceToNameScreen(game, score, trial));
                                        }
                                    },
                             30/30.0f);
@@ -178,7 +182,7 @@ public class FaceRecogScreen extends InputAdapter implements Screen {
                                        @Override
                                        public void run() {
                                            ++trial;
-                                           game.setScreen(new FaceRecogScreen(game, score, trial));
+                                           game.setScreen(new FaceToNameScreen(game, score, trial));
                                        }
                                    },
                             30/30.0f);
@@ -186,6 +190,39 @@ public class FaceRecogScreen extends InputAdapter implements Screen {
 
             }
             renderer.rect(answer2.x, answer2.y, answer2.getWidth(), answer2.getHeight());
+
+
+            if(!onEnd){
+                renderer.setColor(GameTwoConstants.W2F_COLOR);
+            } else {
+                renderer.setColor(GameTwoConstants.CHOICE_COLOR);
+                Timer.schedule(new Timer.Task() {
+                                   @Override
+                                   public void run() {
+                                       //TODO: END SCREEN
+                                   }
+                               },
+                        30/30.0f);
+            }
+
+            renderer.rect(end.x, end.y, end.width, end.height);
+
+
+            if(!onBack){
+                renderer.setColor(GameTwoConstants.W2F_COLOR);
+            } else {
+                renderer.setColor(GameTwoConstants.CHOICE_COLOR);
+                Timer.schedule(new Timer.Task() {
+                                   @Override
+                                   public void run() {
+                                       game.setScreen(new ModeScreen(game));
+                                   }
+                               },
+                        30/30.0f);
+            }
+            renderer.rect(back.x, back.y, back.width, back.height);
+
+
 
             renderer.end();
 
@@ -195,12 +232,15 @@ public class FaceRecogScreen extends InputAdapter implements Screen {
             renderer.rect(answer1.x, answer1.y, answer1.getWidth(), answer1.getHeight());
             renderer.rect(answer2.x, answer2.y, answer2.getWidth(), answer2.getHeight());
 
+            renderer.rect(end.x, end.y, end.width, end.height);
+            renderer.rect(back.x, back.y, back.width, back.height);
+
             renderer.end();
 
 
             batch.begin();
             font.getData().setScale(GameTwoConstants.PROMPT_SCALE);
-            final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.PROMPT);
+            final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.PROMPT + "this?");
             font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight * 7 / 8);
 
 
@@ -246,6 +286,9 @@ public class FaceRecogScreen extends InputAdapter implements Screen {
 
     @Override
     public void hide() {
+        batch.dispose();
+        font.dispose();
+        renderer.dispose();
     }
 
     @Override
@@ -262,6 +305,14 @@ public class FaceRecogScreen extends InputAdapter implements Screen {
         if(answer2.contains(screenX, screenHeight - screenY)){
             onSelect2 = !onSelect2;
             onSelect1 = false;
+        }
+
+        if(end.contains(screenX, screenHeight - screenY)){
+            onEnd = true;
+        }
+
+        if(back.contains(screenX, screenHeight - screenY)){
+            onBack = true;
         }
 
         return true;

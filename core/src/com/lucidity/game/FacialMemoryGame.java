@@ -9,7 +9,6 @@ import com.badlogic.gdx.Game;
 public class FacialMemoryGame extends Game {
     @Override
     public void create() {
-
         showModeScreen();
     }
 
