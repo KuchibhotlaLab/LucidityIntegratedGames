@@ -9,9 +9,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -171,19 +173,34 @@ public class MemoryScreen extends InputAdapter implements Screen {
             batch.begin();
             font.setColor(Color.valueOf("#026670"));
             font.getData().setScale(GameOneConstants.NOTIFICATION_SCALE);
-            font.draw(batch, "Remember the position",screenWidth/12, screenHeight * 2/3);
-            font.draw(batch, "of the lit up boxes.",screenWidth/12, screenHeight / 3);
+
+            final GlyphLayout promptLayout_two = new GlyphLayout(font, GameOneConstants.PROMPT_TWO);
+            font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width)/2,
+                    screenHeight / 2);
+
+            final GlyphLayout promptLayout_one = new GlyphLayout(font, GameOneConstants.PROMPT_ONE);
+            font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width)/2,
+                    screenHeight / 2 + 1.5f * promptLayout_two.height);
+
+
+
+
             batch.end();
         } else if (elapsed > 4 && elapsed <6) {
             Gdx.gl.glClearColor(1, 1, 1, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
             batch.begin();
-            /*font.setColor(Color.valueOf("#9FEDD7"));
             font.getData().setScale(3f);
-            font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
+            font.setColor(Color.valueOf("#026670"));
 
-            font.draw(batch, "This is the blank screen",screenWidth/8, screenHeight/2);*/
+            final GlyphLayout promptLayout_two = new GlyphLayout(font, GameOneConstants.WAIT_TWO);
+            font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width)/2,
+                    screenHeight / 2);
+
+            final GlyphLayout promptLayout_one = new GlyphLayout(font, GameOneConstants.WAIT_ONE);
+            font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width)/2,
+                    screenHeight / 2 + 1.5f * promptLayout_two.height);
             batch.end();
 
         } else {
@@ -262,20 +279,23 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
             //prints text on submit button
             font.draw(batch, "Submit",
-                    (int) (btnSubmit.x + 0.15 * btnSubmit.getWidth()),
+                    (int) (btnSubmit.x + 0.25 * btnSubmit.getWidth()),
                     (int) (btnSubmit.y + 0.6 * btnSubmit.getHeight()));
+
+
 
 
             //prints text on end button
             font.draw(batch, "End",
-                    (int) (btnEnd.x + 0.3 * btnEnd.getWidth()),
+                    (int) (btnEnd.x + 0.4 * btnEnd.getWidth()),
                     (int) (btnEnd.y + 0.6 * btnEnd.getHeight()));
 
 
             //prints the correct/incorrect message when the person clicks submit
             //TODO: FIGURE OUT THE CORRECT WAY TO DO THIS PREFERABLY USING PAUSE
             if(suppressed){
-                font.draw(batch, "You are correct", screenWidth /3, screenHeight / 10);
+                final GlyphLayout promptLayout = new GlyphLayout(font, GameOneConstants.CORRECT_MESSAGE);
+                font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
             }
             if (correct && onSubmit) {
                 correct = false;
@@ -296,7 +316,8 @@ public class MemoryScreen extends InputAdapter implements Screen {
                         30/30.0f);
             } else if (!correct && onSubmit && !suppressed) {
                 selected = new int[blocksHorizontal][blocksVertical];
-                font.draw(batch, "You are Incorrect", screenWidth/3, screenHeight / 10);
+                final GlyphLayout promptLayout = new GlyphLayout(font, GameOneConstants.INCORRECT_MESSAGE);
+                font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
             }
 
 

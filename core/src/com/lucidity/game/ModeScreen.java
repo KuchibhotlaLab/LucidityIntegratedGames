@@ -105,7 +105,7 @@ public class ModeScreen extends InputAdapter implements Screen {
         Vector2 worldTouch = viewport.unproject(new Vector2(screenX, screenY));
 
         if (worldTouch.dst(GameTwoConstants.F2W_CENTER) < GameTwoConstants.MODE_BUBBLE_RADIUS) {
-            game.setScreen(new FaceRecogScreen(game));
+            game.setScreen(new FaceRecogScreen(game, 0, 1));
         }
 
 

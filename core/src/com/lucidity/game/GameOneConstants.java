@@ -60,6 +60,14 @@ public class GameOneConstants {
 
     public static final int SECONDS_DElAYED = 1;
 
+    public static final String TITLE_ONE = "SHORT TERM";
+    public static final String TITLE_TWO = "MEMORY GAME";
+    public static final String CORRECT_MESSAGE = "You are correct!";
+    public static final String INCORRECT_MESSAGE = "You are incorrect!";
+    public static final String PROMPT_ONE = "Remember the position";
+    public static final String PROMPT_TWO = "of the lit up boxes.";
+    public static final String WAIT_ONE = "Select the blocks";
+    public static final String WAIT_TWO = "after this screen ends";
 
 
     public enum Difficulty {

@@ -31,8 +31,8 @@ public class FaceRecogScreen extends InputAdapter implements Screen {
     ExtendViewport viewport;
     ScreenViewport hudViewport;
 
-    int screenWidth;
-    int screenHeight;
+    int screenWidth, screenHeight;
+    int score, trial;
 
     ShapeRenderer renderer;
 
@@ -42,9 +42,11 @@ public class FaceRecogScreen extends InputAdapter implements Screen {
     SpriteBatch batch;
     BitmapFont font;
 
-    public FaceRecogScreen(FacialMemoryGame game) {
+    public FaceRecogScreen(FacialMemoryGame game, int points, int trials) {
         this.game = game;
         answer1 = answer2 = new Rectangle();
+        score = points;
+        trial = trials;
     }
     @Override
     public void show() {

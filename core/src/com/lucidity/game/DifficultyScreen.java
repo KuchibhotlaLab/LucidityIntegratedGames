@@ -55,9 +55,17 @@ public class DifficultyScreen extends InputAdapter implements Screen {
             batch.begin();
             font.setColor(new Color(0.01f, 0.4f, 0.44f, 1));
             font.getData().setScale(GameOneConstants.TITLE_SCALE);
-            //TODO: fix the font printing locations here
-            font.draw(batch, "Short Term", GameOneConstants.DIFFICULTY_WORLD_SIZE/6, GameOneConstants.DIFFICULTY_WORLD_SIZE *2);
-            font.draw(batch, "Memory Test", GameOneConstants.DIFFICULTY_WORLD_SIZE/6, GameOneConstants.DIFFICULTY_WORLD_SIZE);
+
+            final GlyphLayout promptLayout_two = new GlyphLayout(font, GameOneConstants.TITLE_TWO);
+            font.draw(batch, promptLayout_two, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_two.width) /2,
+                    GameOneConstants.DIFFICULTY_WORLD_SIZE * 2);
+
+
+            final GlyphLayout promptLayout_one = new GlyphLayout(font, GameOneConstants.TITLE_ONE);
+            font.draw(batch, promptLayout_one, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_one.width) / 2,
+                    GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_two.height);
+
+
             batch.end();
 
         } else {
