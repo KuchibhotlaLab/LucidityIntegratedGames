@@ -311,7 +311,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {
-
+                                       game.setScreen(new MemoryScreen(game, difficulty, score, trial));
                                    }
                                },
                         30/30.0f);
@@ -397,13 +397,13 @@ public class MemoryScreen extends InputAdapter implements Screen {
         }
 
         while(predicted < blocks){
-            int on = (int)(Math.random()*blocksHorizontal*blocksVertical);
+            int on = (int)(Math.random()*blocksHorizontal*blocksVertical + 1);
             System.out.println(on);
-            System.out.println(on/blocksVertical%blocksHorizontal);
+            System.out.println(on/blocksVertical - 1);
             System.out.println(on%blocksVertical);
-            if(toRemember[on/blocksVertical%blocksHorizontal][on%blocksVertical] != 1){
+            if(toRemember[on/blocksVertical - 1][on%blocksVertical] != 1){
                 ++predicted;
-                toRemember[on/blocksVertical%blocksHorizontal][on%blocksVertical] = 1;
+                toRemember[on/blocksVertical - 1][on%blocksVertical] = 1;
             }
         }
     }
