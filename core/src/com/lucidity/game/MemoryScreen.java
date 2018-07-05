@@ -14,12 +14,23 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.async.AsyncTask;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 //import com.sun.tools.internal.jxc.ap.Const;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import sun.rmi.runtime.Log;
 
 import static com.lucidity.game.GameOneConstants.BACKGROUND_COLOR;
 
@@ -58,12 +69,16 @@ public class MemoryScreen extends InputAdapter implements Screen {
     private SpriteBatch batch;
     public BitmapFont font;
 
+    //to store reaction time of each trial
+    private boolean timerStart;
+    private long trialStartTime;
+    private double[] trialTime;
 
     private float elapsed;
     private boolean disableTouchDown=true;
     //cheap temporary fix
 
-    public MemoryScreen(WorkingMemoryGame game, GameOneConstants.Difficulty difficulty, int points, int trials) {
+    public MemoryScreen(WorkingMemoryGame game, GameOneConstants.Difficulty difficulty, int points, int trials, double[] trialTimes) {
         this.game = game;
 
         this.difficulty = difficulty;
@@ -78,7 +93,8 @@ public class MemoryScreen extends InputAdapter implements Screen {
             blocksVertical = 3;
         }
 
-
+        timerStart = true;
+        trialTime = trialTimes;
 
         //changed for portrait
         screenWidth = Gdx.graphics.getWidth();
@@ -204,6 +220,12 @@ public class MemoryScreen extends InputAdapter implements Screen {
             batch.end();
 
         } else {
+            //Start timer
+            if (elapsed > 6 && timerStart){
+                trialStartTime = TimeUtils.nanoTime();
+                timerStart = false;
+            }
+
             disableTouchDown = false;
             Gdx.gl.glClearColor(BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -311,7 +333,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {
-                                       game.setScreen(new MemoryScreen(game, difficulty, score, trial));
+                                       game.setScreen(new MemoryScreen(game, difficulty, score, trial, trialTime));
                                    }
                                },
                         30/30.0f);
@@ -363,12 +385,22 @@ public class MemoryScreen extends InputAdapter implements Screen {
             if (btnSubmit.contains(screenX, screenHeight - screenY)) {
                 onSubmit = true;
                 if (Arrays.deepEquals(selected, toRemember)) {
+                    //Save time in seconds
+                    if(trial <= 5) {
+                        trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
+                        System.out.println(trialTime[trial - 1]);
+                    }
                     correct = true;
                 } else {
                     attemps++;
                     if (attemps >= 3) {
+                        //Save time in seconds
+                        if (trial < 5) {
+                            trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
+                            System.out.println(trialTime[trial - 1]);
+                        }
                         ++trial;
-                        game.setScreen(new MemoryScreen(game, difficulty, score, trial));
+                        game.setScreen(new MemoryScreen(game, difficulty, score, trial, trialTime));
                     }
                 }
             } else {

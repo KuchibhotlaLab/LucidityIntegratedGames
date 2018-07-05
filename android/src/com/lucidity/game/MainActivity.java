@@ -88,7 +88,9 @@ public class MainActivity extends AppCompatActivity {
         Button btnGame = findViewById(R.id.lucid);
         btnGame.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), AndroidLauncher.class));
+                Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
+                i.putExtra("username", username);
+                startActivity(i);
             }
         });
 

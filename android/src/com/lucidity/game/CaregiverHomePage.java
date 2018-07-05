@@ -35,7 +35,9 @@ public class CaregiverHomePage extends AppCompatActivity {
         Button btnGame = findViewById(R.id.administer_games);
         btnGame.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), AndroidLauncher.class));
+                Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
+                i.putExtra("username", username);
+                startActivity(i);
                 //startActivity(new Intent(getBaseContext(), PersonDependentGameLauncher.class));
 
                 //save instance of the game
