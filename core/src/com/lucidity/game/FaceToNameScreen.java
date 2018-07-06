@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.io.File;
-
 /**
  * Created by lixiaoyan on 7/3/18.
  */
@@ -45,7 +44,6 @@ public class FaceToNameScreen extends InputAdapter implements Screen {
 
     public FaceToNameScreen(FacialMemoryGame game, int points, int trials) {
         this.game = game;
-        answer1 = answer2 = new Rectangle();
         score = points;
         trial = trials;
 
@@ -72,8 +70,6 @@ public class FaceToNameScreen extends InputAdapter implements Screen {
         File folder = new File("/");
         File[] listOfFiles = folder.listFiles();
 
-        //face = new Texture(Gdx.files.external(listOfFiles[0].getPath()));
-
         face = new Texture(Gdx.files.internal("test.jpg"));
         batch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular.fnt"), false);
@@ -97,6 +93,7 @@ public class FaceToNameScreen extends InputAdapter implements Screen {
         Gdx.gl.glClearColor(GameTwoConstants.BACKGROUND_COLOR.r, GameTwoConstants.BACKGROUND_COLOR.g, GameTwoConstants.BACKGROUND_COLOR.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         elapsed += delta;
+
         if(elapsed < 2) {
             batch.begin();
             font.getData().setScale(GameTwoConstants.PROMPT_SCALE);
@@ -116,77 +113,16 @@ public class FaceToNameScreen extends InputAdapter implements Screen {
                 renderer.setColor(GameTwoConstants.W2F_COLOR);
             } else {
                 renderer.setColor(GameTwoConstants.CHOICE_COLOR);
-
-                if(correct.equals(name1)){
-                    batch.begin();
-                    font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
-                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
-                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
-                    batch.end();
-                    Timer.schedule(new Timer.Task() {
-                                       @Override
-                                       public void run() {
-                                           ++score;
-                                           ++trial;
-                                           game.setScreen(new FaceToNameScreen(game, score, trial));
-                                       }
-                                   },
-                            30/30.0f);
-                } else {
-                    batch.begin();
-                    font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
-                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
-                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
-                    batch.end();
-                    Timer.schedule(new Timer.Task() {
-                                       @Override
-                                       public void run() {
-                                           ++trial;
-                                           game.setScreen(new FaceToNameScreen(game, score, trial));
-                                       }
-                                   },
-                            30/30.0f);
-                }
             }
             renderer.rect(answer1.x, answer1.y, answer1.getWidth(), answer1.getHeight());
 
 
             if(!onSelect2){
                 renderer.setColor(GameTwoConstants.W2F_COLOR);
+                //System.out.println("you should be in this loop 2 ");
             } else {
+                //System.out.println("are you even here 1 ");
                 renderer.setColor(GameTwoConstants.CHOICE_COLOR);
-
-                if(correct.equals(name2)){
-                    batch.begin();
-                    font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
-                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
-                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
-                    batch.end();
-                    Timer.schedule(new Timer.Task() {
-                                       @Override
-                                       public void run() {
-                                           ++score;
-                                           ++trial;
-                                           game.setScreen(new FaceToNameScreen(game, score, trial));
-                                       }
-                                   },
-                            30/30.0f);
-                } else {
-                    batch.begin();
-                    font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
-                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
-                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
-                    batch.end();
-                    Timer.schedule(new Timer.Task() {
-                                       @Override
-                                       public void run() {
-                                           ++trial;
-                                           game.setScreen(new FaceToNameScreen(game, score, trial));
-                                       }
-                                   },
-                            30/30.0f);
-                }
-
             }
             renderer.rect(answer2.x, answer2.y, answer2.getWidth(), answer2.getHeight());
 
@@ -201,7 +137,7 @@ public class FaceToNameScreen extends InputAdapter implements Screen {
                                        game.setScreen(new EndScreen(game, score, trial));
                                    }
                                },
-                        30/30.0f);
+                        1);
             }
 
             renderer.rect(end.x, end.y, end.width, end.height);
@@ -216,7 +152,7 @@ public class FaceToNameScreen extends InputAdapter implements Screen {
                                    public void run() {game.setScreen(new ModeScreen(game));
                                    }
                                },
-                        30/30.0f);
+                        1);
             }
             renderer.rect(back.x, back.y, back.width, back.height);
 
@@ -234,6 +170,80 @@ public class FaceToNameScreen extends InputAdapter implements Screen {
             renderer.rect(back.x, back.y, back.width, back.height);
 
             renderer.end();
+
+
+            if(onSelect1 && correct.equals(name1)){
+                batch.begin();
+                font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
+                final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
+                font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
+                batch.end();
+                Timer.schedule(new Timer.Task() {
+                                   @Override
+                                   public void run() {
+                                       ++score;
+                                       ++trial;
+                                       generateTrial();
+                                       Timer.instance().clear();
+                                   }
+                               },
+                        1);
+
+            } else if(onSelect1 && !correct.equals(name1)) {
+                batch.begin();
+                font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
+                final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
+                font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
+                batch.end();
+                Timer.schedule(new Timer.Task() {
+                                   @Override
+                                   public void run() {
+                                       ++trial;
+                                       generateTrial();
+                                       Timer.instance().clear();
+                                   }
+                               },
+                        1);
+
+            }
+
+
+
+            if(onSelect2 && correct.equals(name2)){
+                batch.begin();
+                font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
+                final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
+                font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
+                batch.end();
+                Timer.schedule(new Timer.Task() {
+                                   @Override
+                                   public void run() {
+                                       ++score;
+                                       ++trial;
+                                       generateTrial();
+                                       Timer.instance().clear();
+                                   }
+                               },
+                        1);
+
+            } else if (onSelect2 && !correct.equals(name2)) {
+                batch.begin();
+                font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
+                final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
+                font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
+                batch.end();
+
+                Timer.schedule(new Timer.Task() {
+                                   @Override
+                                   public void run() {
+                                       ++trial;
+                                       generateTrial();
+                                       Timer.instance().clear();
+                                   }
+                               },
+                        1);
+            }
+
 
 
             batch.begin();
@@ -334,8 +344,18 @@ public class FaceToNameScreen extends InputAdapter implements Screen {
     }
 
     private void generateTrial(){
+        name1 = "";
+        name2 = "";
+        elapsed = 0;
+        System.out.println("Got here");
+        onSelect1 = false;
+        onSelect2 = false;
+        onEnd = false;
+        onBack = false;
+
+
+
         int position = (int) (Math.random() * 2);
-        System.out.println(position);
         if(position == 0) {
             name1 = "Correct Answer";
             name2 = "Jane Doe";

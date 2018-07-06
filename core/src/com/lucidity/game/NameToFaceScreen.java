@@ -3,6 +3,8 @@ package com.lucidity.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -18,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.logging.FileHandler;
 
 /**
  * Created by lixiaoyan on 7/5/18.
@@ -38,6 +41,7 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
     Sprite spriteOne, spriteTwo;
     SpriteBatch batch;
     BitmapFont font;
+    AssetManager assetManager;
 
     Rectangle answerOne, answerTwo, end, back;
     boolean onEnd, onBack = false;
@@ -72,6 +76,8 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
         back.x = screenWidth * 3 / 4;
 
 
+
+        //Gdx.file.internal()
         String locRoot = Gdx.files.getLocalStoragePath();
         File folder = new File(locRoot);
         File[] listOfFiles = folder.listFiles();
@@ -85,6 +91,9 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
                 }
             }
         }
+
+        assetManager = new AssetManager();
+
         generateTrial();
 
     }
@@ -137,13 +146,12 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
             } else {
                 renderer.setColor(GameTwoConstants.CHOICE_COLOR);
                 Timer.schedule(new Timer.Task() {
-                                   @Override
-                                   public void run() {
-                                       elapsed = 0;
-                                       generateTrial();
-                                   }
-                               },
-                        30/30.0f);
+                           @Override
+                           public void run() {
+                               game.setScreen(new EndScreen(game, score, trial));
+                           }
+                       },
+                30/30.0f);
             }
 
             renderer.rect(end.x, end.y, end.width, end.height);
@@ -156,8 +164,7 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {
-                                       elapsed = 0;
-                                       generateTrial();
+                                       game.setScreen(new ModeScreen(game));
                                    }
                                },
                         30/30.0f);
@@ -174,15 +181,21 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
                 font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
                 batch.end();
                 renderer.setColor(GameTwoConstants.CHOICE_COLOR);
+
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {
-
                                        //TODO: check correctness once can get string
-                                       game.setScreen(new NameToFaceScreen(game, score, trial));
+                                       //TODO: fix the freeze screen error here
+                                       faceOne.dispose();
+                                       faceTwo.dispose();
+                                       spriteOne.getTexture().dispose();
+                                       spriteTwo.getTexture().dispose();
+                                       generateTrial();
+                                       Timer.instance().clear();
                                    }
                                },
-                        30/30.0f);
+                        1);
             }
             renderer.rect(answerOne.x-20, answerOne.y-20, answerOne.width+40, answerOne.height+40);
 
@@ -196,13 +209,19 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
                 final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
                 font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
                 batch.end();
+
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {
-                                       game.setScreen(new NameToFaceScreen(game, score, trial));
+                                       faceOne.dispose();
+                                       faceTwo.dispose();
+                                       spriteOne.getTexture().dispose();
+                                       spriteTwo.getTexture().dispose();
+                                       generateTrial();
+                                       Timer.instance().clear();
                                    }
                                },
-                        30/30.0f);
+                        1);
             }
             renderer.rect(answerTwo.x - 10, answerTwo.y - 20, answerTwo.width+30, answerTwo.height+40);
 
@@ -315,10 +334,10 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
     }
 
     private void generateTrial(){
+        elapsed = 0;
         attribute = "name";
-        answerOne = new Rectangle();
-        answerTwo = new Rectangle();
-
+        selectedTwo = false;
+        selectedOne = false;
 
         //instead of get name first, get name after get file
         //TODO: get correct name
@@ -335,6 +354,8 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
             faceTwo = new Texture(Gdx.files.absolute(file.getPath()));
             faceOne = new Texture(Gdx.files.absolute(validFiles.get((int)(Math.random()*validFiles.size())).getPath()));
         }
+
+        validFiles.add(file);
 
         spriteOne = new Sprite(faceOne);
         spriteTwo = new Sprite(faceTwo);
