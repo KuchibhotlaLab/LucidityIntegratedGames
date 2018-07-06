@@ -57,17 +57,16 @@ public class FaceToNameScreen extends InputAdapter implements Screen {
         answer1.height = answer2.height = screenHeight / 12;
         answer1.width = answer2.width = screenWidth / 2;
         answer1.x = answer2.x = screenWidth / 4;
-        answer1.y = screenHeight / 6;
+        answer1.y = screenHeight / 8;
         answer2.y = answer1.y + answer1.height;
 
-        //TODO: finish end
         end = new Rectangle();
         back = new Rectangle();
-        end.y = back.y = screenHeight/ 16;
-        end.height = back.height = screenHeight / 12;
+        end.height = back.height = screenHeight / 16;
         end.width = back.width = screenWidth / 5;
-        end.x = screenWidth / 4;
-        back.x = screenWidth * 11 / 20;
+        end.y = back.y = screenHeight - end.height - 25;
+        end.x = screenWidth / 2;
+        back.x = screenWidth * 3 / 4;
 
 
         File folder = new File("/");
@@ -199,7 +198,7 @@ public class FaceToNameScreen extends InputAdapter implements Screen {
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {
-                                       //TODO: END SCREEN
+                                       game.setScreen(new EndScreen(game, score, trial));
                                    }
                                },
                         30/30.0f);
@@ -214,8 +213,7 @@ public class FaceToNameScreen extends InputAdapter implements Screen {
                 renderer.setColor(GameTwoConstants.CHOICE_COLOR);
                 Timer.schedule(new Timer.Task() {
                                    @Override
-                                   public void run() {
-                                       game.setScreen(new ModeScreen(game));
+                                   public void run() {game.setScreen(new ModeScreen(game));
                                    }
                                },
                         30/30.0f);
@@ -256,11 +254,28 @@ public class FaceToNameScreen extends InputAdapter implements Screen {
             font.draw(batch, layout_one, fontX_one, fontY_one);
 
 
+            //prints text on submit button
+            font.draw(batch, GameTwoConstants.BACK_TEXT,
+                    (int) (back.x + 0.25 * back.getWidth()),
+                    (int) (back.y + 0.6 * back.getHeight()));
+
+
+
+
+            //prints text on end button
+            font.draw(batch, GameTwoConstants.END_TEXT,
+                    (int) (end.x + 0.3 * end.getWidth()),
+                    (int) (end.y + 0.6 * end.getHeight()));
+
+
             font.draw(batch, GameTwoConstants.SCORE_LABEL + Integer.toString(score),
                     GameTwoConstants.SCORE_CENTER, screenHeight - GameTwoConstants.SCORE_CENTER);
 
+            final GlyphLayout layout_scores = new GlyphLayout(font, GameTwoConstants.SCORE_LABEL);
+
             font.draw(batch, GameTwoConstants.TRIAL_LABEL + Integer.toString(trial),
-                    GameTwoConstants.TRIAL_CENTER, screenHeight - GameTwoConstants.SCORE_CENTER);
+                    GameTwoConstants.SCORE_CENTER,
+                    screenHeight - GameTwoConstants.SCORE_CENTER - layout_scores.height * 1.5f);
 
 
             batch.draw(face, (screenWidth - face.getWidth())/2, (screenHeight - face.getHeight())/2);

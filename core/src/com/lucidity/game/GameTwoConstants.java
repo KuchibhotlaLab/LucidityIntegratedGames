@@ -15,6 +15,12 @@ public class GameTwoConstants {
     public static final float MODE_BUBBLE_RADIUS = MODE_WORLD_SIZE / 5;
     public static final float MODE_LABEL_SCALE = 1.5f;
 
+    public static final String MODE_ONE_FIRST = "Match name";
+    public static final String MODE_ONE_SECOND = "to faces";
+    public static final String MODE_TWO_FIRST = "Match face";
+    public static final String MODE_TWO_SECOND = "to names";
+
+
     public static final Color BACKGROUND_COLOR = new Color(0.97f,0.69f,0.58f, 1);
     public static final Color F2W_COLOR = new Color(0.96f, 0.45f, 0.5f, 1);
     public static final Color W2F_COLOR = new Color(0.75f, 0.42f, 0.52f, 1);
@@ -36,9 +42,8 @@ public class GameTwoConstants {
 
 
     public static final String SCORE_LABEL = "Score: ";
-    public static final int SCORE_CENTER = 70;
+    public static final int SCORE_CENTER = 50;
     public static final String TRIAL_LABEL = "Trial: ";
-    public static final int TRIAL_CENTER = 400;
 
     public static final float ANSWER_SCALE = 2f;
     public static final String CORRECT_MESSAGE = "You are correct!";
@@ -48,5 +53,8 @@ public class GameTwoConstants {
     public static final String PROMPT_TWO = "person in the picture.";
     public static final String PROMPT_THREE = "person whose ";
     public static final String PROMPT_FOUR = "you see on the screen";
+
+    public static final String BACK_TEXT = "Back";
+    public static final String END_TEXT = "End";
 
 }

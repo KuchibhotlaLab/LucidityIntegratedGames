@@ -51,57 +51,43 @@ public class ModeScreen extends InputAdapter implements Screen {
         Gdx.gl.glClearColor(GameTwoConstants.BACKGROUND_COLOR.r, GameTwoConstants.BACKGROUND_COLOR.g, GameTwoConstants.BACKGROUND_COLOR.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if(elapsed < 2){
-            Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        renderer.setProjectionMatrix(viewport.getCamera().combined);
+
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        renderer.setColor(GameTwoConstants.F2W_COLOR);
+        renderer.circle(GameTwoConstants.F2W_CENTER.x, GameTwoConstants.F2W_CENTER.y, GameTwoConstants.MODE_BUBBLE_RADIUS);
+
+        renderer.setColor(GameTwoConstants.W2F_COLOR);
+        renderer.circle(GameTwoConstants.W2F_CENTER.x, GameTwoConstants.W2F_CENTER.y, GameTwoConstants.MODE_BUBBLE_RADIUS);
+        renderer.end();
+
+        batch.setProjectionMatrix(viewport.getCamera().combined);
+
+        batch.begin();
+        font.getData().setScale(1f);
+        font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+        final GlyphLayout mode_one_second = new GlyphLayout(font, GameTwoConstants.MODE_ONE_SECOND);
+        font.draw(batch, GameTwoConstants.MODE_ONE_SECOND, GameTwoConstants.F2W_CENTER.x, GameTwoConstants.F2W_CENTER.y + mode_one_second.height / 3, 0, Align.center, false);
+
+        final GlyphLayout mode_one_first = new GlyphLayout(font, GameTwoConstants.MODE_ONE_FIRST);
+        font.draw(batch, GameTwoConstants.MODE_ONE_FIRST, GameTwoConstants.F2W_CENTER.x,
+                GameTwoConstants.F2W_CENTER.y + mode_one_first.height / 3 + mode_one_second.height, 0, Align.center, false);
 
 
-            batch.begin();
-            font.getData().setScale(GameTwoConstants.TITLE_SCALE);
-            font.setColor(GameTwoConstants.OUTLINE_COLOR);
-
-            final GlyphLayout promptLayout_three = new GlyphLayout(font, GameTwoConstants.TITLE_THREE);
-            font.draw(batch, promptLayout_three, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_three.width) / 2,
-                    GameOneConstants.DIFFICULTY_WORLD_SIZE * 2);
-
-            final GlyphLayout promptLayout_two = new GlyphLayout(font, GameTwoConstants.TITLE_TWO);
-            font.draw(batch, promptLayout_two, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_two.width) * 2 / 3,
-                    GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_three.height);
 
 
-            final GlyphLayout promptLayout_one = new GlyphLayout(font, GameTwoConstants.TITLE_ONE);
-            font.draw(batch, promptLayout_one, (GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_one.width) * 5 / 4,
-                    GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_two.height + 1.5f * promptLayout_three.height);
+        final GlyphLayout mode_two_second = new GlyphLayout(font, GameTwoConstants.MODE_TWO_SECOND);
+        font.draw(batch, GameTwoConstants.MODE_TWO_SECOND, GameTwoConstants.W2F_CENTER.x, GameTwoConstants.W2F_CENTER.y + mode_two_second.height / 3, 0, Align.center, false);
 
 
+        final GlyphLayout mode_two_first = new GlyphLayout(font, GameTwoConstants.MODE_TWO_FIRST);
+        font.draw(batch, GameTwoConstants.MODE_TWO_FIRST, GameTwoConstants.W2F_CENTER.x,
+                GameTwoConstants.W2F_CENTER.y + mode_two_first.height / 3 + mode_two_second.height, 0, Align.center, false);
 
-            batch.end();
-        } else {
 
-            renderer.setProjectionMatrix(viewport.getCamera().combined);
-
-            renderer.begin(ShapeRenderer.ShapeType.Filled);
-
-            renderer.setColor(GameTwoConstants.F2W_COLOR);
-            renderer.circle(GameTwoConstants.F2W_CENTER.x, GameTwoConstants.F2W_CENTER.y, GameTwoConstants.MODE_BUBBLE_RADIUS);
-
-            renderer.setColor(GameTwoConstants.W2F_COLOR);
-            renderer.circle(GameTwoConstants.W2F_CENTER.x, GameTwoConstants.W2F_CENTER.y, GameTwoConstants.MODE_BUBBLE_RADIUS);
-            renderer.end();
-
-            batch.setProjectionMatrix(viewport.getCamera().combined);
-
-            batch.begin();
-            font.getData().setScale(1f);
-            font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-            final GlyphLayout easyLayout = new GlyphLayout(font, GameOneConstants.EASY_LABEL);
-            font.draw(batch, GameOneConstants.EASY_LABEL, GameTwoConstants.F2W_CENTER.x, GameTwoConstants.F2W_CENTER.y + easyLayout.height / 2, 0, Align.center, false);
-
-            final GlyphLayout mediumLayout = new GlyphLayout(font, GameOneConstants.MEDIUM_LABEL);
-            font.draw(batch, GameOneConstants.MEDIUM_LABEL, GameTwoConstants.W2F_CENTER.x, GameTwoConstants.W2F_CENTER.y + mediumLayout.height / 2, 0, Align.center, false);
-
-            batch.end();
-        }
+        batch.end();
     }
 
     @Override

@@ -9,10 +9,10 @@ import com.badlogic.gdx.Game;
 public class FacialMemoryGame extends Game {
     @Override
     public void create() {
-        showModeScreen();
+        showLoadingScreen();
     }
 
-    public void showModeScreen() {
-        setScreen(new ModeScreen(this));
+    public void showLoadingScreen() {
+        setScreen(new FacialLoadingScreen(this));
     }
 }
