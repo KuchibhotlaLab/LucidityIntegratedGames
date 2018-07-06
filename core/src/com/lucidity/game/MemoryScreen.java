@@ -73,13 +73,14 @@ public class MemoryScreen extends InputAdapter implements Screen {
     //to store reaction time of each trial
     private boolean timerStart;
     private long trialStartTime;
+    private int[] trialSuccess;
     private double[] trialTime;
 
     private float elapsed;
     private boolean disableTouchDown=true;
     //cheap temporary fix
 
-    public MemoryScreen(WorkingMemoryGame game, GameOneConstants.Difficulty difficulty, int points, int trials, double[] trialTimes) {
+    public MemoryScreen(WorkingMemoryGame game, GameOneConstants.Difficulty difficulty, int points, int trials) {
         this.game = game;
 
         this.difficulty = difficulty;
@@ -95,7 +96,8 @@ public class MemoryScreen extends InputAdapter implements Screen {
         }
 
         timerStart = true;
-        trialTime = trialTimes;
+        trialTime = new double[5];
+        trialSuccess = new int[5];
 
         //changed for portrait
         screenWidth = Gdx.graphics.getWidth();
@@ -213,9 +215,9 @@ public class MemoryScreen extends InputAdapter implements Screen {
             if (elapsed > 6 && timerStart){
                 trialStartTime = TimeUtils.nanoTime();
                 timerStart = false;
+                disableTouchDown = false;
             }
 
-            disableTouchDown = false;
             Gdx.gl.glClearColor(BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -235,7 +237,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
             }
 
 
-                //change the color of the submit button when it is pressed
+            //change the color of the submit button when it is pressed
             if (onSubmit) {
                 renderer.setColor(Color.valueOf("#9FEDD7"));
 
@@ -267,16 +269,16 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
             //draw the outline of the blocks
             renderer.begin(ShapeRenderer.ShapeType.Line);
-                for (int i = 0; i < blocksHorizontal; i++) {
-                    for (int j = 0; j < blocksVertical; j++) {
-                        if (selected[i][j] == 1) {
-                            renderer.setColor(Color.valueOf("#026670"));
-                        } else {
-                            renderer.setColor(Color.valueOf("#9FEDD7"));
-                        }
-                        renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
+            for (int i = 0; i < blocksHorizontal; i++) {
+                for (int j = 0; j < blocksVertical; j++) {
+                    if (selected[i][j] == 1) {
+                        renderer.setColor(Color.valueOf("#026670"));
+                    } else {
+                        renderer.setColor(Color.valueOf("#9FEDD7"));
                     }
+                    renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                 }
+            }
 
             renderer.end();
 
@@ -285,7 +287,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
             batch.begin();
             font.getData().setScale(GameOneConstants.LABEL_SCALE);
             //font.setColor(Color.valueOf("#9FEDD7"));
-            font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
+            font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 
             //prints text on submit button
@@ -301,6 +303,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
                     (int) (btnEnd.x + 0.4 * btnEnd.getWidth()),
                     (int) (btnEnd.y + 0.6 * btnEnd.getHeight()));
 
+            font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 
             //prints the correct/incorrect message when the person clicks submit
             //TODO: FIGURE OUT THE CORRECT WAY TO DO THIS PREFERABLY USING PAUSE
@@ -321,14 +324,13 @@ public class MemoryScreen extends InputAdapter implements Screen {
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {
-                                       elapsed = 0;
                                        trial++;
                                        correct=false;
                                        suppressed=false;
                                        generateTrial(difficulty);
                                    }
                                },
-                        30/30.0f);
+                        1);
             } else if (!correct && onSubmit && !suppressed) {
                 selected = new int[blocksHorizontal][blocksVertical];
                 final GlyphLayout promptLayout = new GlyphLayout(font, GameOneConstants.INCORRECT_MESSAGE);
@@ -380,6 +382,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
                     //Save time in seconds
                     if(trial <= 5) {
                         trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
+                        trialSuccess[trial - 1] = attemps + 1;
                         System.out.println(trialTime[trial - 1]);
                     }
                     correct = true;
@@ -387,12 +390,27 @@ public class MemoryScreen extends InputAdapter implements Screen {
                     attemps++;
                     if (attemps >= 3) {
                         //Save time in seconds
-                        if (trial < 5) {
+                        if (trial <= 5) {
                             trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
+                            trialSuccess[trial - 1] = attemps + 1;
                             System.out.println(trialTime[trial - 1]);
                         }
-                        ++trial;
-                        game.setScreen(new MemoryScreen(game, difficulty, score, trial, trialTime));
+
+                        disableTouchDown = true;
+                        if(trial == 5){
+                            postScore();
+                            game.setScreen(new EndScreen(game, score, trial));
+                        }
+                        Timer.schedule(new Timer.Task() {
+                                           @Override
+                                           public void run() {
+                                               trial++;
+                                               correct=false;
+                                               suppressed=false;
+                                               generateTrial(difficulty);
+                                           }
+                                       },
+                                1);
                     }
                 }
             } else {
@@ -412,6 +430,10 @@ public class MemoryScreen extends InputAdapter implements Screen {
     private void generateTrial(GameOneConstants.Difficulty difficulty){
         int blocks;
         int predicted = 0;
+        elapsed = 0;
+        timerStart = true;
+        toRemember = new int[blocksHorizontal][blocksVertical];
+        attemps = 0;
         if(this.difficulty.label.equals("Easy")){
             blocks = 1;
         } else if(this.difficulty.label.equals("Medium")){
@@ -450,11 +472,14 @@ public class MemoryScreen extends InputAdapter implements Screen {
         //set parameters
         Map<String, String> json = new HashMap<String, String>();
         json.put("username", game.getUsername());
+        json.put("difficulty", difficulty.label);
         json.put("score", String.valueOf(score));
         for (int i = 0; i < trial; i++) {
             String trialNum = "trial" + (i+1);
-            json.put(trialNum, String.valueOf(trialTime[i]));
-    }
+            json.put(trialNum, String.valueOf(trialSuccess[i]));
+            json.put(trialNum + "time", String.valueOf(trialTime[i]));
+        }
+
         httpPost.setContent(HttpParametersUtils.convertHttpParameters(json));
 
         //Send JSON and Look for response

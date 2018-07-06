@@ -19,7 +19,9 @@ import java.io.File;
  * Created by lixiaoyan on 7/3/18.
  */
 
-public class FaceToNameScreen extends InputAdapter implements Screen {
+public class
+
+FaceToNameScreen extends InputAdapter implements Screen {
     private FacialMemoryGame game;
 
     ExtendViewport viewport;
