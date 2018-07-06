@@ -109,6 +109,7 @@ public class EndScreen extends InputAdapter implements Screen {
         batch.begin();
         font.getData().setScale(4f);
         final GlyphLayout promptLayout = new GlyphLayout(font, "Your score is " + Integer.toString(score) + "/" + Integer.toString(trial));
+        font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
         font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2,
                 screenHeight / 2);
         batch.end();
