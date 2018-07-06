@@ -5,6 +5,7 @@ package com.lucidity.game;
  */
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,22 +14,22 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.net.HttpParametersUtils;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.async.AsyncTask;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 //import com.sun.tools.internal.jxc.ap.Const;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import sun.rmi.runtime.Log;
 
@@ -326,6 +327,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
                 suppressed = true;
                 disableTouchDown = true;
                 if(trial == 5){
+                    postScore();
                     game.setScreen(new EndScreen(game, score, trial));
                 }
                 //TODO: fix this?
@@ -436,5 +438,39 @@ public class MemoryScreen extends InputAdapter implements Screen {
                 toRemember[on/blocksVertical%blocksHorizontal][on%blocksVertical] = 1;
             }
         }
+    }
+
+    //Posts score and stats to MySQL database
+    private void postScore(){
+        Net.HttpRequest httpPost = new Net.HttpRequest(Net.HttpMethods.POST);
+        httpPost.setUrl("http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_blockgame_score.php");
+
+        //set parameters
+        Map<String, String> json = new HashMap<String, String>();
+        json.put("username", game.getUsername());
+        json.put("score", String.valueOf(score));
+        for (int i = 0; i < trial; i++) {
+            String trialNum = "trial" + (i+1);
+            json.put(trialNum, String.valueOf(trialTime[i]));
+    }
+        httpPost.setContent(HttpParametersUtils.convertHttpParameters(json));
+
+        //Send JSON and Look for response
+        Gdx.net.sendHttpRequest (httpPost, new Net.HttpResponseListener() {
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                String status = httpResponse.getResultAsString().trim();
+                HashMap<String,String> map = new Gson().fromJson(status, new TypeToken<HashMap<String, String>>(){}.getType());
+                System.out.println(map);
+            }
+
+            public void failed(Throwable t) {
+                String status = "failed";
+            }
+
+            @Override
+            public void cancelled() {
+
+            }
+        });
     }
 }
