@@ -150,18 +150,6 @@ public class MemoryScreen extends InputAdapter implements Screen {
         Gdx.input.setInputProcessor(this);
 
 
-        //flashes randomly generated pattern for a certain period of time
-        selected = toRemember;
-        Timer.schedule(new Timer.Task() {
-                           @Override
-                           public void run() {
-                               selected = new int[blocksHorizontal][blocksVertical];
-                           }
-                       },
-                4);
-        //30 / 30.0f
-
-
     }
 
 
@@ -183,7 +171,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
         elapsed += delta;
 
-        if(elapsed > 0 && elapsed < 1) {
+        if(elapsed > 0 && elapsed < 2) {
             Gdx.gl.glClearColor(1, 1, 1, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -330,12 +318,14 @@ public class MemoryScreen extends InputAdapter implements Screen {
                     postScore();
                     game.setScreen(new EndScreen(game, score, trial));
                 }
-                //TODO: fix this?
-                trial++;
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {
-                                       game.setScreen(new MemoryScreen(game, difficulty, score, trial, trialTime));
+                                       elapsed = 0;
+                                       trial++;
+                                       correct=false;
+                                       suppressed=false;
+                                       generateTrial(difficulty);
                                    }
                                },
                         30/30.0f);
@@ -441,6 +431,18 @@ public class MemoryScreen extends InputAdapter implements Screen {
                 toRemember[on/blocksVertical%blocksHorizontal][on%blocksVertical] = 1;
             }
         }
+
+
+        //flashes randomly generated pattern for a certain period of time
+        selected = toRemember;
+        Timer.schedule(new Timer.Task() {
+                           @Override
+                           public void run() {
+                               selected = new int[blocksHorizontal][blocksVertical];
+                           }
+                       },
+                4);
+        //30 / 30.0f
     }
 
     //Posts score and stats to MySQL database
