@@ -225,9 +225,9 @@ public class MemoryScreen extends InputAdapter implements Screen {
             if (elapsed > 6 && timerStart){
                 trialStartTime = TimeUtils.nanoTime();
                 timerStart = false;
+                disableTouchDown = false;
             }
 
-            disableTouchDown = false;
             Gdx.gl.glClearColor(BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -400,6 +400,9 @@ public class MemoryScreen extends InputAdapter implements Screen {
                         if (trial < 5) {
                             trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
                             System.out.println(trialTime[trial - 1]);
+                        } else if(trial == 5){
+                            postScore();
+                            game.setScreen(new EndScreen(game, score, trial));
                         }
                         ++trial;
                         game.setScreen(new MemoryScreen(game, difficulty, score, trial, trialTime));
