@@ -33,7 +33,10 @@ public class HomePageActivity extends AppCompatActivity {
         btnGame.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 //startActivity(new Intent(getBaseContext(), AndroidLauncher.class));
-                startActivity(new Intent(getBaseContext(), PersonDependentGameLauncher.class));
+                Intent i = new Intent(getBaseContext(), PersonDependentGameLauncher.class);
+                i.putExtra("username", username);
+                startActivity(i);
+
             }
         });
     }

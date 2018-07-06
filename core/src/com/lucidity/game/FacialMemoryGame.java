@@ -7,6 +7,12 @@ import com.badlogic.gdx.Game;
  */
 
 public class FacialMemoryGame extends Game {
+    private String username;
+
+    public FacialMemoryGame(String uname){
+        username = uname;
+    }
+
     @Override
     public void create() {
         showLoadingScreen();
@@ -14,5 +20,9 @@ public class FacialMemoryGame extends Game {
 
     public void showLoadingScreen() {
         setScreen(new FacialLoadingScreen(this));
+    }
+
+    public String getUsername() {
+        return username;
     }
 }
