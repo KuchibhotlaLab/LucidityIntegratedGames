@@ -3,6 +3,7 @@ package com.lucidity.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -15,6 +16,9 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.logging.FileHandler;
+
 /**
  * Created by lixiaoyan on 7/3/18.
  */
@@ -37,7 +41,9 @@ FaceToNameScreen extends InputAdapter implements Screen {
     boolean onEnd, onBack = false;
     String name1, name2;
     String correct;
+    String username;
 
+    ArrayList<File> validFiles;
     Texture face;
     SpriteBatch batch;
     BitmapFont font;
@@ -69,10 +75,22 @@ FaceToNameScreen extends InputAdapter implements Screen {
         back.x = screenWidth * 3 / 4;
 
 
-        File folder = new File("/");
-        File[] listOfFiles = folder.listFiles();
 
-        face = new Texture(Gdx.files.internal("test.jpg"));
+
+        String locRoot = "data/user/0/com.lucidity.game/app_imageDir/" + username;
+        File folder = new File(locRoot);
+        File[] listOfFiles = folder.listFiles();
+        validFiles = new ArrayList<File>();
+        for(File file : listOfFiles){
+            if(file.isFile()){
+                System.out.println(file.getPath());
+                if("jpg".equals(file.getName().substring(file.getName().length()-3, file.getName().length())) ||
+                        "png".equals(file.getName().substring(file.getName().length()-3, file.getName().length()))){
+                    validFiles.add(file);
+                }
+            }
+        }
+
         batch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular.fnt"), false);
 
@@ -354,6 +372,11 @@ FaceToNameScreen extends InputAdapter implements Screen {
         onSelect2 = false;
         onEnd = false;
         onBack = false;
+
+        int picture = (int) (Math.random() * validFiles.size());
+        face = new Texture(Gdx.files.absolute(validFiles.get(picture).getPath()));
+
+        /*face = new Texture(Gdx.files.internal("test.jpg"));*/
 
 
 

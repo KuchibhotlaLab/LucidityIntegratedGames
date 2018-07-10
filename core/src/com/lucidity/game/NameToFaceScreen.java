@@ -41,17 +41,21 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
     Sprite spriteOne, spriteTwo;
     SpriteBatch batch;
     BitmapFont font;
-    AssetManager assetManager;
 
     Rectangle answerOne, answerTwo, end, back;
     boolean onEnd, onBack = false;
     boolean selectedOne, selectedTwo = false;
     ArrayList<File> validFiles;
+    //ArrayList<FileHandle> validFiles;
 
     String name;
     String attribute;
+    String username;
 
     float elapsed = 0;
+    //cheap fix
+    boolean delayOn= false;
+    float delayed = -10000;
 
     public NameToFaceScreen(FacialMemoryGame game, int points, int trials) {
         this.game = game;
@@ -76,9 +80,24 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
         back.x = screenWidth * 3 / 4;
 
 
+        username = game.getUsername();
+        //data/data/com.lucidity.game/app_imageDir/username
+        //data/user/0/com.lucidity.game/app_imageDir/Coco
+        //data/user/0/com.lucidity.game/files -> local storage path
+        //Gdx.file.local()
+        /*System.out.println(Gdx.files.getLocalStoragePath());
+        String locRoot = "../app_imageDir/" + username;
+        FileHandle [] listOfFiles;
+        listOfFiles=Gdx.files.internal(locRoot).list();
+        for(FileHandle file : listOfFiles){
+            System.out.println(file.name());
+            if("jpg".equals(file.extension()) || "png".equals(file.extension())){
+                validFiles.add(file);
+            }
+        }*/
 
-        //Gdx.file.internal()
-        String locRoot = Gdx.files.getLocalStoragePath();
+        /*String locRoot = Gdx.files.getLocalStoragePath();*/
+        String locRoot = "data/user/0/com.lucidity.game/app_imageDir/" + username;
         File folder = new File(locRoot);
         File[] listOfFiles = folder.listFiles();
         validFiles = new ArrayList<File>();
@@ -91,8 +110,6 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
                 }
             }
         }
-
-        assetManager = new AssetManager();
 
         generateTrial();
 
@@ -181,21 +198,11 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
                 font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
                 batch.end();
                 renderer.setColor(GameTwoConstants.CHOICE_COLOR);
+                if(!delayOn){
+                    delayOn = true;
+                    delayed = elapsed;
+                }
 
-                Timer.schedule(new Timer.Task() {
-                                   @Override
-                                   public void run() {
-                                       //TODO: check correctness once can get string
-                                       //TODO: fix the freeze screen error here
-                                       faceOne.dispose();
-                                       faceTwo.dispose();
-                                       spriteOne.getTexture().dispose();
-                                       spriteTwo.getTexture().dispose();
-                                       generateTrial();
-                                       Timer.instance().clear();
-                                   }
-                               },
-                        1);
             }
             renderer.rect(answerOne.x-20, answerOne.y-20, answerOne.width+40, answerOne.height+40);
 
@@ -210,29 +217,28 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
                 font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
                 batch.end();
 
-                Timer.schedule(new Timer.Task() {
-                                   @Override
-                                   public void run() {
-                                       faceOne.dispose();
-                                       faceTwo.dispose();
-                                       spriteOne.getTexture().dispose();
-                                       spriteTwo.getTexture().dispose();
-                                       generateTrial();
-                                       Timer.instance().clear();
-                                   }
-                               },
-                        1);
+                if(!delayOn){
+                    delayOn = true;
+                    delayed = elapsed;
+                }
             }
-            renderer.rect(answerTwo.x - 10, answerTwo.y - 20, answerTwo.width+30, answerTwo.height+40);
+            renderer.rect(answerTwo.x - 20, answerTwo.y - 20, answerTwo.width+40, answerTwo.height+40);
 
 
             renderer.end();
 
+
+            if(elapsed - delayed >= 1f && delayOn) {
+                generateTrial();
+            }
+
+
+
             renderer.begin(ShapeRenderer.ShapeType.Line);
 
             renderer.setColor(GameTwoConstants.OUTLINE_COLOR);
-            renderer.rect(answerOne.x-20, answerOne.y-20, answerOne.width+30, answerOne.height+40);
-            renderer.rect(answerTwo.x - 10, answerTwo.y - 20, answerTwo.width+30, answerTwo.height+40);
+            renderer.rect(answerOne.x-20, answerOne.y-20, answerOne.width+40, answerOne.height+40);
+            renderer.rect(answerTwo.x - 20, answerTwo.y - 20, answerTwo.width+40, answerTwo.height+40);
 
             renderer.rect(end.x, end.y, end.width, end.height);
             renderer.rect(back.x, back.y, back.width, back.height);
@@ -333,26 +339,44 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
         return true;
     }
 
-    private void generateTrial(){
+    private void generateTrial() {
         elapsed = 0;
+        delayed = -10000;
+        name = "Jane Doe";
         attribute = "name";
+        delayOn = false;
         selectedTwo = false;
         selectedOne = false;
 
         //instead of get name first, get name after get file
         //TODO: get correct name
         name = "Jane Doe";
-        int position = (int)(Math.random()*validFiles.size());
-        int correct = (int)(Math.random() * 2);
+        int position = (int) (Math.random() * validFiles.size());
+        int correct = (int) (Math.random() * 2);
+
+        /*FileHandle file = validFiles.get(position);
+        validFiles.remove(file);
+
+        if (correct == 0) {
+            faceOne = new Texture(file);
+            faceTwo = new Texture(validFiles.get((int) (Math.random() * validFiles.size())));
+        } else {
+
+            faceTwo = new Texture(file);
+            faceOne = new Texture(validFiles.get((int) (Math.random() * validFiles.size())));
+        }
+
+        validFiles.add(file);*/
+
         File file = validFiles.get(position);
         validFiles.remove(file);
-        if(correct == 0){
+        if (correct == 0) {
             faceOne = new Texture(Gdx.files.absolute(file.getPath()));
-            faceTwo = new Texture(Gdx.files.absolute(validFiles.get((int)(Math.random()*validFiles.size())).getPath()));
+            faceTwo = new Texture(Gdx.files.absolute(validFiles.get((int) (Math.random() * validFiles.size())).getPath()));
         } else {
 
             faceTwo = new Texture(Gdx.files.absolute(file.getPath()));
-            faceOne = new Texture(Gdx.files.absolute(validFiles.get((int)(Math.random()*validFiles.size())).getPath()));
+            faceOne = new Texture(Gdx.files.absolute(validFiles.get((int) (Math.random() * validFiles.size())).getPath()));
         }
 
         validFiles.add(file);
@@ -360,17 +384,14 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
         spriteOne = new Sprite(faceOne);
         spriteTwo = new Sprite(faceTwo);
 
+        int interval = screenWidth/10;
 
-        answerOne.x = (screenWidth - spriteOne.getWidth()/6)/18;
-        answerOne.y = (screenHeight - spriteOne.getHeight()/6)/2;
-        answerOne.width = spriteOne.getWidth()/6;
-        answerOne.height = spriteOne.getHeight()/6;
+        answerOne.width = answerTwo.width = (screenWidth - interval) / 2;
+        answerOne.height = answerTwo.height = screenHeight * 3 / 8;
+        answerOne.y = answerTwo.y = screenHeight / 3;
+        answerOne.x = interval/4;
 
-        answerTwo.x = (screenWidth - spriteTwo.getWidth()/6) * 17 / 18;
-        answerTwo.y = (screenHeight - spriteTwo.getHeight()/6)/2;
-        answerTwo.width = spriteTwo.getWidth()/6;
-        answerTwo.height = spriteTwo.getHeight()/6;
-
+        answerTwo.x = answerOne.getWidth() + interval*3/4;
     }
 
 }

@@ -56,5 +56,4 @@ public class GameTwoConstants {
 
     public static final String BACK_TEXT = "Back";
     public static final String END_TEXT = "End";
-
 }
