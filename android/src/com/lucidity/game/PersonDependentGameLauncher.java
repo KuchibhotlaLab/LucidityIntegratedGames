@@ -17,9 +17,18 @@ public class PersonDependentGameLauncher extends AndroidApplication {
 
     private String username;
 
+    // JSON parser class
+    JSONParser jsonParser = new JSONParser();
+
+    // JSON Node names
+    private static final String TAG_SUCCESS = "success";
+    private static final String TAG_MESSAGE = "message";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //ask permission to access local files
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //Gets the username passed from previous activity
             Bundle extras = getIntent().getExtras();

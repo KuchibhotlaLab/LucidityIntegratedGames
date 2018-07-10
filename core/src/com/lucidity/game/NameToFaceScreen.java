@@ -54,6 +54,7 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
 
     float elapsed = 0;
     //cheap fix
+    //TODO: figure out how to properly time
     boolean delayOn= false;
     float delayed = -10000;
 
@@ -97,6 +98,8 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
         }*/
 
         /*String locRoot = Gdx.files.getLocalStoragePath();*/
+
+        //TODO: create interface for this
         String locRoot = "data/user/0/com.lucidity.game/app_imageDir/" + username;
         File folder = new File(locRoot);
         File[] listOfFiles = folder.listFiles();
@@ -229,6 +232,7 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
 
 
             if(elapsed - delayed >= 1f && delayOn) {
+                ++trial;
                 generateTrial();
             }
 

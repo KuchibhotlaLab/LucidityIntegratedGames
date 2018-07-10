@@ -24,7 +24,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     //Stores the username of the user
     private String username;
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         Button btnGame = findViewById(R.id.lucid);
         btnGame.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
+                Intent i = new Intent(getBaseContext(), PersonDependentGameLauncher.class);
                 i.putExtra("username", username);
                 startActivity(i);
             }
