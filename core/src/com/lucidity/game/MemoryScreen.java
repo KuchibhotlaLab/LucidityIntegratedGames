@@ -72,9 +72,11 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
     //to store reaction time of each trial
     private boolean timerStart;
-    private long trialStartTime;
+    private boolean pauseTimerEnd;
+    private long attemptStartTime;
+    private long pauseStartTime;
     private int[] trialSuccess;
-    private double[] trialTime;
+    private double[][] attemptTime;
 
     private float elapsed;
     private boolean disableTouchDown=true;
@@ -96,7 +98,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
         }
 
         timerStart = true;
-        trialTime = new double[5];
+        attemptTime = new double[5][3];
         trialSuccess = new int[5];
 
         //changed for portrait
@@ -211,9 +213,14 @@ public class MemoryScreen extends InputAdapter implements Screen {
             batch.end();
 
         } else {
+            if (TimeUtils.nanoTime() - pauseStartTime > 1000000000.0 && pauseTimerEnd) {
+                timerStart = true;
+                pauseTimerEnd = false;
+            }
+
             //Start timer
             if (elapsed > 6 && timerStart){
-                trialStartTime = TimeUtils.nanoTime();
+                attemptStartTime = TimeUtils.nanoTime();
                 timerStart = false;
                 disableTouchDown = false;
             }
@@ -378,25 +385,24 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
             if (btnSubmit.contains(screenX, screenHeight - screenY)) {
                 onSubmit = true;
+
+                //Save time in seconds
+                if(trial <= 5) {
+                    attemptTime[trial - 1][attemps] = (TimeUtils.nanoTime() - attemptStartTime) / 1000000000.0;
+                    trialSuccess[trial - 1] = attemps + 1;
+                    System.out.println(attemptTime[trial - 1][attemps]);
+                }
+
                 if (Arrays.deepEquals(selected, toRemember)) {
-                    //Save time in seconds
-                    if(trial <= 5) {
-                        trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
-                        trialSuccess[trial - 1] = attemps + 1;
-                        System.out.println(trialTime[trial - 1]);
-                    }
                     correct = true;
                 } else {
                     attemps++;
+                    disableTouchDown = true;
+                    pauseStartTime = TimeUtils.nanoTime();
+                    pauseTimerEnd = true;
                     if (attemps >= 3) {
+                        trialSuccess[trial - 1] = attemps + 1;
                         //Save time in seconds
-                        if (trial <= 5) {
-                            trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
-                            trialSuccess[trial - 1] = attemps + 1;
-                            System.out.println(trialTime[trial - 1]);
-                        }
-
-                        disableTouchDown = true;
                         if(trial == 5){
                             postScore();
                             game.setScreen(new EndScreen(game, score, trial));
@@ -477,7 +483,11 @@ public class MemoryScreen extends InputAdapter implements Screen {
         for (int i = 0; i < trial; i++) {
             String trialNum = "trial" + (i+1);
             json.put(trialNum, String.valueOf(trialSuccess[i]));
-            json.put(trialNum + "time", String.valueOf(trialTime[i]));
+            for (int j = 0; j < 3; j++) {
+                json.put(trialNum + "-" + (j + 1) + "time", String.valueOf(attemptTime[i][j]));
+                System.out.println(trialNum + "-" + (j + 1) + "time");
+                System.out.println(String.valueOf(attemptTime[i][j]));
+            }
         }
 
         httpPost.setContent(HttpParametersUtils.convertHttpParameters(json));
