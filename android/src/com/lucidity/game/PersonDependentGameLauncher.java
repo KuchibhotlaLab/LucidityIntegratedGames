@@ -36,11 +36,12 @@ import java.util.concurrent.TimeoutException;
 
 public class PersonDependentGameLauncher extends AndroidApplication {
     final int WRITE_REQUEST_CODE = 1;
+    final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
     String coordinates = " ";
 
     private LocationManager locationManager;
-    private LocationListener locationListener = new myLocationListener();
+    private LocationListener locationListener;
 
     private boolean gps_enabled = false;
     private boolean network_enabled = false;
@@ -86,6 +87,11 @@ public class PersonDependentGameLauncher extends AndroidApplication {
             if (this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 this.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_REQUEST_CODE);
             }
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+
 
             picturesForGame = new ArrayList<>();
             tagsForGame = new ArrayList<>();
@@ -102,6 +108,8 @@ public class PersonDependentGameLauncher extends AndroidApplication {
             } catch (TimeoutException e) {
                 e.printStackTrace();
             }
+
+            locationListener = new myLocationListener();
 
             getLocation();
 
@@ -180,7 +188,6 @@ public class PersonDependentGameLauncher extends AndroidApplication {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            System.out.println("Not enough permission");
         }
 
         if (gps_enabled) {
