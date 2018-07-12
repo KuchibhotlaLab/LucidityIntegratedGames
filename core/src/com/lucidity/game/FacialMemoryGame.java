@@ -35,7 +35,7 @@ public class FacialMemoryGame extends Game {
     }
 
     public void showLoadingScreen() {
-        setScreen(new FacialLoadingScreen(this));
+        setScreen(new LoadingScreen(this));
     }
 
     public String getUsername() {

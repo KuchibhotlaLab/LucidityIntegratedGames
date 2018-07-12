@@ -13,8 +13,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
  * Created by lixiaoyan on 7/6/18.
  */
 
-public class FacialLoadingScreen implements Screen {
-    private FacialMemoryGame game;
+public class LoadingScreen implements Screen {
+    private FacialMemoryGame FacMemGame;
+    private ObjectRecognitionGame ObjRecGame;
 
     ShapeRenderer renderer;
     SpriteBatch batch;
@@ -23,9 +24,11 @@ public class FacialLoadingScreen implements Screen {
     BitmapFont font;
     float elapsed;
 
-    public FacialLoadingScreen(FacialMemoryGame game) {
-        this.game = game;
+    public LoadingScreen(FacialMemoryGame game) {
+        this.FacMemGame = game;
     }
+    public LoadingScreen(ObjectRecognitionGame game) {this.ObjRecGame = game;}
+
     @Override
     public void show() {
         renderer = new ShapeRenderer();
@@ -68,7 +71,7 @@ public class FacialLoadingScreen implements Screen {
 
             batch.end();
         } else {
-            game.setScreen(new ModeScreen(game));
+            FacMemGame.setScreen(new ModeScreen(FacMemGame));
         }
     }
 
