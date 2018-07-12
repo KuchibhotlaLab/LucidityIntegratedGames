@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity{
     // url to check caregiver password
     private static String url_verify_carepass = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/verify_carepass.php";
 
-    // url to add a user
+    // url to get a user's name
     private static String url_get_name = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/get_name.php";
 
     // JSON Node names
