@@ -482,6 +482,15 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
         //set parameters
         Map<String, String> json = new HashMap<String, String>();
         json.put("username", game.getUsername());
+        json.put("time", game.getDateTime());
+        json.put("location", game.getLocation());
+        if(game.getLucid()){
+            json.put("menu", "Lucid");
+        } else if (game.getPatient()) {
+            json.put("menu", "Patient");
+        } else if (game.getCare()) {
+            json.put("menu", "CareGiver");
+        }
         json.put("score", String.valueOf(score));
         for (int i = 0; i < trial; i++) {
             String trialNum = "trial" + (i+1);

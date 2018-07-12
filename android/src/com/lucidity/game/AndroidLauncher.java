@@ -37,8 +37,6 @@ public class AndroidLauncher extends AndroidApplication {
     private boolean gps_enabled = false;
     private boolean network_enabled = false;
 
-
-
     @Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

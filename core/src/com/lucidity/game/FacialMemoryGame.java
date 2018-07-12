@@ -26,7 +26,6 @@ public class FacialMemoryGame extends Game {
         isCare = care;
         dateTime = date;
         coordinates = location;
-
     }
 
     @Override
@@ -50,5 +49,5 @@ public class FacialMemoryGame extends Game {
     public boolean getPatient(){return isPatient;}
     public boolean getCare(){return isCare;}
     public String getDateTime(){return dateTime;}
-    private String getLocations(){return coordinates;}
+    public String getLocation(){return coordinates;}
 }

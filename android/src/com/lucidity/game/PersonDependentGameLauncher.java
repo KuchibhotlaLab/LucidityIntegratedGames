@@ -2,6 +2,7 @@ package com.lucidity.game;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -110,7 +111,7 @@ public class PersonDependentGameLauncher extends AndroidApplication {
             }
 
             locationListener = new myLocationListener();
-
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             getLocation();
 
             AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
