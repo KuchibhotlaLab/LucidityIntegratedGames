@@ -4,9 +4,12 @@ import com.badlogic.gdx.Game;
 
 public class WorkingMemoryGame extends Game {
     private String username;
+    private String currentDateTime;
 
-    public WorkingMemoryGame(String uname){
-        username = uname;
+    public WorkingMemoryGame(String uname, String date){
+
+    	username = uname;
+    	currentDateTime = date;
     }
 
 	@Override
@@ -25,4 +28,5 @@ public class WorkingMemoryGame extends Game {
     public String getUsername() {
         return username;
     }
+    public String getDate() {return currentDateTime;}
 }

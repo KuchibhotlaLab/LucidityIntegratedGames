@@ -37,12 +37,16 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
     ShapeRenderer renderer;
 
+    String username;
+    ArrayList<String> imgNames;
+    ArrayList<ArrayList<String>> imgTags;
+
     Rectangle answer1, answer2, end, back;
     boolean onSelect1, onSelect2 = false;
     boolean onEnd, onBack = false;
     String name1, name2;
     String correct;
-    String username;
+
 
     ArrayList<File> validFiles;
     Texture face;
@@ -82,6 +86,8 @@ FaceToNameScreen extends InputAdapter implements Screen {
         back.x = screenWidth * 3 / 4;
 
 
+        imgNames = game.getPicturenames();
+        imgTags = game.getPicturetags();
         username = game.getUsername();
 
 
@@ -200,78 +206,28 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
             renderer.end();
 
+            batch.begin();
+            font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
 
-            if(onSelect1 && correct.equals(name1)){
-                batch.begin();
-                font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
-                final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
-                font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
-                batch.end();
-                /*Timer.schedule(new Timer.Task() {
-                                   @Override
-                                   public void run() {
-                                       ++score;
-                                       ++trial;
-                                       generateTrial();
-                                       Timer.instance().clear();
-                                   }
-                               },
-                        1);*/
-
-            } else if(onSelect1 && !correct.equals(name1)) {
-                batch.begin();
-                font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
-                final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
-                font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
-                batch.end();
-                /*Timer.schedule(new Timer.Task() {
-                                   @Override
-                                   public void run() {
-                                       ++trial;
-                                       generateTrial();
-                                       Timer.instance().clear();
-                                   }
-                               },
-                        1);*/
-
+            if(onSelect1){
+                if(correct.equals(name1)){
+                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
+                } else {
+                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
+                }
+            } else if (onSelect2) {
+                if(correct.equals(name2)){
+                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
+                } else {
+                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
+                }
             }
 
-
-
-            if(onSelect2 && correct.equals(name2)){
-                batch.begin();
-                font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
-                final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
-                font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
-                batch.end();
-                /*Timer.schedule(new Timer.Task() {
-                                   @Override
-                                   public void run() {
-                                       ++score;
-                                       ++trial;
-                                       generateTrial();
-                                       Timer.instance().clear();
-                                   }
-                               },
-                        1);*/
-
-            } else if (onSelect2 && !correct.equals(name2)) {
-                batch.begin();
-                font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
-                final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
-                font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
-                batch.end();
-                /*Timer.schedule(new Timer.Task() {
-                                   @Override
-                                   public void run() {
-                                       ++trial;
-                                       generateTrial();
-                                       Timer.instance().clear();
-                                   }
-                               },
-                        1);*/
-            }
-
+            batch.end();
 
             batch.begin();
             font.getData().setScale(GameTwoConstants.PROMPT_SCALE);
@@ -332,6 +288,9 @@ FaceToNameScreen extends InputAdapter implements Screen {
                 if(onSelect1 && correct.equals(name1) ||
                         onSelect2 && correct.equals(name2)) {
                     ++score;
+                }
+                if(trial == 5) {
+                    game.setScreen(new EndScreen(game, score, trial));
                 }
                 ++trial;
                 generateTrial();
@@ -407,18 +366,22 @@ FaceToNameScreen extends InputAdapter implements Screen {
         display = new Sprite(face);
         /*face = new Texture(Gdx.files.internal("test.jpg"));*/
 
-
+        correct = imgTags.get(imgNames.indexOf(validFiles.get(picture).getName())).get(0);
+        int incorrect = (int) (Math.random() * validFiles.size());
+        while (incorrect == picture) {
+            incorrect = (int) (Math.random() * validFiles.size());
+        }
 
         int position = (int) (Math.random() * 2);
         if(position == 0) {
-            name1 = "Correct Answer";
-            name2 = "Jane Doe";
+            name1 = correct;
+            name2 = imgTags.get(imgNames.indexOf(validFiles.get(incorrect).getName())).get(0);;
         } else {
-            name1 = "Jane Doe";
-            name2 = "Correct Answer";
+            name1 = imgTags.get(imgNames.indexOf(validFiles.get(incorrect).getName())).get(0);;
+            name2 = correct;
         }
 
-        correct = "Correct Answer";
+
     }
 
 }

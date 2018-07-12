@@ -43,6 +43,7 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
     BitmapFont font;
 
     Rectangle answerOne, answerTwo, end, back;
+    String answerOneName, answerTwoName;
     boolean onEnd, onBack = false;
     boolean selectedOne, selectedTwo = false;
     ArrayList<File> validFiles;
@@ -50,7 +51,11 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
 
     String name;
     String attribute;
+    String correctAnswer;
+
     String username;
+    ArrayList<String> imgNames;
+    ArrayList<ArrayList<String>> imgTags;
 
     float elapsed = 0;
     //cheap fix
@@ -81,6 +86,8 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
         back.x = screenWidth * 3 / 4;
 
 
+        imgNames = game.getPicturenames();
+        imgTags = game.getPicturetags();
         username = game.getUsername();
         //data/data/com.lucidity.game/app_imageDir/username
         //data/user/0/com.lucidity.game/app_imageDir/Coco
@@ -195,11 +202,6 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
             if(!selectedOne){
                 renderer.setColor(GameTwoConstants.W2F_COLOR);
             } else {
-                batch.begin();
-                font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
-                final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
-                font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
-                batch.end();
                 renderer.setColor(GameTwoConstants.CHOICE_COLOR);
                 if(!delayOn){
                     delayOn = true;
@@ -214,24 +216,48 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
                 renderer.setColor(GameTwoConstants.W2F_COLOR);
             } else {
                 renderer.setColor(GameTwoConstants.CHOICE_COLOR);
-                batch.begin();
-                font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
-                final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
-                font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
-                batch.end();
-
                 if(!delayOn){
                     delayOn = true;
                     delayed = elapsed;
                 }
             }
             renderer.rect(answerTwo.x - 20, answerTwo.y - 20, answerTwo.width+40, answerTwo.height+40);
-
-
             renderer.end();
+
+            batch.begin();
+            font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
+            if(selectedOne){
+                if(correctAnswer.equals(answerOneName)){
+                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
+                } else {
+
+                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight / 10);
+                }
+            } else if (selectedTwo) {
+                if(correctAnswer.equals(answerTwoName)){
+                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
+                } else {
+
+                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight / 10);
+                }
+            }
+            batch.end();
+
+
 
 
             if(elapsed - delayed >= 1f && delayOn) {
+                if(selectedOne && correctAnswer.equals(answerOneName) ||
+                        selectedTwo && correctAnswer.equals(answerTwoName)) {
+                    ++score;
+                }
+                if(trial == 5) {
+                    game.setScreen(new EndScreen(game, score, trial));
+                }
                 ++trial;
                 generateTrial();
             }
@@ -346,15 +372,12 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
     private void generateTrial() {
         elapsed = 0;
         delayed = -10000;
-        name = "Jane Doe";
+        name = "";
         attribute = "name";
         delayOn = false;
         selectedTwo = false;
         selectedOne = false;
 
-        //instead of get name first, get name after get file
-        //TODO: get correct name
-        name = "Jane Doe";
         int position = (int) (Math.random() * validFiles.size());
         int correct = (int) (Math.random() * 2);
 
@@ -373,15 +396,27 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
         validFiles.add(file);*/
 
         File file = validFiles.get(position);
+        name = imgTags.get(imgNames.indexOf(file.getName())).get(0);
+        correctAnswer = file.getName();
+
         validFiles.remove(file);
+        int incorrect = (int) (Math.random() * validFiles.size());
         if (correct == 0) {
             faceOne = new Texture(Gdx.files.absolute(file.getPath()));
-            faceTwo = new Texture(Gdx.files.absolute(validFiles.get((int) (Math.random() * validFiles.size())).getPath()));
+            answerOneName = file.getName();
+            faceTwo = new Texture(Gdx.files.absolute(validFiles.get(incorrect).getPath()));
+            answerTwoName = validFiles.get(incorrect).getName();
         } else {
 
             faceTwo = new Texture(Gdx.files.absolute(file.getPath()));
-            faceOne = new Texture(Gdx.files.absolute(validFiles.get((int) (Math.random() * validFiles.size())).getPath()));
+            answerTwoName = file.getName();
+            faceOne = new Texture(Gdx.files.absolute(validFiles.get(incorrect).getPath()));
+            answerOneName = validFiles.get(incorrect).getName();
         }
+
+        System.out.println(answerOneName);
+        System.out.println(answerTwoName);
+        System.out.println(name);
 
         validFiles.add(file);
 
