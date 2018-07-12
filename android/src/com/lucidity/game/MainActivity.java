@@ -1,7 +1,6 @@
 package com.lucidity.game;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -90,6 +89,9 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View v) {
                 Intent i = new Intent(getBaseContext(), PersonDependentGameLauncher.class);
                 i.putExtra("username", username);
+                i.putExtra("isLucid", true);
+                i.putExtra("isCare", false);
+                i.putExtra("isPatient", false);
                 startActivity(i);
             }
         });

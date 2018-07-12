@@ -1,6 +1,5 @@
 package com.lucidity.game;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,6 +34,9 @@ public class HomePageActivity extends AppCompatActivity {
                 //startActivity(new Intent(getBaseContext(), AndroidLauncher.class));
                 Intent i = new Intent(getBaseContext(), PersonDependentGameLauncher.class);
                 i.putExtra("username", username);
+                i.putExtra("isLucid", false);
+                i.putExtra("isCare", false);
+                i.putExtra("isPatient", true);
                 startActivity(i);
 
             }

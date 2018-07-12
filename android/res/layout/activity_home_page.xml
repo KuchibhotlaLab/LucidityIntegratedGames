@@ -51,8 +51,9 @@
                     android:layout_height="150dp"
                     android:layout_gravity="bottom|right"
                     android:background="@android:color/transparent"
-                    android:text="@string/games"
-                    android:textColor="#fff" />
+                    />
+                    <!--android:text="@string/games"
+                    android:textColor="#fff" />-->
 
                 <ImageView
                     android:id="@+id/imageView"
@@ -60,7 +61,7 @@
                     android:layout_height="150dp"
                     android:layout_gravity="bottom|right"
                     android:scaleType="fitXY"
-                    android:src="@drawable/roundcustombutton" />
+                    android:src="@drawable/memorytestbutton" />
             </FrameLayout>
 
             <FrameLayout
@@ -75,9 +76,9 @@
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_gravity="bottom|left"
-                    android:background="@android:color/transparent"
-                    android:text="@string/photos"
-                    android:textColor="#fff" />
+                    android:background="@android:color/transparent"/>
+                    <!--android:text="@string/photos"
+                    android:textColor="#fff" />-->
 
                 <ImageView
                     android:id="@+id/imageView2"
@@ -85,7 +86,7 @@
                     android:layout_height="150dp"
                     android:layout_gravity="bottom|left"
                     android:scaleType="fitXY"
-                    android:src="@drawable/roundcustombutton" />
+                    android:src="@drawable/photobutton" />
             </FrameLayout>
         </LinearLayout>
 
@@ -106,17 +107,17 @@
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@android:color/transparent"
-                    android:text="@string/reminders"
-                    android:textColor="#fff" />
+                    android:background="@android:color/transparent"/>
+                    <!--android:text="@string/reminders"
+                    android:textColor="#fff" />-->
 
                 <ImageView
                     android:id="@+id/imageView3"
-                    android:layout_width="wrap_content"
+                    android:layout_width="146dp"
                     android:layout_height="146dp"
                     android:layout_gravity="top|center_horizontal"
                     android:scaleType="fitXY"
-                    android:src="@drawable/roundcustombutton" />
+                    android:src="@drawable/remindersbutton" />
             </FrameLayout>
         </LinearLayout>
 

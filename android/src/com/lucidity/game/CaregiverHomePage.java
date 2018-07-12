@@ -37,6 +37,9 @@ public class CaregiverHomePage extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
                 i.putExtra("username", username);
+                i.putExtra("isLucid", false);
+                i.putExtra("isCare", true);
+                i.putExtra("isPatient", false);
                 startActivity(i);
                 //startActivity(new Intent(getBaseContext(), PersonDependentGameLauncher.class));
 
