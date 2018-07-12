@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public class LoadingScreen implements Screen {
     private FacialMemoryGame FacMemGame;
     private ObjectRecognitionGame ObjRecGame;
+    boolean isFacGame, isObgGame = false;
 
     ShapeRenderer renderer;
     SpriteBatch batch;
@@ -25,9 +26,12 @@ public class LoadingScreen implements Screen {
     float elapsed;
 
     public LoadingScreen(FacialMemoryGame game) {
+        isFacGame = true;
         this.FacMemGame = game;
     }
-    public LoadingScreen(ObjectRecognitionGame game) {this.ObjRecGame = game;}
+    public LoadingScreen(ObjectRecognitionGame game) {
+        isObgGame = true;
+        this.ObjRecGame = game;}
 
     @Override
     public void show() {
@@ -44,7 +48,11 @@ public class LoadingScreen implements Screen {
     public void render(float delta) {
         elapsed += delta;
         viewport.apply();
-        Gdx.gl.glClearColor(GameTwoConstants.BACKGROUND_COLOR.r, GameTwoConstants.BACKGROUND_COLOR.g, GameTwoConstants.BACKGROUND_COLOR.b, 1);
+        if(isFacGame) {
+            Gdx.gl.glClearColor(GameTwoConstants.BACKGROUND_COLOR.r, GameTwoConstants.BACKGROUND_COLOR.g, GameTwoConstants.BACKGROUND_COLOR.b, 1);
+        } else if(isObgGame){
+            Gdx.gl.glClearColor(GameThreeConstants.LOADING_COLOR.r, GameThreeConstants.LOADING_COLOR.g, GameThreeConstants.LOADING_COLOR.b, 1);
+        }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (elapsed < 2) {
@@ -53,25 +61,46 @@ public class LoadingScreen implements Screen {
 
             batch.begin();
             font.getData().setScale(GameTwoConstants.TITLE_SCALE);
-            font.setColor(GameTwoConstants.OUTLINE_COLOR);
 
-            final GlyphLayout promptLayout_three = new GlyphLayout(font, GameTwoConstants.TITLE_THREE);
-            font.draw(batch, promptLayout_three, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_three.width) / 2,
-                    GameOneConstants.DIFFICULTY_WORLD_SIZE * 2);
+            if(isFacGame){
+                font.setColor(GameTwoConstants.OUTLINE_COLOR);
+                final GlyphLayout promptLayout_three = new GlyphLayout(font, GameTwoConstants.TITLE_THREE);
+                font.draw(batch, promptLayout_three, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_three.width) / 2,
+                        GameOneConstants.DIFFICULTY_WORLD_SIZE * 2);
 
-            final GlyphLayout promptLayout_two = new GlyphLayout(font, GameTwoConstants.TITLE_TWO);
-            font.draw(batch, promptLayout_two, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_two.width) * 2 / 3,
-                    GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_three.height);
+                final GlyphLayout promptLayout_two = new GlyphLayout(font, GameTwoConstants.TITLE_TWO);
+                font.draw(batch, promptLayout_two, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_two.width) * 2 / 3,
+                        GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_three.height);
 
 
-            final GlyphLayout promptLayout_one = new GlyphLayout(font, GameTwoConstants.TITLE_ONE);
-            font.draw(batch, promptLayout_one, (GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_one.width) * 5 / 4,
-                    GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_two.height + 1.5f * promptLayout_three.height);
+                final GlyphLayout promptLayout_one = new GlyphLayout(font, GameTwoConstants.TITLE_ONE);
+                font.draw(batch, promptLayout_one, (GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_one.width) * 5 / 4,
+                        GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_two.height + 1.5f * promptLayout_three.height);
+            } else if(isObgGame){
 
+                font.setColor(GameThreeConstants.TITLE_COLOR);
+                final GlyphLayout promptLayout_three = new GlyphLayout(font, GameThreeConstants.TITLE_THREE);
+                font.draw(batch, promptLayout_three, (GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_three.width) * 2/3,
+                        GameOneConstants.DIFFICULTY_WORLD_SIZE * 2);
+
+                final GlyphLayout promptLayout_two = new GlyphLayout(font, GameThreeConstants.TITLE_TWO);
+                font.draw(batch, promptLayout_two, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_two.width) * 2 / 3,
+                        GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_three.height);
+
+
+                final GlyphLayout promptLayout_one = new GlyphLayout(font, GameThreeConstants.TITLE_ONE);
+                font.draw(batch, promptLayout_one, (GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_one.width) * 8 / 3,
+                        GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_two.height + 1.5f * promptLayout_three.height);
+            }
 
             batch.end();
         } else {
-            FacMemGame.setScreen(new ModeScreen(FacMemGame));
+            if(isFacGame){
+                FacMemGame.setScreen(new ModeScreen(FacMemGame));
+            } else if(isObgGame) {
+                ObjRecGame.setScreen(new ObjectRecognitionDifficultyScreen(ObjRecGame));
+            }
+
         }
     }
 

@@ -12,16 +12,18 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
  */
 
 public class ObjectRecognitionGameLauncher extends AndroidApplication {
+    private boolean isLucid, isCare, isPatient;
+    private String username;
     @Override
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Gets the username passed from previous activity
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            /*username = extras.getString("username");
+            username = extras.getString("username");
             isLucid = extras.getBoolean("isLucid");
             isCare = extras.getBoolean("isCare");
-            isPatient = extras.getBoolean("isPatient");*/
+            isPatient = extras.getBoolean("isPatient");
         }
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 

@@ -18,5 +18,6 @@ public class ObjectRecognitionGame extends Game {
 
     public void showObjectRecognitionScreen(GameOneConstants.Difficulty difficulty) {
         //setScreen(new MemoryScreen(this, difficulty, 0, 1));
+        setScreen(new ObjectRecognitionDifficultyScreen(this));
     }
 }
