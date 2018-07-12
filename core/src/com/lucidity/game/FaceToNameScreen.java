@@ -2,6 +2,7 @@ package com.lucidity.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
@@ -12,12 +13,18 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.net.HttpParametersUtils;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.FileHandler;
 
 /**
@@ -54,12 +61,18 @@ FaceToNameScreen extends InputAdapter implements Screen {
     SpriteBatch batch;
     BitmapFont font;
 
+    private boolean timerStart;
+    private long trialStartTime;
+    private int[] trialSuccess;
+    private double[] trialTime;
+
     float elapsed = 0;
     //cheap fix
     //TODO: figure out how to properly time
     boolean delayOn= false;
     float delayed = -10000;
 
+    private boolean disableTouchDown=true;
 
     public FaceToNameScreen(FacialMemoryGame game, int points, int trials) {
         this.game = game;
@@ -90,6 +103,9 @@ FaceToNameScreen extends InputAdapter implements Screen {
         imgTags = game.getPicturetags();
         username = game.getUsername();
 
+        timerStart = true;
+        trialTime = new double[5];
+        trialSuccess = new int[5];
 
         String locRoot = "data/user/0/com.lucidity.game/app_imageDir/" + username;
         File folder = new File(locRoot);
@@ -142,6 +158,13 @@ FaceToNameScreen extends InputAdapter implements Screen {
             batch.end();
 
         } else {
+            //Start timer
+            if (timerStart){
+                trialStartTime = TimeUtils.nanoTime();
+                timerStart = false;
+                disableTouchDown = false;
+            }
+
             renderer.begin(ShapeRenderer.ShapeType.Filled);
 
             if(!onSelect1){
@@ -210,6 +233,7 @@ FaceToNameScreen extends InputAdapter implements Screen {
             font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
 
             if(onSelect1){
+                disableTouchDown = true;
                 if(correct.equals(name1)){
                     final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
                     font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
@@ -218,6 +242,7 @@ FaceToNameScreen extends InputAdapter implements Screen {
                     font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
                 }
             } else if (onSelect2) {
+                disableTouchDown = true;
                 if(correct.equals(name2)){
                     final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
                     font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
@@ -285,11 +310,25 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
             if(elapsed - delayed >= 1f && delayOn) {
                 System.out.println("calls new trial");
+
                 if(onSelect1 && correct.equals(name1) ||
                         onSelect2 && correct.equals(name2)) {
                     ++score;
+
+                    //Save time in seconds
+                    if(trial <= 5) {
+                        trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
+                        trialSuccess[trial - 1] = 1;
+                    }
+                } else {
+                    //Save time in seconds
+                    if(trial <= 5) {
+                        trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
+                        trialSuccess[trial - 1] = 0;
+                    }
                 }
                 if(trial == 5) {
+                    postScore();
                     game.setScreen(new EndScreen(game, score, trial));
                 }
                 ++trial;
@@ -329,23 +368,24 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if(answer1.contains(screenX, screenHeight - screenY)){
-            onSelect1 = !onSelect1;
-            onSelect2 = false;
-        }
-        if(answer2.contains(screenX, screenHeight - screenY)){
-            onSelect2 = !onSelect2;
-            onSelect1 = false;
-        }
+        if(!disableTouchDown) {
+            if (answer1.contains(screenX, screenHeight - screenY)) {
+                onSelect1 = !onSelect1;
+                onSelect2 = false;
+            }
+            if (answer2.contains(screenX, screenHeight - screenY)) {
+                onSelect2 = !onSelect2;
+                onSelect1 = false;
+            }
 
-        if(end.contains(screenX, screenHeight - screenY)){
-            onEnd = true;
-        }
+            if (end.contains(screenX, screenHeight - screenY)) {
+                onEnd = true;
+            }
 
-        if(back.contains(screenX, screenHeight - screenY)){
-            onBack = true;
+            if (back.contains(screenX, screenHeight - screenY)) {
+                onBack = true;
+            }
         }
-
         return true;
     }
 
@@ -360,6 +400,7 @@ FaceToNameScreen extends InputAdapter implements Screen {
         onSelect2 = false;
         onEnd = false;
         onBack = false;
+        timerStart = true;
 
         int picture = (int) (Math.random() * validFiles.size());
         face = new Texture(Gdx.files.absolute(validFiles.get(picture).getPath()));
@@ -384,4 +425,39 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
     }
 
+    //Posts score and stats to MySQL database
+    private void postScore(){
+        Net.HttpRequest httpPost = new Net.HttpRequest(Net.HttpMethods.POST);
+        httpPost.setUrl("http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_facetonamegame_score.php");
+
+        //set parameters
+        Map<String, String> json = new HashMap<String, String>();
+        json.put("username", game.getUsername());
+        json.put("score", String.valueOf(score));
+        for (int i = 0; i < trial; i++) {
+            String trialNum = "trial" + (i+1);
+            json.put(trialNum, String.valueOf(trialSuccess[i]));
+            json.put(trialNum + "time", String.valueOf(trialTime[i]));
+        }
+
+        httpPost.setContent(HttpParametersUtils.convertHttpParameters(json));
+
+        //Send JSON and Look for response
+        Gdx.net.sendHttpRequest (httpPost, new Net.HttpResponseListener() {
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                String status = httpResponse.getResultAsString().trim();
+                HashMap<String,String> map = new Gson().fromJson(status, new TypeToken<HashMap<String, String>>(){}.getType());
+                System.out.println(map);
+            }
+
+            public void failed(Throwable t) {
+                String status = "failed";
+            }
+
+            @Override
+            public void cancelled() {
+
+            }
+        });
+    }
 }

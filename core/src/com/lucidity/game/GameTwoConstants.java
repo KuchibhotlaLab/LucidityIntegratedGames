@@ -15,10 +15,10 @@ public class GameTwoConstants {
     public static final float MODE_BUBBLE_RADIUS = MODE_WORLD_SIZE / 5;
     public static final float MODE_LABEL_SCALE = 1.5f;
 
-    public static final String MODE_ONE_FIRST = "Match name";
-    public static final String MODE_ONE_SECOND = "to faces";
-    public static final String MODE_TWO_FIRST = "Match face";
-    public static final String MODE_TWO_SECOND = "to names";
+    public static final String MODE_ONE_FIRST = "Match face";
+    public static final String MODE_ONE_SECOND = "to names";
+    public static final String MODE_TWO_FIRST = "Match name";
+    public static final String MODE_TWO_SECOND = "to faces";
 
 
     public static final Color BACKGROUND_COLOR = new Color(0.97f,0.69f,0.58f, 1);
