@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class AndroidLauncher extends AndroidApplication {
+    final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private String username;
     private boolean isLucid, isPatient, isCare;
     private String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
@@ -51,6 +52,13 @@ public class AndroidLauncher extends AndroidApplication {
             isPatient = extras.getBoolean("isPatient");
         }
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+        }
 
         locationListener = new myLocationListener();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
