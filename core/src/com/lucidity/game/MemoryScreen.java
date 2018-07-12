@@ -379,7 +379,6 @@ public class MemoryScreen extends InputAdapter implements Screen {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
-        //TODO: make sure this actually disables touch
         if(!disableTouchDown) {
             onEnd = btnEnd.contains(screenX, screenHeight - screenY);
 

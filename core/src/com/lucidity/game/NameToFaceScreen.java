@@ -75,6 +75,8 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
     boolean delayOn= false;
     float delayed = -10000;
 
+    private boolean disableTouchDown=true;
+
     public NameToFaceScreen(FacialMemoryGame game, int points, int trials) {
         this.game = game;
         score = points;
@@ -186,6 +188,7 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
             if (timerStart){
                 trialStartTime = TimeUtils.nanoTime();
                 timerStart = false;
+                disableTouchDown = false;
             }
 
             renderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -249,6 +252,7 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
             batch.begin();
             font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
             if(selectedOne){
+                disableTouchDown = true;
                 if(correctAnswer.equals(answerOneName)){
                     final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
                     font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
@@ -258,6 +262,7 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
                     font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight / 10);
                 }
             } else if (selectedTwo) {
+                disableTouchDown = true;
                 if(correctAnswer.equals(answerTwoName)){
                     final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
                     font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
@@ -292,7 +297,6 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
 
                 if(trial == 5) {
                     postScore();
-                    System.out.println("hello");
                     game.setScreen(new EndScreen(game, score, trial));
                 }
                 ++trial;
@@ -385,24 +389,23 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (answerOne.contains(screenX, screenHeight - screenY)) {
-            selectedOne = true;
+        if(!disableTouchDown) {
+            if (answerOne.contains(screenX, screenHeight - screenY)) {
+                selectedOne = true;
+            }
+
+            if (answerTwo.contains(screenX, screenHeight - screenY)) {
+                selectedTwo = true;
+            }
+
+            if (end.contains(screenX, screenHeight - screenY)) {
+                onEnd = true;
+            }
+
+            if (back.contains(screenX, screenHeight - screenY)) {
+                onBack = true;
+            }
         }
-
-        if(answerTwo.contains(screenX, screenHeight - screenY)) {
-            selectedTwo = true;
-        }
-
-
-
-        if(end.contains(screenX, screenHeight - screenY)){
-            onEnd = true;
-        }
-
-        if(back.contains(screenX, screenHeight - screenY)){
-            onBack = true;
-        }
-
         return true;
     }
 
