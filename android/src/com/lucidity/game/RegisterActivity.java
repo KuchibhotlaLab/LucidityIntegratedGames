@@ -157,12 +157,19 @@ public class RegisterActivity extends AppCompatActivity {
                 String msg = json.getString(TAG_MESSAGE);
 
                 if (success == 1) {
+
+                    // remember log in status for future
+                    Login login = new Login(getApplicationContext());
+                    login.newLogin(username);
+
                     // successfully added user
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 
                     //Pass username through to other activities
                     intent.putExtra("username", username);
 
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
 
                     // closing this screen

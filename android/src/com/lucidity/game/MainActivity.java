@@ -63,6 +63,21 @@ public class MainActivity extends AppCompatActivity{
 
         new GetName().execute();
 
+        //Logout and go back to login page
+        Button btnLogout = findViewById(R.id.button_logout);
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Login login = new Login(getApplicationContext());
+                login.logout();
+
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+
         Button btnCaregiver = findViewById(R.id.caregiver);
         btnCaregiver.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

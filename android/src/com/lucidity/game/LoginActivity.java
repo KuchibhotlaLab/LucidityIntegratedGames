@@ -18,6 +18,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.AsyncTask;
@@ -61,6 +62,9 @@ public class LoginActivity extends AppCompatActivity {
     private View mProgressView;
     private View mLoginFormView;
 
+    //Used to check log in status
+    Login login;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +97,17 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         }).execute();
+
+        // Check login status
+        login = new Login(getApplicationContext());
+        // Proceed to main page if logged in
+        if(login.LoggedIn()){
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("username", login.getUsername());
+            startActivity(intent);
+            //close this screen
+            finish();
+        }
 
         setContentView(R.layout.activity_login);
 
@@ -165,6 +180,10 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (success == 1) {
                     // successfully found user and verified password
+                    // remember log in status for future
+                    login.newLogin(username);
+
+                    //Go to main activity
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 
                     //Pass username with correct case through to other activities
@@ -172,6 +191,8 @@ public class LoginActivity extends AppCompatActivity {
                     intent.putExtra("username", username);
 
                     startActivity(intent);
+                    //close this screen
+                    finish();
 
                 } else {
                     if (msg.equals("Incorrect Password")) {
