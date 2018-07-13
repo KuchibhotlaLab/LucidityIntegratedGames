@@ -3,6 +3,7 @@ package com.lucidity.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.net.HttpParametersUtils;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -19,9 +21,13 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by lixiaoyan on 7/13/18.
@@ -59,6 +65,10 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
     int score, trial;
 
+    private boolean timerStart;
+    private long trialStartTime;
+    private int[] trialSuccess;
+    private double[] trialTime;
 
     public ObjectRecognitionScreen(ObjectRecognitionGame game, boolean difficulty) {
         this.difficult = difficulty;
@@ -106,6 +116,10 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
         trial = 1;
 
+        timerStart = true;
+        trialTime = new double[5];
+        trialSuccess = new int[5];
+
         generateTrial();
     }
 
@@ -123,7 +137,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         elapsed += delta;
 
-        if(elapsed < 2){
+        if(elapsed <= 2){
 
             batch.begin();
             font.getData().setScale(GameThreeConstants.PROMPT_SCALE);
@@ -148,7 +162,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
             batch.end();
 
-        } else if (elapsed > 2 && elapsed < 4) {
+        } else if (elapsed > 2 && elapsed <= 4) {
 
 
             renderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -168,7 +182,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             }
             renderer.end();
 
-        } else if(elapsed > 4 && elapsed < 6){
+        } else if(elapsed > 4 && elapsed <= 6){
             batch.begin();
             font.getData().setScale(GameThreeConstants.INSTRUCTION_SCALE);
 
@@ -197,7 +211,13 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             batch.end();
 
         } else {
-            disabled = false;
+            //Start timer
+            if (timerStart){
+                trialStartTime = TimeUtils.nanoTime();
+                timerStart = false;
+                disabled = false;
+            }
+
             renderer.begin(ShapeRenderer.ShapeType.Filled);
             renderer.setColor(cShown);
             switch (sShown.size()) {
@@ -319,14 +339,29 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             if(!delayOn && (sameSelected || diffSelected)){
                 delayOn = true;
                 delayed = elapsed;
+
+                disabled = true;
+                //record reaction time here
+                if(trial <= 5) {
+                    trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
+                }
             }
 
             if(elapsed - delayed >= 1f && delayOn) {
                 if(isCorrect()){
                     ++score;
+                    //record correct
+                    if(trial <= 5) {
+                        trialSuccess[trial - 1] = 1;
+                    }
+                } else {
+                    if(trial <= 5) {
+                        //record incorrect
+                        trialSuccess[trial - 1] = 0;
+                    }
                 }
                 if(trial == 5) {
-                    //postScore();
+                    postScore();
                     game.setScreen(new EndScreen(game, score, trial));
                 }
                 ++trial;
@@ -391,7 +426,6 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
     private void generateTrial(){
         elapsed = 0;
         delayed = 0;
-        disabled = true;
         sSame = false;
         cSame = false;
         sameSelected = false;
@@ -399,6 +433,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
         onEnd = false;
         onBack = false;
         delayOn = false;
+        timerStart = true;
 
         int sAnswer = (int)(Math.random() * shapes.size());
         int sShow = (int)(Math.random() * shapes.size());
@@ -431,5 +466,56 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             }
         }
         return false;
+    }
+
+    //Posts score and stats to MySQL database
+    private void postScore() {
+        Net.HttpRequest httpPost = new Net.HttpRequest(Net.HttpMethods.POST);
+        httpPost.setUrl("http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_objectrecognitiongame_score.php");
+
+        //set parameters
+        Map<String, String> json = new HashMap<String, String>();
+        json.put("username", game.getUsername());
+        json.put("time", game.getDateTime());
+        json.put("location", game.getLocation());
+        if (game.getLucid()) {
+            json.put("menu", "Lucid");
+        } else if (game.getPatient()) {
+            json.put("menu", "Patient");
+        } else if (game.getCare()) {
+            json.put("menu", "CareGiver");
+        }
+        if (difficult) {
+            json.put("difficulty", "Hard");
+        } else {
+            json.put("difficulty", "Easy");
+        }
+        json.put("score", String.valueOf(score));
+        for (int i = 0; i < trial; i++) {
+            String trialNum = "trial" + (i + 1);
+            json.put(trialNum, String.valueOf(trialSuccess[i]));
+            json.put(trialNum + "time", String.valueOf(trialTime[i]));
+        }
+
+        httpPost.setContent(HttpParametersUtils.convertHttpParameters(json));
+
+        //Send JSON and Look for response
+        Gdx.net.sendHttpRequest(httpPost, new Net.HttpResponseListener() {
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                String status = httpResponse.getResultAsString().trim();
+                HashMap<String, String> map = new Gson().fromJson(status, new TypeToken<HashMap<String, String>>() {
+                }.getType());
+                System.out.println(map);
+            }
+
+            public void failed(Throwable t) {
+                String status = "failed";
+            }
+
+            @Override
+            public void cancelled() {
+
+            }
+        });
     }
 }
