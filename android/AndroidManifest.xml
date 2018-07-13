@@ -105,6 +105,7 @@
                 android:enabled="true" />
 
             <activity android:name=".CameraActivity"></activity>
+            <activity android:name=".GameMenuActivity"></activity>
         </application>
 
     </manifest>

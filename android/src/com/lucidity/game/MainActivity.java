@@ -87,8 +87,7 @@ public class MainActivity extends AppCompatActivity{
         Button btnGame = findViewById(R.id.lucid);
         btnGame.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                //Intent i = new Intent(getBaseContext(), PersonDependentGameLauncher.class);
-                Intent i = new Intent(getBaseContext(), ObjectRecognitionGameLauncher.class);
+                Intent i = new Intent(getApplicationContext(), GameMenuActivity.class);
                 i.putExtra("username", username);
                 i.putExtra("isLucid", true);
                 i.putExtra("isCare", false);
