@@ -82,6 +82,8 @@ public class MemoryScreen extends InputAdapter implements Screen {
     private boolean disableTouchDown=true;
     //cheap temporary fix
 
+
+    //TODO: add trial time and deal with the complexity
     public MemoryScreen(WorkingMemoryGame game, GameOneConstants.Difficulty difficulty, int points, int trials) {
         this.game = game;
 
@@ -305,9 +307,8 @@ public class MemoryScreen extends InputAdapter implements Screen {
                     (int) (btnEnd.y + 0.6 * btnEnd.getHeight()));
 
             //prints the correct/incorrect message when the person clicks submit
-            //TODO: FIGURE OUT THE CORRECT WAY TO DO THIS PREFERABLY USING PAUSE
             if(suppressed){
-                font.setColor(0.0f, 0.5f, 0.0f, 1.0f);
+                font.setColor(GameOneConstants.CORRECT_COLOR);
                 final GlyphLayout promptLayout = new GlyphLayout(font, GameOneConstants.CORRECT_MESSAGE);
                 font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
             }
@@ -333,11 +334,12 @@ public class MemoryScreen extends InputAdapter implements Screen {
                         1);
             } else if (!correct && onSubmit && !suppressed) {
                 selected = new int[blocksHorizontal][blocksVertical];
-                font.setColor(1.0f, 0.0f, 0.0f, 1.0f);
+                font.setColor(GameOneConstants.INCORRECT_COLOR);
                 final GlyphLayout promptLayout = new GlyphLayout(font, GameOneConstants.INCORRECT_MESSAGE);
                 font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
             }
 
+            font.getData().setScale(GameOneConstants.LABEL_SCALE);
             font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 
             //prints the score on the screen of game

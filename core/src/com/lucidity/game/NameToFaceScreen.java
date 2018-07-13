@@ -6,6 +6,7 @@ import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -261,24 +262,34 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
             if(selectedOne){
                 disableTouchDown = true;
                 if(correctAnswer.equals(answerOneName)){
+                    font.setColor(GameOneConstants.CORRECT_COLOR);
+                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                    font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight / 8);
                     final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
-                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 8 + 1.5f * reactionLayout.height);
 
                 } else {
-
+                    font.setColor(GameOneConstants.INCORRECT_COLOR);
+                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                    font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight / 8);
                     final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
-                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight / 10);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight / 8 + 1.5f * reactionLayout.height);
                 }
             } else if (selectedTwo) {
                 disableTouchDown = true;
                 if(correctAnswer.equals(answerTwoName)){
+                    font.setColor(GameOneConstants.CORRECT_COLOR);
+                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                    font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight / 8);
                     final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
-                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 8 + 1.5f * reactionLayout.height);
 
                 } else {
-
+                    font.setColor(GameOneConstants.INCORRECT_COLOR);
+                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                    font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight / 8);
                     final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
-                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight / 10);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight / 8 + 1.5f * reactionLayout.height);
 
                 }
             }
@@ -320,6 +331,7 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
             renderer.end();
 
             batch.begin();
+            font.setColor(Color.WHITE);
             font.getData().setScale(GameTwoConstants.PROMPT_SCALE);
             final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.PROMPT + name);
             font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight * 7 / 8);
@@ -337,13 +349,13 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
 
             //prints text on submit button
             font.draw(batch, GameTwoConstants.BACK_TEXT,
-                    (int) (back.x + 0.25 * back.getWidth()),
+                    (int) (back.x + 0.2 * back.getWidth()),
                     (int) (back.y + 0.6 * back.getHeight()));
 
 
             //prints text on end button
             font.draw(batch, GameTwoConstants.END_TEXT,
-                    (int) (end.x + 0.3 * end.getWidth()),
+                    (int) (end.x + 0.25 * end.getWidth()),
                     (int) (end.y + 0.6 * end.getHeight()));
 
 

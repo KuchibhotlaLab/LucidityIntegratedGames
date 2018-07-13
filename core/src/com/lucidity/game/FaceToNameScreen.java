@@ -1,10 +1,12 @@
 package com.lucidity.game;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -87,7 +89,7 @@ FaceToNameScreen extends InputAdapter implements Screen {
         answer1.height = answer2.height = screenHeight / 12;
         answer1.width = answer2.width = screenWidth / 2;
         answer1.x = answer2.x = screenWidth / 4;
-        answer1.y = screenHeight / 8;
+        answer1.y = screenHeight / 10;
         answer2.y = answer1.y + answer1.height;
 
         end = new Rectangle();
@@ -229,32 +231,59 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
             renderer.end();
 
+            if(!delayOn && (onSelect2 || onSelect1)){
+                delayOn = true;
+                delayed = elapsed;
+
+                //record reaction time here
+                if(trial <= 5) {
+                    trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
+                }
+            }
+
             batch.begin();
             font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
 
             if(onSelect1){
                 disableTouchDown = true;
                 if(correct.equals(name1)){
+                    font.setColor(GameOneConstants.CORRECT_COLOR);
+                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                    font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight* 3 / 4);
+
                     final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
-                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight* 3 / 4 + 1.5f * reactionLayout.height);
                 } else {
+                    font.setColor(GameOneConstants.INCORRECT_COLOR);
+                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                    font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight* 3 / 4);
+
                     final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
-                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight * 3 / 4 + 1.5f * reactionLayout.height);
                 }
             } else if (onSelect2) {
                 disableTouchDown = true;
                 if(correct.equals(name2)){
+                    font.setColor(GameOneConstants.CORRECT_COLOR);
+                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                    font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight * 3 / 4);
+
                     final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
-                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight * 3 / 4+ 1.5f * reactionLayout.height);
                 } else {
+                    font.setColor(GameOneConstants.INCORRECT_COLOR);
+                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                    font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight* 3 / 4);
+
                     final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
-                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight* 3 / 4 + 1.5f * reactionLayout.height);
                 }
             }
 
             batch.end();
 
             batch.begin();
+            font.setColor(Color.WHITE);
             font.getData().setScale(GameTwoConstants.PROMPT_SCALE);
             final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.PROMPT + "this?");
             font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight * 7 / 8);
@@ -274,7 +303,7 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
             //prints text on back button
             font.draw(batch, GameTwoConstants.BACK_TEXT,
-                    (int) (back.x + 0.25 * back.getWidth()),
+                    (int) (back.x + 0.2 * back.getWidth()),
                     (int) (back.y + 0.6 * back.getHeight()));
 
 
@@ -282,7 +311,7 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
             //prints text on end button
             font.draw(batch, GameTwoConstants.END_TEXT,
-                    (int) (end.x + 0.3 * end.getWidth()),
+                    (int) (end.x + 0.25 * end.getWidth()),
                     (int) (end.y + 0.6 * end.getHeight()));
 
 
@@ -297,21 +326,10 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
 
             //batch.draw(face, (screenWidth - face.getWidth())/2, (screenHeight - face.getHeight())/2);
-            batch.draw(display, screenWidth/5, screenHeight/3, screenWidth * 3 / 5, screenHeight * 5/ 12);
+            batch.draw(display, screenWidth/5, screenHeight * 7/24, screenWidth * 3 / 5, screenHeight * 5/ 12);
 
             batch.end();
 
-
-
-            if(!delayOn && (onSelect2 || onSelect1)){
-                delayOn = true;
-                delayed = elapsed;
-
-                //record reaction time here
-                if(trial <= 5) {
-                    trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
-                }
-            }
 
             if(elapsed - delayed >= 1f && delayOn) {
                 if(onSelect1 && correct.equals(name1) ||

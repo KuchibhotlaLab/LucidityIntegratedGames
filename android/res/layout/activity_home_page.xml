@@ -23,7 +23,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="24dp"
                 android:fontFamily="@font/ostrich_sans_rounded_medium"
-                android:text="TextView"
+                android:text="Home"
                 android:textAlignment="center"
                 android:textColor="#4b4b4b"
                 android:textSize="48sp"
@@ -35,87 +35,68 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:paddingBottom="15dp"
-                android:paddingRight="15dp">
+                android:layout_height="150dp"
+                android:paddingTop="15dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp">
 
                 <Button
                     android:id="@+id/game_button"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="bottom|right"
-                    android:background="@android:color/transparent"
-                    />
-                    <!--android:text="@string/games"
-                    android:textColor="#fff" />-->
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent" />
 
                 <ImageView
                     android:id="@+id/imageView"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="bottom|right"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:scaleType="fitXY"
                     android:src="@drawable/memorytestbutton" />
             </FrameLayout>
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:paddingBottom="15dp"
-                android:paddingLeft="15dp">
+                android:layout_height="150dp"
+                android:paddingTop="15dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp">
 
                 <Button
                     android:id="@+id/Photos"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="bottom|left"
-                    android:background="@android:color/transparent"/>
-                    <!--android:text="@string/photos"
-                    android:textColor="#fff" />-->
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent" />
 
                 <ImageView
                     android:id="@+id/imageView2"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="bottom|left"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:scaleType="fitXY"
                     android:src="@drawable/photobutton" />
             </FrameLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:paddingTop="15dp">
+                android:layout_height="150dp"
+                android:paddingTop="15dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp">
 
                 <Button
                     android:id="@+id/reminders"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
-                    android:background="@android:color/transparent"/>
-                    <!--android:text="@string/reminders"
-                    android:textColor="#fff" />-->
+                    android:background="@android:color/transparent" />
 
                 <ImageView
                     android:id="@+id/imageView3"
-                    android:layout_width="146dp"
-                    android:layout_height="146dp"
-                    android:layout_gravity="top|center_horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:scaleType="fitXY"
                     android:src="@drawable/remindersbutton" />
             </FrameLayout>

@@ -49,7 +49,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
     ArrayList<ArrayList<Integer>> shapes;
     ArrayList<Color> colors;
     boolean hasColor = false;
-    boolean difficult;
+    int difficult;
     boolean disabled = true;
     boolean delayOn = false;
 
@@ -70,10 +70,13 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
     private int[] trialSuccess;
     private double[] trialTime;
 
-    public ObjectRecognitionScreen(ObjectRecognitionGame game, boolean difficulty) {
-        this.difficult = difficulty;
+    public ObjectRecognitionScreen(ObjectRecognitionGame game, int level) {
+        this.difficult = level;
         this.game = game;
-        hasColor = difficult;
+        if(difficult == 1 || difficult == 2){
+            hasColor = true;
+        }
+
 
         screenWidth = Gdx.graphics.getWidth();
         screenHeight = Gdx.graphics.getHeight();
@@ -86,7 +89,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
         }
         shapes = new ArrayList<ArrayList<Integer>>();
         shapes.add(new ArrayList<Integer>(Arrays.asList(screenWidth/6, screenHeight/3, screenWidth * 2 / 3, screenWidth * 2 / 3)));
-        shapes.add(new ArrayList<Integer>(Arrays.asList(screenWidth/2,screenHeight/2, screenWidth/3)));
+        shapes.add(new ArrayList<Integer>(Arrays.asList(screenWidth / 2,screenHeight * 2 / 3, screenWidth/3)));
         shapes.add(new ArrayList<Integer>(Arrays.asList(screenWidth/6, screenHeight/3, screenWidth/2, screenHeight * 2 / 3, screenWidth * 5 / 6, screenHeight/3)));
 
 
@@ -145,7 +148,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             final GlyphLayout promptLayout_three = new GlyphLayout(font, GameThreeConstants.PROMPT_THREE);
             font.draw(batch, promptLayout_three, (screenWidth - promptLayout_three.width)/2, screenHeight * 2 / 3);
 
-            if(difficult) {
+            if(difficult == 1 || difficult == 2) {
                 final GlyphLayout promptLayout_two = new GlyphLayout(font, GameThreeConstants.PROMPT_TWO);
                 font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width)/2,
                         screenHeight * 2 / 3 + 1.5f * promptLayout_three.height);
@@ -163,8 +166,6 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             batch.end();
 
         } else if (elapsed > 2 && elapsed <= 4) {
-
-
             renderer.begin(ShapeRenderer.ShapeType.Filled);
             renderer.setColor(cCorrect);
             switch (sCorrect.size()) {
@@ -197,7 +198,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width)/2,
                     screenHeight * 2 / 3 + 1.5f * promptLayout_three.height + 1.5f * promptLayout_four.height);
 
-            if(difficult){
+            if(difficult == 1 || difficult == 2){
                 final GlyphLayout promptLayout_one = new GlyphLayout(font, GameThreeConstants.INSTRUCTION_ONE_TWO);
                 font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width)/2,
                         screenHeight * 2 / 3 + 1.5f * promptLayout_two.height + 1.5f * promptLayout_three.height + 1.5f * promptLayout_four.height);
@@ -219,20 +220,88 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             }
 
             renderer.begin(ShapeRenderer.ShapeType.Filled);
-            renderer.setColor(cShown);
-            switch (sShown.size()) {
-                case 3:
-                    renderer.circle(sShown.get(0), sShown.get(1), sShown.get(2));
-                    break;
-                case 4:
-                    renderer.rect(sShown.get(0), sShown.get(1), sShown.get(2), sShown.get(3));
-                    break;
-                case 6:
-                    renderer.triangle(sShown.get(0), sShown.get(1), sShown.get(2), sShown.get(3), sShown.get(4), sShown.get(5));
-                    break;
-                default:
-                    break;
+
+            if(difficult == 0 || difficult == 1){
+                renderer.setColor(cShown);
+                switch (sShown.size()) {
+                    case 3:
+                        renderer.circle(sShown.get(0), sShown.get(1), sShown.get(2));
+                        break;
+                    case 4:
+                        renderer.rect(sShown.get(0), sShown.get(1), sShown.get(2), sShown.get(3));
+                        break;
+                    case 6:
+                        renderer.triangle(sShown.get(0), sShown.get(1), sShown.get(2), sShown.get(3), sShown.get(4), sShown.get(5));
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+
+                //TODO: randomize this
+                renderer.setColor(cCorrect);
+                switch (sCorrect.size()) {
+                    case 3:
+                        renderer.circle(sCorrect.get(0) / 2, sCorrect.get(1), sCorrect.get(2) / 2);
+                        break;
+                    case 4:
+                        renderer.rect(sCorrect.get(0) / 2, sCorrect.get(1), sCorrect.get(2) / 2, sCorrect.get(3) / 2);
+                        break;
+                    case 6:
+                        renderer.triangle(sCorrect.get(0) / 2 , sCorrect.get(1), sCorrect.get(2)/ 4, sCorrect.get(3) / 2, sCorrect.get(4) / 4, sCorrect.get(5) / 2);
+                        break;
+                    default:
+                        break;
+                }
+
+                renderer.setColor(cShown);
+                switch (sCorrect.size()) {
+                    case 3:
+                        renderer.circle(sCorrect.get(0) / 2 + screenWidth / 2, sCorrect.get(1), sCorrect.get(2) / 2);
+                        break;
+                    case 4:
+                        renderer.rect(sCorrect.get(0) / 2 + screenWidth / 2 , sCorrect.get(1), sCorrect.get(2) / 2, sCorrect.get(3) / 2);
+                        break;
+                    case 6:
+                        renderer.triangle(sCorrect.get(0) / 2 + screenWidth / 2, sCorrect.get(1) / 2, sCorrect.get(2)/4 + screenWidth / 2, sCorrect.get(3) / 2, sCorrect.get(4)/4 + screenWidth / 2, sCorrect.get(5)/2);
+                        break;
+                    default:
+                        break;
+                }
+
+                renderer.setColor(cShown);
+                switch (sShown.size()) {
+                    case 3:
+                        renderer.circle(sShown.get(0) / 2, sShown.get(1) + screenHeight / 3, sShown.get(2) / 2);
+                        break;
+                    case 4:
+                        renderer.rect(sShown.get(0) / 2, sShown.get(1) + screenHeight / 3, sShown.get(2) / 2, sShown.get(3) / 2);
+                        break;
+                    case 6:
+                        renderer.triangle(sShown.get(0) / 2, sShown.get(1) / 2 + screenHeight / 3, sShown.get(2)/4, sShown.get(3) / 2 + screenHeight / 3, sShown.get(4)/4, sShown.get(5)/2  + screenHeight / 3);
+                        break;
+                    default:
+                        break;
+                }
+
+                renderer.setColor(cCorrect);
+                switch (sShown.size()) {
+                    case 3:
+                        renderer.circle(sShown.get(0) / 2 + screenWidth / 2, sShown.get(1) + screenHeight / 3, sShown.get(2) / 2);
+                        break;
+                    case 4:
+                        renderer.rect(sShown.get(0) / 2 + screenWidth / 2, sShown.get(1) + screenHeight / 3, sShown.get(2) / 2, sShown.get(3) / 2);
+                        break;
+                    case 6:
+                        renderer.triangle(sShown.get(0) / 2 + screenWidth / 2, sShown.get(1) / 2 + screenHeight / 3, sShown.get(2)/4 + screenWidth / 2, sShown.get(3) / 2 + screenHeight / 3, sShown.get(4)/2 + screenWidth / 3, sShown.get(5)/2 + screenHeight / 3);
+                        break;
+                    default:
+                        break;
+                }
+
             }
+
+
 
             if(!sameSelected){
                 renderer.setColor(GameThreeConstants.TITLE_COLOR);
@@ -292,15 +361,48 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             renderer.end();
 
 
+            if(!delayOn && (sameSelected || diffSelected)){
+                delayOn = true;
+                delayed = elapsed;
+
+                disabled = true;
+                //record reaction time here
+                if(trial <= 5) {
+                    trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
+                }
+            }
+
             batch.begin();
             font.getData().setScale(GameThreeConstants.ANSWER_SCALE);
+
+            if(sameSelected || diffSelected) {
+                if (isCorrect()) {
+                    font.setColor(GameOneConstants.CORRECT_COLOR);
+                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                    font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight * 3 / 4);
+                    final GlyphLayout promptLayout = new GlyphLayout(font, GameThreeConstants.CORRECT_MESSAGE);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight * 3 / 4 + 1.5f * reactionLayout.height);
+
+                } else {
+                    font.setColor(GameOneConstants.INCORRECT_COLOR);
+                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                    font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight * 3 / 4);
+                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight * 3 / 4  + 1.5f * reactionLayout.height);
+
+                }
+            }
+
+
+
+            font.setColor(Color.WHITE);
             //prints text on back button
             font.draw(batch, GameTwoConstants.BACK_TEXT,
-                    (int) (back.x + 0.25 * back.getWidth()),
+                    (int) (back.x + 0.2 * back.getWidth()),
                     (int) (back.y + 0.6 * back.getHeight()));
             //prints text on end button
             font.draw(batch, GameTwoConstants.END_TEXT,
-                    (int) (end.x + 0.3 * end.getWidth()),
+                    (int) (end.x + 0.25 * end.getWidth()),
                     (int) (end.y + 0.6 * end.getHeight()));
 
             font.draw(batch, GameTwoConstants.SCORE_LABEL + Integer.toString(score),
@@ -312,16 +414,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
                     GameTwoConstants.SCORE_CENTER,
                     screenHeight - GameTwoConstants.SCORE_CENTER - layout_scores.height * 1.5f);
 
-            if(sameSelected || diffSelected) {
-                if (isCorrect()) {
-                    final GlyphLayout promptLayout = new GlyphLayout(font, GameThreeConstants.CORRECT_MESSAGE);
-                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight / 10);
-                } else {
-                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
-                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight / 10);
-                }
-            }
-
+            font.setColor(Color.WHITE);
             font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
             final GlyphLayout layout_two = new GlyphLayout(font, GameThreeConstants.SAME_ANSWER_TEXT);
             final float fontX_two = (screenWidth - layout_two.width) / 2;
@@ -336,16 +429,6 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
             batch.end();
 
-            if(!delayOn && (sameSelected || diffSelected)){
-                delayOn = true;
-                delayed = elapsed;
-
-                disabled = true;
-                //record reaction time here
-                if(trial <= 5) {
-                    trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
-                }
-            }
 
             if(elapsed - delayed >= 1f && delayOn) {
                 if(isCorrect()){
@@ -450,13 +533,13 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             cCorrect = colors.get(cAnswer);
             cShown = colors.get(cShow);
         } else {
-            cCorrect = Color.LIGHT_GRAY;
-            cShown = Color.LIGHT_GRAY;
+            cCorrect = GameThreeConstants.DEFAULT_COLOR;
+            cShown = GameThreeConstants.DEFAULT_COLOR;
         }
     }
 
     private boolean isCorrect(){
-        if(!difficult){
+        if(difficult == 0){
             return (sameSelected && sCorrect.equals(sShown)) || (diffSelected && !sCorrect.equals(sShown));
         } else {
             if(sameSelected){
@@ -485,9 +568,11 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
         } else if (game.getCare()) {
             json.put("menu", "CareGiver");
         }
-        if (difficult) {
+        if (difficult == 2) {
             json.put("difficulty", "Hard");
-        } else {
+        } else if(difficult == 1) {
+            json.put("difficulty", "Medium");
+        } else{
             json.put("difficulty", "Easy");
         }
         json.put("score", String.valueOf(score));

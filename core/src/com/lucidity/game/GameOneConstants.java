@@ -69,6 +69,9 @@ public class GameOneConstants {
     public static final String WAIT_ONE = "Select the blocks";
     public static final String WAIT_TWO = "after this screen ends";
 
+    public static final Color CORRECT_COLOR = new Color(0.6f, 0.89f, 0.55f, 1);
+    public static final Color INCORRECT_COLOR = new Color(1f, 0.41f, 0.38f, 1);
+
 
     public enum Difficulty {
         EASY(EASY_SPAWNS_PER_SECOND, EASY_LABEL),
