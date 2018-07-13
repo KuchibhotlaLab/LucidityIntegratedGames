@@ -191,9 +191,6 @@ public class MemoryScreen extends InputAdapter implements Screen {
             font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width)/2,
                     screenHeight / 2 + 1.5f * promptLayout_two.height);
 
-
-
-
             batch.end();
         } else if (elapsed > 4 && elapsed <6) {
             Gdx.gl.glClearColor(1, 1, 1, 1);
@@ -302,19 +299,15 @@ public class MemoryScreen extends InputAdapter implements Screen {
                     (int) (btnSubmit.x + 0.25 * btnSubmit.getWidth()),
                     (int) (btnSubmit.y + 0.6 * btnSubmit.getHeight()));
 
-
-
-
             //prints text on end button
             font.draw(batch, "End",
                     (int) (btnEnd.x + 0.4 * btnEnd.getWidth()),
                     (int) (btnEnd.y + 0.6 * btnEnd.getHeight()));
 
-            font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
-
             //prints the correct/incorrect message when the person clicks submit
             //TODO: FIGURE OUT THE CORRECT WAY TO DO THIS PREFERABLY USING PAUSE
             if(suppressed){
+                font.setColor(0.0f, 0.5f, 0.0f, 1.0f);
                 final GlyphLayout promptLayout = new GlyphLayout(font, GameOneConstants.CORRECT_MESSAGE);
                 font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
             }
@@ -340,10 +333,12 @@ public class MemoryScreen extends InputAdapter implements Screen {
                         1);
             } else if (!correct && onSubmit && !suppressed) {
                 selected = new int[blocksHorizontal][blocksVertical];
+                font.setColor(1.0f, 0.0f, 0.0f, 1.0f);
                 final GlyphLayout promptLayout = new GlyphLayout(font, GameOneConstants.INCORRECT_MESSAGE);
                 font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
             }
 
+            font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 
             //prints the score on the screen of game
             font.draw(batch, GameOneConstants.SCORE_LABEL + Integer.toString(score),
