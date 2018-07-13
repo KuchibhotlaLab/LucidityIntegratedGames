@@ -272,7 +272,7 @@ FaceToNameScreen extends InputAdapter implements Screen {
             font.draw(batch, layout_one, fontX_one, fontY_one);
 
 
-            //prints text on submit button
+            //prints text on back button
             font.draw(batch, GameTwoConstants.BACK_TEXT,
                     (int) (back.x + 0.25 * back.getWidth()),
                     (int) (back.y + 0.6 * back.getHeight()));
@@ -314,8 +314,6 @@ FaceToNameScreen extends InputAdapter implements Screen {
             }
 
             if(elapsed - delayed >= 1f && delayOn) {
-                System.out.println("calls new trial");
-
                 if(onSelect1 && correct.equals(name1) ||
                         onSelect2 && correct.equals(name2)) {
                     ++score;
