@@ -306,6 +306,11 @@ FaceToNameScreen extends InputAdapter implements Screen {
             if(!delayOn && (onSelect2 || onSelect1)){
                 delayOn = true;
                 delayed = elapsed;
+
+                //record reaction time here
+                if(trial <= 5) {
+                    trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
+                }
             }
 
             if(elapsed - delayed >= 1f && delayOn) {
@@ -315,15 +320,13 @@ FaceToNameScreen extends InputAdapter implements Screen {
                         onSelect2 && correct.equals(name2)) {
                     ++score;
 
-                    //Save time in seconds
+                    //record correct
                     if(trial <= 5) {
-                        trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
                         trialSuccess[trial - 1] = 1;
                     }
                 } else {
-                    //Save time in seconds
                     if(trial <= 5) {
-                        trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
+                        //record incorrect
                         trialSuccess[trial - 1] = 0;
                     }
                 }
@@ -335,7 +338,6 @@ FaceToNameScreen extends InputAdapter implements Screen {
                 generateTrial();
             }
         }
-
     }
 
     @Override

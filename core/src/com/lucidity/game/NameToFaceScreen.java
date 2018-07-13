@@ -150,7 +150,6 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
         renderer = new ShapeRenderer();
 
         Gdx.input.setInputProcessor(this);
-
     }
 
     @Override
@@ -178,8 +177,6 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
             final GlyphLayout promptLayout_one = new GlyphLayout(font, GameTwoConstants.PROMPT_ONE);
             font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
                     screenHeight/2 + 1.5f * promptLayout_three.height + 1.5f * promptLayout_two.height);
-
-
 
             batch.end();
 
@@ -231,6 +228,11 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
                 if(!delayOn){
                     delayOn = true;
                     delayed = elapsed;
+
+                    //record reaction time here
+                    if(trial <= 5) {
+                        trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
+                    }
                 }
 
             }
@@ -244,6 +246,11 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
                 if(!delayOn){
                     delayOn = true;
                     delayed = elapsed;
+
+                    //record reaction time here
+                    if(trial <= 5) {
+                        trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
+                    }
                 }
             }
             renderer.rect(answerTwo.x - 20, answerTwo.y - 20, answerTwo.width+40, answerTwo.height+40);
@@ -256,6 +263,7 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
                 if(correctAnswer.equals(answerOneName)){
                     final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
                     font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
+
                 } else {
 
                     final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
@@ -266,31 +274,28 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
                 if(correctAnswer.equals(answerTwoName)){
                     final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
                     font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
+
                 } else {
 
                     final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
                     font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight / 10);
+
                 }
             }
             batch.end();
-
-
-
 
             if(elapsed - delayed >= 1f && delayOn) {
                 if(selectedOne && correctAnswer.equals(answerOneName) ||
                         selectedTwo && correctAnswer.equals(answerTwoName)) {
                     ++score;
 
-                    //Save time in seconds
+                    //record correct
                     if(trial <= 5) {
-                        trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
                         trialSuccess[trial - 1] = 1;
                     }
                 } else {
-                    //Save time in seconds
                     if(trial <= 5) {
-                        trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
+                        //record incorrect
                         trialSuccess[trial - 1] = 0;
                     }
                 }
@@ -303,8 +308,6 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
                 generateTrial();
             }
 
-
-
             renderer.begin(ShapeRenderer.ShapeType.Line);
 
             renderer.setColor(GameTwoConstants.OUTLINE_COLOR);
@@ -315,8 +318,6 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
             renderer.rect(back.x, back.y, back.width, back.height);
 
             renderer.end();
-
-
 
             batch.begin();
             font.getData().setScale(GameTwoConstants.PROMPT_SCALE);
@@ -340,13 +341,10 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
                     (int) (back.y + 0.6 * back.getHeight()));
 
 
-
-
             //prints text on end button
             font.draw(batch, GameTwoConstants.END_TEXT,
                     (int) (end.x + 0.3 * end.getWidth()),
                     (int) (end.y + 0.6 * end.getHeight()));
-
 
 
             //batch.draw(sprite, (screenWidth - sprite.getWidth())/2, (screenHeight - sprite.getHeight())/2);
@@ -518,5 +516,4 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
             }
         });
     }
-
 }
