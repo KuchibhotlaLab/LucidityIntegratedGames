@@ -45,9 +45,9 @@ public class GameTwoConstants {
     public static final int SCORE_CENTER = 50;
     public static final String TRIAL_LABEL = "Trial: ";
 
-    public static final float ANSWER_SCALE = 2f;
-    public static final String CORRECT_MESSAGE = "You are correct!";
-    public static final String INCORRECT_MESSAGE = "You are incorrect!";
+    public static final float ANSWER_SCALE = 3f;
+    public static final String CORRECT_MESSAGE = "Correct!";
+    public static final String INCORRECT_MESSAGE = "Incorrect!";
 
     public static final String PROMPT_ONE = "Please identify the";
     public static final String PROMPT_TWO = "person in the picture.";
