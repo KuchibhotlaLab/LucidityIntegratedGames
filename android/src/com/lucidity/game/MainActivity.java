@@ -10,9 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import org.apache.http.NameValuePair;
@@ -63,18 +65,33 @@ public class MainActivity extends AppCompatActivity{
 
         new GetName().execute();
 
-        //Logout and go back to login page
-        Button btnLogout = findViewById(R.id.button_logout);
-        btnLogout.setOnClickListener(new View.OnClickListener() {
+        //Pop up menu for logging out
+        final Button btnMenu = findViewById(R.id.button_menu);
+        btnMenu.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Login login = new Login(getApplicationContext());
-                login.logout();
+                PopupMenu menu = new PopupMenu(MainActivity.this,btnMenu);
+                menu.getMenuInflater().inflate(R.menu.menu_popup, menu.getMenu());
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.logout:
+                                Login login = new Login(getApplicationContext());
+                                login.logout();
 
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
 
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+                menu.show();
             }
         });
 

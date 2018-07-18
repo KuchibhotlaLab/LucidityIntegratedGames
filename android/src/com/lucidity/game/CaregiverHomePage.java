@@ -41,13 +41,15 @@ public class CaregiverHomePage extends AppCompatActivity {
                 i.putExtra("isCare", true);
                 i.putExtra("isPatient", false);
                 startActivity(i);
-                //startActivity(new Intent(getBaseContext(), PersonDependentGameLauncher.class));
+            }
+        });
 
-                //save instance of the game
-                //stackoverflow.com/questions/25209480/
-                /*Game game = new Game(this)
-                View gameView = initializeForView(game, cfg);
-                layout.addView(gameView)*/
+        Button btnTracking = findViewById(R.id.tracking);
+        btnTracking.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), TrackingActivity.class);
+                i.putExtra("username", username);
+                startActivity(i);
             }
         });
 
