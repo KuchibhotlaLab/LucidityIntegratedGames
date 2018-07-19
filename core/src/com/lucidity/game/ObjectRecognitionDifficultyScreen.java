@@ -117,7 +117,7 @@ public class ObjectRecognitionDifficultyScreen extends InputAdapter implements S
         }
 
         if (worldTouch.dst(GameOneConstants.MEDIUM_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
-            game.setScreen(new ObjectRecognitionScreen(game, GameThreeConstants.DIFFICULTY_MIDIUM));
+            game.setScreen(new ObjectRecognitionScreen(game, GameThreeConstants.DIFFICULTY_MEDIUM));
         }
 
         if (worldTouch.dst(GameOneConstants.HARD_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {

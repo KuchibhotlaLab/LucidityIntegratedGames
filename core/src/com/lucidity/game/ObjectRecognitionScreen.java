@@ -65,6 +65,10 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
     int score, trial;
 
+    ArrayList<Integer> sShowOne, sShowTwo;
+    Color cShowOne, cShowTwo;
+    boolean selectOne, selectTwo, selectThree, selectFour = false;
+    Rectangle one, two, three, four;
     boolean cIsCorrect, sIsCorrect = false;
 
     private boolean timerStart;
@@ -240,7 +244,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
                 }
 
 
-
+                //showSelect(sameSelected);
                 if(!sameSelected){
                     renderer.setColor(GameThreeConstants.TITLE_COLOR);
                 } else {
@@ -251,9 +255,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
                 if(!diffSelected){
                     renderer.setColor(GameThreeConstants.TITLE_COLOR);
-                    //System.out.println("you should be in this loop 2 ");
                 } else {
-                    //System.out.println("are you even here 1 ");
                     renderer.setColor(GameThreeConstants.EASY_COLOR);
                 }
                 renderer.rect(diff.x, diff.y, diff.getWidth(), diff.getHeight());
@@ -316,30 +318,49 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
             } else {
 
-                ArrayList<Integer> sShowOne, sShowTwo;
-                sShowOne = new ArrayList<Integer>();
-                sShowTwo = new ArrayList<Integer>();
-                Color cShowOne, cShowTwo;
 
-                cShowOne = new Color();
-                cShowTwo = new Color();
 
-                if(sIsCorrect){
-                    sShowOne = sCorrect;
-                    sShowTwo = sShown;
+                if(!selectOne){
+                    renderer.setColor(GameThreeConstants.TITLE_COLOR);
                 } else {
-                    sShowTwo = sCorrect;
-                    sShowOne = sShown;
+                    renderer.setColor(GameThreeConstants.EASY_COLOR);
                 }
+                renderer.rect(one.x, one.y, one.getWidth(), one.getHeight());
 
-                if(cIsCorrect){
-                    cShowOne = cCorrect;
-                    cShowTwo = cShown;
+                if(!selectTwo){
+                    renderer.setColor(GameThreeConstants.TITLE_COLOR);
                 } else {
-                    cShowTwo = cCorrect;
-                    cShowOne = cShown;
+                    renderer.setColor(GameThreeConstants.EASY_COLOR);
                 }
+                renderer.rect(two.x, two.y, two.getWidth(), two.getHeight());
 
+
+                if(!selectThree){
+                    renderer.setColor(GameThreeConstants.TITLE_COLOR);
+                } else {
+                    renderer.setColor(GameThreeConstants.EASY_COLOR);
+                }
+                renderer.rect(three.x, three.y, three.getWidth(), three.getHeight());
+
+                if(!selectFour){
+                    renderer.setColor(GameThreeConstants.TITLE_COLOR);
+                } else {
+                    renderer.setColor(GameThreeConstants.EASY_COLOR);
+                }
+                renderer.rect(four.x, four.y, four.getWidth(), four.getHeight());
+                renderer.end();
+
+
+                renderer.begin(ShapeRenderer.ShapeType.Line);
+                renderer.setColor(GameThreeConstants.HARD_COLOR);
+                renderer.rect(one.x, one.y, one.getWidth(), one.getHeight());
+                renderer.rect(two.x, two.y, two.getWidth(), two.getHeight());
+                renderer.rect(three.x, three.y, three.getWidth(), three.getHeight());
+                renderer.rect(four.x, four.y, four.getWidth(), four.getHeight());
+                renderer.end();
+
+
+                renderer.begin(ShapeRenderer.ShapeType.Filled);
                 renderer.setColor(cShowOne);
                 switch (sShowOne.size()) {
                     case 3:
@@ -399,8 +420,41 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
                     default:
                         break;
                 }
-
                 renderer.end();
+
+
+                if(!delayOn && (selectOne || selectTwo || selectThree || selectFour)){
+                    delayOn = true;
+                    delayed = elapsed;
+
+                    disabled = true;
+                    //record reaction time here
+                    if(trial <= 5) {
+                        trialTime[trial - 1] = (TimeUtils.nanoTime() - trialStartTime) / 1000000000.0;
+                    }
+                }
+
+                batch.begin();
+                font.getData().setScale(GameThreeConstants.ANSWER_SCALE);
+
+                if(selectOne || selectTwo || selectThree || selectFour) {
+                    if (isCorrectHard()) {
+                        font.setColor(GameOneConstants.CORRECT_COLOR);
+                        final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                        font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight * 3 / 4);
+                        final GlyphLayout promptLayout = new GlyphLayout(font, GameThreeConstants.CORRECT_MESSAGE);
+                        font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight * 3 / 4 + 1.5f * reactionLayout.height);
+
+                    } else {
+                        font.setColor(GameOneConstants.INCORRECT_COLOR);
+                        final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                        font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight * 3 / 4);
+                        final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
+                        font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight * 3 / 4  + 1.5f * reactionLayout.height);
+
+                    }
+                }
+                batch.end();
 
             }
 
@@ -516,13 +570,30 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if(!disabled){
-            if (same.contains(screenX, screenHeight - screenY)) {
-                sameSelected = !sameSelected;
-                diffSelected = false;
-            }
-            if (diff.contains(screenX, screenHeight - screenY)) {
-                diffSelected = !diffSelected;
-                sameSelected = false;
+
+            if(difficult == GameThreeConstants.DIFFICULTY_EASY || difficult == GameThreeConstants.DIFFICULTY_MEDIUM) {
+                if (same.contains(screenX, screenHeight - screenY)) {
+                    sameSelected = !sameSelected;
+                    diffSelected = false;
+                }
+                if (diff.contains(screenX, screenHeight - screenY)) {
+                    diffSelected = !diffSelected;
+                    sameSelected = false;
+                }
+            } else {
+                if(one.contains(screenX, screenHeight - screenY)){
+                    selectOne = true;
+                    selectTwo = selectThree = selectFour = false;
+                } else if(two.contains(screenX, screenHeight - screenY)){
+                    selectTwo = true;
+                    selectOne = selectThree = selectFour = false;
+                } else if (three.contains(screenX, screenHeight - screenY)){
+                    selectThree = true;
+                    selectOne = selectTwo = selectFour = false;
+                } else if(four.contains(screenX, screenHeight - screenY)){
+                    selectFour = true;
+                    selectOne = selectTwo = selectThree = false;
+                }
             }
 
             if (end.contains(screenX, screenHeight - screenY)) {
@@ -560,6 +631,8 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             while (sShow == sAnswer) {
                 sShow = (int)(Math.random() * shapes.size());
             }
+
+            initializeAnswer();
         }
         sShown = shapes.get(sShow);
 
@@ -582,12 +655,34 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
         cIsCorrect = ((int)(Math.random() * 2) == 0);
         sIsCorrect = ((int)(Math.random() * 2) == 0);
 
+        sShowOne = new ArrayList<Integer>();
+        sShowTwo = new ArrayList<Integer>();
+
+        cShowOne = new Color();
+        cShowTwo = new Color();
+
+        if(sIsCorrect){
+            sShowOne = sCorrect;
+            sShowTwo = sShown;
+        } else {
+            sShowTwo = sCorrect;
+            sShowOne = sShown;
+        }
+
+        if(cIsCorrect){
+            cShowOne = cCorrect;
+            cShowTwo = cShown;
+        } else {
+            cShowTwo = cCorrect;
+            cShowOne = cShown;
+        }
+
     }
 
     private boolean isCorrect(){
-        if(difficult == 0){
+        if(difficult == GameThreeConstants.DIFFICULTY_EASY){
             return (sameSelected && sCorrect.equals(sShown)) || (diffSelected && !sCorrect.equals(sShown));
-        } else {
+        } else if(difficult == GameThreeConstants.DIFFICULTY_MEDIUM) {
             if(sameSelected){
                 return (sCorrect.equals(sShown) && cCorrect.equals(cShown));
             } else if (diffSelected){
@@ -596,6 +691,50 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
         }
         return false;
     }
+
+    private boolean isCorrectHard(){
+        if(selectOne){
+            return (cShowOne.equals(cCorrect) && sShowOne.equals(sCorrect));
+        } else if(selectTwo){
+            return (cShowTwo.equals(cCorrect) && sShowOne.equals(sCorrect));
+        } else if(selectThree) {
+            return (cShowOne.equals(cCorrect) && sShowTwo.equals(sCorrect));
+        } else if(selectFour){
+            return (cShowTwo.equals(cCorrect) && sShowTwo.equals(sCorrect));
+        }
+        return false;
+    }
+
+
+    private void initializeAnswer(){
+        selectOne = false;
+        selectTwo = false;
+        selectThree = false;
+        selectFour = false;
+        one = new Rectangle();
+        two = new Rectangle();
+        three = new Rectangle();
+        four = new Rectangle();
+
+
+        one.x = three.x = 0;
+        two.x = four.x = screenWidth / 2;
+        one.width = two.width = three.width = four.width = screenWidth / 2;
+        one.height = two.height = three.height = four.height = screenWidth / 2;
+        three.y = four.y = screenHeight / 10;
+        one.y = two.y = three.y + three.height;
+
+
+    }
+
+    private void showSelect(boolean selected){
+        if(!selected){
+            renderer.setColor(GameThreeConstants.TITLE_COLOR);
+        } else {
+            renderer.setColor(GameThreeConstants.EASY_COLOR);
+        }
+    }
+
 
     //Posts score and stats to MySQL database
     private void postScore() {

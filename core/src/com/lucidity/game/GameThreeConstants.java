@@ -33,7 +33,7 @@ public class GameThreeConstants {
     public static final String TITLE_THREE = "TEST";
 
     public static final int DIFFICULTY_EASY = 0;
-    public static final int DIFFICULTY_MIDIUM = 1;
+    public static final int DIFFICULTY_MEDIUM = 1;
     public static final int DIFFICULTY_HARD = 2;
 
     public static final String PROMPT_ONE = "Please rememeber the shape";
