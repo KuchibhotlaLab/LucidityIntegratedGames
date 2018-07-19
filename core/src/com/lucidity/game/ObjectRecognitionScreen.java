@@ -317,64 +317,84 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             } else {
 
                 ArrayList<Integer> sShowOne, sShowTwo;
+                sShowOne = new ArrayList<Integer>();
+                sShowTwo = new ArrayList<Integer>();
                 Color cShowOne, cShowTwo;
 
+                cShowOne = new Color();
+                cShowTwo = new Color();
 
-                renderer.setColor(cCorrect);
-                switch (sCorrect.size()) { 
+                if(sIsCorrect){
+                    sShowOne = sCorrect;
+                    sShowTwo = sShown;
+                } else {
+                    sShowTwo = sCorrect;
+                    sShowOne = sShown;
+                }
+
+                if(cIsCorrect){
+                    cShowOne = cCorrect;
+                    cShowTwo = cShown;
+                } else {
+                    cShowTwo = cCorrect;
+                    cShowOne = cShown;
+                }
+
+                renderer.setColor(cShowOne);
+                switch (sShowOne.size()) {
                     case 3:
-                        renderer.circle(sCorrect.get(0) / 2, sCorrect.get(1)/2 + screenHeight/8, sCorrect.get(2) / 2);
+                        renderer.circle(sShowOne.get(0) / 2, sShowOne.get(1)/2 + screenHeight/8, sShowOne.get(2) / 2);
                         break;
                     case 4:
-                        renderer.rect(sCorrect.get(0) / 2, sCorrect.get(1), sCorrect.get(2) / 2, sCorrect.get(3) / 2);
+                        renderer.rect(sShowOne.get(0) / 2, sShowOne.get(1), sShowOne.get(2) / 2, sShowOne.get(3) / 2);
                         break;
                     case 6:
-                        renderer.triangle(sCorrect.get(0) / 2, sCorrect.get(1)/2 + screenHeight / 6, sCorrect.get(2)/ 2, sCorrect.get(3) / 2 + screenHeight / 6, sCorrect.get(4) / 2, sCorrect.get(5) / 2  + screenHeight / 6);
+                        renderer.triangle(sShowOne.get(0) / 2, sShowOne.get(1)/2 + screenHeight / 6, sShowOne.get(2)/ 2, sShowOne.get(3) / 2 + screenHeight / 6, sShowOne.get(4) / 2, sShowOne.get(5) / 2  + screenHeight / 6);
                         break;
                     default:
                         break;
                 }
 
-                renderer.setColor(cShown);
-                switch (sCorrect.size()) {
+                renderer.setColor(cShowTwo);
+                switch (sShowOne.size()) {
                     case 3:
-                        renderer.circle(sCorrect.get(0) / 2 + screenWidth / 2, sCorrect.get(1) / 2 + screenHeight/8, sCorrect.get(2) / 2);
+                        renderer.circle(sShowOne.get(0) / 2 + screenWidth / 2, sShowOne.get(1) / 2 + screenHeight/8, sShowOne.get(2) / 2);
                         break;
                     case 4:
-                        renderer.rect(sCorrect.get(0) / 2 + screenWidth / 2 , sCorrect.get(1), sCorrect.get(2) / 2, sCorrect.get(3) / 2);
+                        renderer.rect(sShowOne.get(0) / 2 + screenWidth / 2 , sShowOne.get(1), sShowOne.get(2) / 2, sShowOne.get(3) / 2);
                         break;
                     case 6:
-                        renderer.triangle(sCorrect.get(0) / 2 + screenWidth  / 2, sCorrect.get(1) / 2  + screenHeight / 6, sCorrect.get(2)/2 + screenWidth /2, sCorrect.get(3) / 2  + screenHeight / 6, sCorrect.get(4)/2 +  screenWidth /2, sCorrect.get(5)/2  + screenHeight / 6);
+                        renderer.triangle(sShowOne.get(0) / 2 + screenWidth  / 2, sShowOne.get(1) / 2  + screenHeight / 6, sShowOne.get(2)/2 + screenWidth /2, sShowOne.get(3) / 2  + screenHeight / 6, sShowOne.get(4)/2 +  screenWidth /2, sShowOne.get(5)/2  + screenHeight / 6);
                         break;
                     default:
                         break;
                 }
 
-                renderer.setColor(cShown);
-                switch (sShown.size()) {
+                renderer.setColor(cShowTwo);
+                switch (sShowTwo.size()) {
                     case 3:
-                        renderer.circle(sShown.get(0) / 2, sShown.get(1) + screenHeight / 8, sShown.get(2) / 2);
+                        renderer.circle(sShowTwo.get(0) / 2, sShowTwo.get(1) + screenHeight / 8, sShowTwo.get(2) / 2);
                         break;
                     case 4:
-                        renderer.rect(sShown.get(0) / 2, sShown.get(1) + screenHeight / 3, sShown.get(2) / 2, sShown.get(3) / 2);
+                        renderer.rect(sShowTwo.get(0) / 2, sShowTwo.get(1) + screenHeight / 3, sShowTwo.get(2) / 2, sShowTwo.get(3) / 2);
                         break;
                     case 6:
-                        renderer.triangle(sShown.get(0) / 2, sShown.get(1) / 2 + screenHeight / 2, sShown.get(2)/2, sShown.get(3) / 2 + screenHeight / 2, sShown.get(4)/2, sShown.get(5)/2 + screenHeight / 2);
+                        renderer.triangle(sShowTwo.get(0) / 2, sShowTwo.get(1) / 2 + screenHeight / 2, sShowTwo.get(2)/2, sShowTwo.get(3) / 2 + screenHeight / 2, sShowTwo.get(4)/2, sShowTwo.get(5)/2 + screenHeight / 2);
                         break;
                     default:
                         break;
                 }
 
-                renderer.setColor(cCorrect);
-                switch (sShown.size()) {
+                renderer.setColor(cShowOne);
+                switch (sShowTwo.size()) {
                     case 3:
-                        renderer.circle(sShown.get(0) / 2 + screenWidth / 2, sShown.get(1) + screenHeight / 8, sShown.get(2) / 2);
+                        renderer.circle(sShowTwo.get(0) / 2 + screenWidth / 2, sShowTwo.get(1) + screenHeight / 8, sShowTwo.get(2) / 2);
                         break;
                     case 4:
-                        renderer.rect(sShown.get(0) / 2 + screenWidth / 2, sShown.get(1) + screenHeight / 3, sShown.get(2) / 2, sShown.get(3) / 2);
+                        renderer.rect(sShowTwo.get(0) / 2 + screenWidth / 2, sShowTwo.get(1) + screenHeight / 3, sShowTwo.get(2) / 2, sShowTwo.get(3) / 2);
                         break;
                     case 6:
-                        renderer.triangle(sShown.get(0) / 2 + screenWidth /2, sShown.get(1) / 2 + screenHeight / 2, sShown.get(2)/2 + screenWidth /2, sShown.get(3) / 2 + screenHeight / 2, sShown.get(4)/2 + screenWidth /2, sShown.get(5)/2 + screenHeight / 2);
+                        renderer.triangle(sShowTwo.get(0) / 2 + screenWidth /2, sShowTwo.get(1) / 2 + screenHeight / 2, sShowTwo.get(2)/2 + screenWidth /2, sShowTwo.get(3) / 2 + screenHeight / 2, sShowTwo.get(4)/2 + screenWidth /2, sShowTwo.get(5)/2 + screenHeight / 2);
                         break;
                     default:
                         break;
