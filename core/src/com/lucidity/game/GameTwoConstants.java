@@ -12,12 +12,14 @@ public class GameTwoConstants {
     public static final float WORLD_SIZE = 10.0f;
 
     public static final float MODE_WORLD_SIZE = 480.0f;
-    public static final float MODE_BUBBLE_RADIUS = MODE_WORLD_SIZE / 5;
+    public static final float MODE_BUBBLE_RADIUS = MODE_WORLD_SIZE * 2 / 9;
     public static final float MODE_LABEL_SCALE = 1.5f;
 
     public static final String MODE_ONE_FIRST = "Match face";
     public static final String MODE_ONE_SECOND = "to names";
+    public static final String MODE_ONE_THIRD = "to relation";
     public static final String MODE_TWO_FIRST = "Match name";
+    public static final String MODE_TWO_THIRD = "Match relation";
     public static final String MODE_TWO_SECOND = "to faces";
 
 
@@ -34,12 +36,17 @@ public class GameTwoConstants {
     public static final String TITLE_THREE = "MEMORY TEST";
 
 
-    public static final Vector2 F2W_CENTER = new Vector2(MODE_WORLD_SIZE/4,MODE_WORLD_SIZE/2);
-    public static final Vector2 W2F_CENTER = new Vector2(MODE_WORLD_SIZE * 3 /4,MODE_WORLD_SIZE/2);
+    public static final Vector2 F2W_CENTER_NAME = new Vector2(MODE_WORLD_SIZE/4,MODE_WORLD_SIZE  * 3 / 4);
+    public static final Vector2 F2W_CENTER_ATTR = new Vector2(MODE_WORLD_SIZE/4, MODE_WORLD_SIZE / 4);
+    public static final Vector2 W2F_CENTER_NAME = new Vector2(MODE_WORLD_SIZE * 3 /4,MODE_WORLD_SIZE * 3 /4);
+    public static final Vector2 W2F_CENTER_ATTR = new Vector2(MODE_WORLD_SIZE * 3 /4,MODE_WORLD_SIZE / 4);
+
+    public static final int MODE_NAME = 0;
+    public static final int MODE_ATTR = 1;
+
 
     public static final String PROMPT = "Who is ";
     public static final float PROMPT_SCALE = 3f;
-
 
     public static final String SCORE_LABEL = "Score: ";
     public static final int SCORE_CENTER = 50;

@@ -57,7 +57,7 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
     ArrayList<File> validFiles;
     //ArrayList<FileHandle> validFiles;
 
-    String name;
+    String tag;
     String attribute;
     String correctAnswer;
 
@@ -75,13 +75,16 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
     //TODO: figure out how to properly time
     boolean delayOn= false;
     float delayed = -10000;
+    int gameMode;
 
     private boolean disableTouchDown=true;
 
-    public NameToFaceScreen(FacialMemoryGame game, int points, int trials) {
+    public NameToFaceScreen(FacialMemoryGame game, int points, int trials, int mode) {
         this.game = game;
         score = points;
         trial = trials;
+
+        gameMode = mode;
 
         screenWidth = Gdx.graphics.getWidth();
         screenHeight = Gdx.graphics.getHeight();
@@ -333,7 +336,7 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
             batch.begin();
             font.setColor(Color.WHITE);
             font.getData().setScale(GameTwoConstants.PROMPT_SCALE);
-            final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.PROMPT + name);
+            final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.PROMPT + tag);
             font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight * 7 / 8);
 
 
@@ -422,8 +425,13 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
     private void generateTrial() {
         elapsed = 0;
         delayed = -10000;
-        name = "";
-        attribute = "name";
+        tag = "";
+        if(gameMode == GameTwoConstants.MODE_NAME){
+            attribute = "name";
+        } else if(gameMode == GameTwoConstants.MODE_ATTR){
+            attribute = "relation";
+        }
+
         delayOn = false;
         selectedTwo = false;
         selectedOne = false;
@@ -447,7 +455,13 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
         validFiles.add(file);*/
 
         File file = validFiles.get(position);
-        name = imgTags.get(imgNames.indexOf(file.getName())).get(0);
+        if(gameMode == GameTwoConstants.MODE_NAME){
+            tag = imgTags.get(imgNames.indexOf(file.getName())).get(0);
+        } else if(gameMode == GameTwoConstants.MODE_ATTR){
+            tag = imgTags.get(imgNames.indexOf(file.getName())).get(1);
+        }
+
+
         correctAnswer = file.getName();
 
         validFiles.remove(file);
@@ -464,10 +478,6 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
             faceOne = new Texture(Gdx.files.absolute(validFiles.get(incorrect).getPath()));
             answerOneName = validFiles.get(incorrect).getName();
         }
-
-        System.out.println(answerOneName);
-        System.out.println(answerTwoName);
-        System.out.println(name);
 
         validFiles.add(file);
 

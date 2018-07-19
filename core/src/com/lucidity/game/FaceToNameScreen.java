@@ -49,11 +49,12 @@ FaceToNameScreen extends InputAdapter implements Screen {
     String username;
     ArrayList<String> imgNames;
     ArrayList<ArrayList<String>> imgTags;
+    int gameMode;
 
     Rectangle answer1, answer2, end, back;
     boolean onSelect1, onSelect2 = false;
     boolean onEnd, onBack = false;
-    String name1, name2;
+    String attr1, attr2;
     String correct;
 
 
@@ -76,10 +77,11 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
     private boolean disableTouchDown=true;
 
-    public FaceToNameScreen(FacialMemoryGame game, int points, int trials) {
+    public FaceToNameScreen(FacialMemoryGame game, int points, int trials, int mode) {
         this.game = game;
         score = points;
         trial = trials;
+        gameMode = mode;
 
         screenWidth = Gdx.graphics.getWidth();
         screenHeight = Gdx.graphics.getHeight();
@@ -246,7 +248,7 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
             if(onSelect1){
                 disableTouchDown = true;
-                if(correct.equals(name1)){
+                if(correct.equals(attr1)){
                     font.setColor(GameOneConstants.CORRECT_COLOR);
                     final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
                     font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight* 3 / 4);
@@ -263,7 +265,7 @@ FaceToNameScreen extends InputAdapter implements Screen {
                 }
             } else if (onSelect2) {
                 disableTouchDown = true;
-                if(correct.equals(name2)){
+                if(correct.equals(attr2)){
                     font.setColor(GameOneConstants.CORRECT_COLOR);
                     final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
                     font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight * 3 / 4);
@@ -290,12 +292,12 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
 
             font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
-            final GlyphLayout layout_two = new GlyphLayout(font, name2);
+            final GlyphLayout layout_two = new GlyphLayout(font, attr2);
             final float fontX_two = (screenWidth - layout_two.width) / 2;
             final float fontY_two = (answer2.height * 0.6f + answer2.y);
             font.draw(batch, layout_two, fontX_two, fontY_two);
 
-            final GlyphLayout layout_one = new GlyphLayout(font, name1);
+            final GlyphLayout layout_one = new GlyphLayout(font, attr1);
             final float fontX_one = (screenWidth - layout_one.width) / 2;
             final float fontY_one = (answer1.height * 0.6f + answer1.y);
             font.draw(batch, layout_one, fontX_one, fontY_one);
@@ -332,8 +334,8 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
 
             if(elapsed - delayed >= 1f && delayOn) {
-                if(onSelect1 && correct.equals(name1) ||
-                        onSelect2 && correct.equals(name2)) {
+                if(onSelect1 && correct.equals(attr1) ||
+                        onSelect2 && correct.equals(attr2)) {
                     ++score;
 
                     //record correct
@@ -408,8 +410,8 @@ FaceToNameScreen extends InputAdapter implements Screen {
     }
 
     private void generateTrial(){
-        name1 = "";
-        name2 = "";
+        attr1 = "";
+        attr2 = "";
         elapsed = 0;
         delayed = -10000;
         delayOn = false;
@@ -420,25 +422,40 @@ FaceToNameScreen extends InputAdapter implements Screen {
         onBack = false;
         timerStart = true;
 
+
+
         int picture = (int) (Math.random() * validFiles.size());
         face = new Texture(Gdx.files.absolute(validFiles.get(picture).getPath()));
         display = new Sprite(face);
-        /*face = new Texture(Gdx.files.internal("test.jpg"));*/
 
-        correct = imgTags.get(imgNames.indexOf(validFiles.get(picture).getName())).get(0);
         int incorrect = (int) (Math.random() * validFiles.size());
         while (incorrect == picture) {
             incorrect = (int) (Math.random() * validFiles.size());
         }
 
-        int position = (int) (Math.random() * 2);
-        if(position == 0) {
-            name1 = correct;
-            name2 = imgTags.get(imgNames.indexOf(validFiles.get(incorrect).getName())).get(0);;
-        } else {
-            name1 = imgTags.get(imgNames.indexOf(validFiles.get(incorrect).getName())).get(0);;
-            name2 = correct;
+
+        if(gameMode == GameTwoConstants.MODE_NAME){
+            int position = (int) (Math.random() * 2);
+            correct = imgTags.get(imgNames.indexOf(validFiles.get(picture).getName())).get(0);
+            if(position == 0) {
+                attr1 = correct;
+                attr2 = imgTags.get(imgNames.indexOf(validFiles.get(incorrect).getName())).get(0);;
+            } else {
+                attr1 = imgTags.get(imgNames.indexOf(validFiles.get(incorrect).getName())).get(0);;
+                attr2 = correct;
+            }
+        } else if(gameMode == GameTwoConstants.MODE_ATTR){
+            int position = (int) (Math.random() * 2);
+            correct = imgTags.get(imgNames.indexOf(validFiles.get(picture).getName())).get(1);
+            if(position == 0) {
+                attr1 = correct;
+                attr2 = imgTags.get(imgNames.indexOf(validFiles.get(incorrect).getName())).get(1);;
+            } else {
+                attr1 = imgTags.get(imgNames.indexOf(validFiles.get(incorrect).getName())).get(1);;
+                attr2 = correct;
+            }
         }
+
 
 
     }

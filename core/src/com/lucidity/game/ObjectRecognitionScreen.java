@@ -142,7 +142,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
     @Override
     public void render(float delta) {
         viewport.apply();
-        Gdx.gl.glClearColor(GameThreeConstants.BACKGROUND_COLOR.r, GameThreeConstants.BACKGROUND_COLOR.g, GameThreeConstants.BACKGROUND_COLOR.b, 1);
+        Gdx.gl.glClearColor(GameThreeConstants.LOADING_COLOR.r, GameThreeConstants.LOADING_COLOR.g, GameThreeConstants.LOADING_COLOR.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         elapsed += delta;
 
@@ -150,6 +150,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
             batch.begin();
             font.getData().setScale(GameThreeConstants.PROMPT_SCALE);
+            font.setColor(GameThreeConstants.TITLE_COLOR);
 
             final GlyphLayout promptLayout_three = new GlyphLayout(font, GameThreeConstants.PROMPT_THREE);
             font.draw(batch, promptLayout_three, (screenWidth - promptLayout_three.width)/2, screenHeight * 2 / 3);
@@ -291,7 +292,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
                     }
                 }
 
-                font.setColor(Color.WHITE);
+                font.setColor(GameThreeConstants.TITLE_COLOR);
                 font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
                 final GlyphLayout layout_two = new GlyphLayout(font, GameThreeConstants.SAME_ANSWER_TEXT);
                 final float fontX_two = (screenWidth - layout_two.width) / 2;
@@ -337,13 +338,15 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
                 renderer.setColor(cShowOne);
                 switch (sShowOne.size()) {
                     case 3:
-                        renderer.circle(sShowOne.get(0) / 2, sShowOne.get(1)/2, sShowOne.get(2) / 2);
+                        renderer.circle(one.width / 2, one.width / 2 + one.y, sShowOne.get(2) / 2);
                         break;
                     case 4:
-                        renderer.rect(sShowOne.get(0) / 2, sShowOne.get(1)/2, sShowOne.get(2) / 2, sShowOne.get(3) / 2);
+                        renderer.rect((one.width - sShowOne.get(2) / 2) / 2, (one.height - sShowOne.get(3) / 2) / 2 + one.y, sShowOne.get(2) / 2, sShowOne.get(3) / 2);
                         break;
                     case 6:
-                        renderer.triangle(sShowOne.get(0) / 2, sShowOne.get(1)/2 + screenHeight / 6, sShowOne.get(2)/ 2, sShowOne.get(3) / 2 + screenHeight / 6, sShowOne.get(4) / 2, sShowOne.get(5) / 2  + screenHeight / 6);
+                        int width = (sShowOne.get(4) - sShowOne.get(0)) / 2;
+                        int height = (sShowOne.get(3) - sShowOne.get(1)) / 2;
+                        renderer.triangle((one.width - width) / 2, one.y + (one.height - height) / 2, one.width/2, one.y + height + (one.height - height) / 2, width + (one.width - width) / 2 , one.y + (one.height - height) / 2);
                         break;
                     default:
                         break;
@@ -352,13 +355,15 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
                 renderer.setColor(cShowTwo);
                 switch (sShowOne.size()) {
                     case 3:
-                        renderer.circle(sShowOne.get(0) / 2 + screenWidth / 2, sShowOne.get(1) / 2, sShowOne.get(2) / 2);
+                        renderer.circle(two.width / 2, two.width / 2 + two.y, sShowOne.get(2) / 2);
                         break;
                     case 4:
-                        renderer.rect(sShowOne.get(0) / 2 + screenWidth / 2 , sShowOne.get(1)/2, sShowOne.get(2) / 2, sShowOne.get(3) / 2);
+                        renderer.rect((two.width - sShowOne.get(2) / 2) / 2, (two.height - sShowOne.get(3) / 2) / 2 + two.y, sShowOne.get(2) / 2, sShowOne.get(3) / 2);
                         break;
                     case 6:
-                        renderer.triangle(sShowOne.get(0) / 2 + screenWidth  / 2, sShowOne.get(1) / 2  + screenHeight / 6, sShowOne.get(2)/2 + screenWidth /2, sShowOne.get(3) / 2  + screenHeight / 6, sShowOne.get(4)/2 +  screenWidth /2, sShowOne.get(5)/2  + screenHeight / 6);
+                        int width = (sShowOne.get(4) - sShowOne.get(0)) / 2;
+                        int height = (sShowOne.get(3) - sShowOne.get(1)) / 2;
+                        renderer.triangle((two.width - width) / 2, two.y + (two.height - height) / 2, two.width/2, two.y + height + (two.height - height) / 2, width + (two.width - width) / 2 , two.y + (two.height - height) / 2);
                         break;
                     default:
                         break;
@@ -367,13 +372,15 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
                 renderer.setColor(cShowTwo);
                 switch (sShowTwo.size()) {
                     case 3:
-                        renderer.circle(sShowTwo.get(0) / 2, sShowTwo.get(1), sShowTwo.get(2) / 2);
+                        renderer.circle(three.width / 2 + three.x, three.width / 2 + three.y, sShowTwo.get(2) / 2);
                         break;
                     case 4:
-                        renderer.rect(sShowTwo.get(0) / 2, sShowTwo.get(1)/2 + screenHeight / 3, sShowTwo.get(2) / 2, sShowTwo.get(3) / 2);
+                        renderer.rect((three.width - sShowTwo.get(2) / 2) / 2 + three.x, (three.height - sShowTwo.get(3) / 2) / 2 + three.y, sShowTwo.get(2) / 2, sShowTwo.get(3) / 2);
                         break;
                     case 6:
-                        renderer.triangle(sShowTwo.get(0) / 2, sShowTwo.get(1) / 2 + screenHeight / 2, sShowTwo.get(2)/2, sShowTwo.get(3) / 2 + screenHeight / 2, sShowTwo.get(4)/2, sShowTwo.get(5)/2 + screenHeight / 2);
+                        int width = (sShowTwo.get(4) - sShowTwo.get(0)) / 2;
+                        int height = (sShowTwo.get(3) - sShowTwo.get(1)) /2;
+                        renderer.triangle((three.width - width) / 2 + three.x, three.y + (three.height - height) / 2, three.width/2 + three.x, three.y + height + (three.height - height) / 2, width + three.x + (three.width - width) / 2 , three.y + (three.height - height) / 2);
                         break;
                     default:
                         break;
@@ -382,13 +389,15 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
                 renderer.setColor(cShowOne);
                 switch (sShowTwo.size()) {
                     case 3:
-                        renderer.circle(sShowTwo.get(0) / 2 + screenWidth / 2, sShowTwo.get(1), sShowTwo.get(2) / 2);
+                        renderer.circle(four.width / 2 + three.x, four.width / 2 + four.y, sShowTwo.get(2) / 2);
                         break;
                     case 4:
-                        renderer.rect(sShowTwo.get(0) / 2 + screenWidth / 2, sShowTwo.get(1)/2 + screenHeight / 3, sShowTwo.get(2) / 2, sShowTwo.get(3) / 2);
+                        renderer.rect((four.width - sShowTwo.get(2) / 2) / 2 + four.x, (four.height - sShowTwo.get(3) / 2) / 2 + four.y, sShowTwo.get(2) / 2, sShowTwo.get(3) / 2);
                         break;
                     case 6:
-                        renderer.triangle(sShowTwo.get(0) / 2 + screenWidth /2, sShowTwo.get(1) / 2 + screenHeight / 2, sShowTwo.get(2)/2 + screenWidth /2, sShowTwo.get(3) / 2 + screenHeight / 2, sShowTwo.get(4)/2 + screenWidth /2, sShowTwo.get(5)/2 + screenHeight / 2);
+                        int width = (sShowTwo.get(4) - sShowTwo.get(0)) / 2;
+                        int height = (sShowTwo.get(3) - sShowTwo.get(1)) /2;
+                        renderer.triangle((four.width - width) / 2 + four.x, four.y + (four.height - height) / 2, four.width/2 + four.x, four.y + height + (four.height - height) / 2, width + four.x + (four.width - width) / 2 , four.y + (four.height - height) / 2);
                         break;
                     default:
                         break;
@@ -477,6 +486,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
                     (int) (end.x + 0.25 * end.getWidth()),
                     (int) (end.y + 0.6 * end.getHeight()));
 
+            font.setColor(GameThreeConstants.TITLE_COLOR);
             font.draw(batch, GameTwoConstants.SCORE_LABEL + Integer.toString(score),
                     GameTwoConstants.SCORE_CENTER, screenHeight - GameTwoConstants.SCORE_CENTER);
 
@@ -489,7 +499,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
 
             if(elapsed - delayed >= 1f && delayOn) {
-                if(isCorrect()){
+                if(isCorrect() || isCorrectHard()){
                     ++score;
                     //record correct
                     if(trial <= 5) {
@@ -671,9 +681,9 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
         } else if(selectTwo){
             return (cShowTwo.equals(cCorrect) && sShowOne.equals(sCorrect));
         } else if(selectThree) {
-            return (cShowOne.equals(cCorrect) && sShowTwo.equals(sCorrect));
-        } else if(selectFour){
             return (cShowTwo.equals(cCorrect) && sShowTwo.equals(sCorrect));
+        } else if(selectFour){
+            return (cShowOne.equals(cCorrect) && sShowTwo.equals(sCorrect));
         }
         return false;
     }
@@ -708,6 +718,24 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
         }
     }
 
+    private boolean shapeCorrect(){
+        if(selectOne || selectTwo){
+            return sShowOne.equals(sCorrect);
+        } else if (selectThree || selectFour){
+            return sShowTwo.equals(sCorrect);
+        }
+        return false;
+    }
+
+    private boolean colorCorrect(){
+        if(selectOne || selectFour){
+            return cShowOne.equals(cCorrect);
+        } else if(selectThree || selectFour){
+            return cShowTwo.equals(cCorrect);
+        }
+        return false;
+    }
+
 
     //Posts score and stats to MySQL database
     private void postScore() {
@@ -739,6 +767,12 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             json.put(trialNum, String.valueOf(trialSuccess[i]));
             json.put(trialNum + "time", String.valueOf(trialTime[i]));
         }
+
+        /* TODO: for posting */
+        boolean shapeCorrect = shapeCorrect();
+        boolean colorCorrect = colorCorrect();
+        /* json.put("correct shape", shapeCorrect);
+        *  json.put("correct color", colorCorrect);*/
 
         httpPost.setContent(HttpParametersUtils.convertHttpParameters(json));
 

@@ -56,10 +56,18 @@ public class ModeScreen extends InputAdapter implements Screen {
         renderer.begin(ShapeRenderer.ShapeType.Filled);
 
         renderer.setColor(GameTwoConstants.F2W_COLOR);
-        renderer.circle(GameTwoConstants.F2W_CENTER.x, GameTwoConstants.F2W_CENTER.y, GameTwoConstants.MODE_BUBBLE_RADIUS);
+        renderer.circle(GameTwoConstants.F2W_CENTER_NAME.x, GameTwoConstants.F2W_CENTER_NAME.y, GameTwoConstants.MODE_BUBBLE_RADIUS);
 
         renderer.setColor(GameTwoConstants.W2F_COLOR);
-        renderer.circle(GameTwoConstants.W2F_CENTER.x, GameTwoConstants.W2F_CENTER.y, GameTwoConstants.MODE_BUBBLE_RADIUS);
+        renderer.circle(GameTwoConstants.W2F_CENTER_NAME.x, GameTwoConstants.W2F_CENTER_NAME.y, GameTwoConstants.MODE_BUBBLE_RADIUS);
+
+        renderer.setColor(GameTwoConstants.F2W_COLOR);
+        renderer.circle(GameTwoConstants.F2W_CENTER_ATTR.x, GameTwoConstants.F2W_CENTER_ATTR.y, GameTwoConstants.MODE_BUBBLE_RADIUS);
+
+        renderer.setColor(GameTwoConstants.W2F_COLOR);
+        renderer.circle(GameTwoConstants.W2F_CENTER_ATTR.x, GameTwoConstants.W2F_CENTER_ATTR.y, GameTwoConstants.MODE_BUBBLE_RADIUS);
+
+
         renderer.end();
 
         batch.setProjectionMatrix(viewport.getCamera().combined);
@@ -69,22 +77,41 @@ public class ModeScreen extends InputAdapter implements Screen {
         font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         final GlyphLayout mode_one_second = new GlyphLayout(font, GameTwoConstants.MODE_ONE_SECOND);
-        font.draw(batch, GameTwoConstants.MODE_ONE_SECOND, GameTwoConstants.F2W_CENTER.x, GameTwoConstants.F2W_CENTER.y + mode_one_second.height / 3, 0, Align.center, false);
+        font.draw(batch, GameTwoConstants.MODE_ONE_SECOND, GameTwoConstants.F2W_CENTER_NAME.x, GameTwoConstants.F2W_CENTER_NAME.y + mode_one_second.height / 3, 0, Align.center, false);
 
         final GlyphLayout mode_one_first = new GlyphLayout(font, GameTwoConstants.MODE_ONE_FIRST);
-        font.draw(batch, GameTwoConstants.MODE_ONE_FIRST, GameTwoConstants.F2W_CENTER.x,
-                GameTwoConstants.F2W_CENTER.y + mode_one_first.height / 3 + mode_one_second.height, 0, Align.center, false);
+        font.draw(batch, GameTwoConstants.MODE_ONE_FIRST, GameTwoConstants.F2W_CENTER_NAME.x,
+                GameTwoConstants.F2W_CENTER_NAME.y + mode_one_first.height / 3 + mode_one_second.height, 0, Align.center, false);
+
+
+        final GlyphLayout mode_one_third = new GlyphLayout(font, GameTwoConstants.MODE_ONE_THIRD);
+        font.draw(batch, GameTwoConstants.MODE_ONE_THIRD, GameTwoConstants.F2W_CENTER_ATTR.x, GameTwoConstants.F2W_CENTER_ATTR.y + mode_one_third.height / 3, 0, Align.center, false);
+
+        final GlyphLayout mode_one_first_two = new GlyphLayout(font, GameTwoConstants.MODE_ONE_FIRST);
+        font.draw(batch, GameTwoConstants.MODE_ONE_FIRST, GameTwoConstants.F2W_CENTER_ATTR.x,
+                GameTwoConstants.F2W_CENTER_ATTR.y + mode_one_first_two.height / 3 + mode_one_third.height, 0, Align.center, false);
 
 
 
 
         final GlyphLayout mode_two_second = new GlyphLayout(font, GameTwoConstants.MODE_TWO_SECOND);
-        font.draw(batch, GameTwoConstants.MODE_TWO_SECOND, GameTwoConstants.W2F_CENTER.x, GameTwoConstants.W2F_CENTER.y + mode_two_second.height / 3, 0, Align.center, false);
+        font.draw(batch, GameTwoConstants.MODE_TWO_SECOND, GameTwoConstants.W2F_CENTER_NAME.x, GameTwoConstants.W2F_CENTER_NAME.y + mode_two_second.height / 3, 0, Align.center, false);
 
 
         final GlyphLayout mode_two_first = new GlyphLayout(font, GameTwoConstants.MODE_TWO_FIRST);
-        font.draw(batch, GameTwoConstants.MODE_TWO_FIRST, GameTwoConstants.W2F_CENTER.x,
-                GameTwoConstants.W2F_CENTER.y + mode_two_first.height / 3 + mode_two_second.height, 0, Align.center, false);
+        font.draw(batch, GameTwoConstants.MODE_TWO_FIRST, GameTwoConstants.W2F_CENTER_NAME.x,
+                GameTwoConstants.W2F_CENTER_NAME.y + mode_two_first.height / 3 + mode_two_second.height, 0, Align.center, false);
+
+
+
+        final GlyphLayout mode_two_second_two = new GlyphLayout(font, GameTwoConstants.MODE_TWO_SECOND);
+        font.draw(batch, GameTwoConstants.MODE_TWO_SECOND, GameTwoConstants.W2F_CENTER_ATTR.x, GameTwoConstants.W2F_CENTER_ATTR.y + mode_two_second_two.height / 3, 0, Align.center, false);
+
+
+        final GlyphLayout mode_two_third = new GlyphLayout(font, GameTwoConstants.MODE_TWO_THIRD);
+        font.draw(batch, GameTwoConstants.MODE_TWO_THIRD, GameTwoConstants.W2F_CENTER_ATTR.x,
+                GameTwoConstants.W2F_CENTER_ATTR.y + mode_two_third.height / 3 + mode_two_second_two.height, 0, Align.center, false);
+
 
 
         batch.end();
@@ -120,12 +147,20 @@ public class ModeScreen extends InputAdapter implements Screen {
 
         Vector2 worldTouch = viewport.unproject(new Vector2(screenX, screenY));
 
-        if (worldTouch.dst(GameTwoConstants.F2W_CENTER) < GameTwoConstants.MODE_BUBBLE_RADIUS) {
-            game.setScreen(new FaceToNameScreen(game, 0, 1));
+        if (worldTouch.dst(GameTwoConstants.F2W_CENTER_NAME) < GameTwoConstants.MODE_BUBBLE_RADIUS) {
+            game.setScreen(new FaceToNameScreen(game, 0, 1, GameTwoConstants.MODE_NAME));
         }
 
-        if (worldTouch.dst(GameTwoConstants.W2F_CENTER) < GameTwoConstants.MODE_BUBBLE_RADIUS) {
-            game.setScreen(new NameToFaceScreen(game, 0, 1));
+        if (worldTouch.dst(GameTwoConstants.F2W_CENTER_ATTR) < GameTwoConstants.MODE_BUBBLE_RADIUS) {
+            game.setScreen(new FaceToNameScreen(game, 0, 1, GameTwoConstants.MODE_ATTR));
+        }
+
+        if (worldTouch.dst(GameTwoConstants.W2F_CENTER_NAME) < GameTwoConstants.MODE_BUBBLE_RADIUS) {
+            game.setScreen(new NameToFaceScreen(game, 0, 1, GameTwoConstants.MODE_NAME));
+        }
+
+        if (worldTouch.dst(GameTwoConstants.W2F_CENTER_ATTR) < GameTwoConstants.MODE_BUBBLE_RADIUS) {
+            game.setScreen(new NameToFaceScreen(game, 0, 1, GameTwoConstants.MODE_ATTR));
         }
 
 
