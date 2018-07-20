@@ -93,7 +93,7 @@ public class SpacialScreen extends InputAdapter implements Screen {
 
         renderer = new ShapeRenderer();
 
-        Gdx.input.setInputProcessor(this);
+        Gdx.input.setInputProcessor(this); 
     }
 
     @Override
