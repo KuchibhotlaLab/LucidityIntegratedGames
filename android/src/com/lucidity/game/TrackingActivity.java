@@ -26,6 +26,7 @@ public class TrackingActivity extends AppCompatActivity implements OnChartGestur
             "12:00 PM", "", "6:00 PM", "", "12:00 AM"};
 
     private LineChart chart;
+    private long tsStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +46,7 @@ public class TrackingActivity extends AppCompatActivity implements OnChartGestur
         long[] tsSeconds = new long[timesRaw.length];
         long[] x = new long[timesRaw.length];
         java.sql.Timestamp ts = java.sql.Timestamp.valueOf(timesRaw[0].substring(0, 10) + " 00:00:00");
-        long tsStart = ts.getTime() / 1000;
-        System.out.println(tsStart);
+        tsStart = ts.getTime() / 1000;
         for (int i = 0; i < timesRaw.length; i++) {
             ts = java.sql.Timestamp.valueOf(timesRaw[i]);
             tsSeconds[i] = ts.getTime() / 1000;
@@ -58,6 +58,7 @@ public class TrackingActivity extends AppCompatActivity implements OnChartGestur
             entries.add(new Entry(x[i], y[i]));
         }
         LineDataSet dataSet = new LineDataSet(entries, "Scores");
+        dataSet.setDrawValues(false);
         LineData data = new LineData(dataSet);
         chart.setData(data);
 
@@ -133,6 +134,9 @@ public class TrackingActivity extends AppCompatActivity implements OnChartGestur
     @Override
     public void onValueSelected(Entry e, Highlight h) {
         Log.i("Entry selected", e.toString());
+
+        CustomMarkerView mv = new CustomMarkerView(getApplicationContext(), R.layout.custom_marker_view_layout, tsStart);
+        chart.setMarker(mv);
 
         Log.i("MIN MAX", "xmin: " + chart.getXChartMin()
                 + ", xmax: " + chart.getXChartMax()
