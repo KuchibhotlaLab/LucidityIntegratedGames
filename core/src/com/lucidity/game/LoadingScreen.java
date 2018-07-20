@@ -16,7 +16,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public class LoadingScreen implements Screen {
     private FacialMemoryGame FacMemGame;
     private ObjectRecognitionGame ObjRecGame;
-    boolean isFacGame, isObgGame = false;
+    private SpacialMemoryGame SpMemGame;
+    boolean isFacGame, isObjGame, isSpGame = false;
 
     ShapeRenderer renderer;
     SpriteBatch batch;
@@ -30,8 +31,14 @@ public class LoadingScreen implements Screen {
         this.FacMemGame = game;
     }
     public LoadingScreen(ObjectRecognitionGame game) {
-        isObgGame = true;
-        this.ObjRecGame = game;}
+        isObjGame = true;
+        this.ObjRecGame = game;
+    }
+
+    public LoadingScreen(SpacialMemoryGame game) {
+        isSpGame = true;
+        this.SpMemGame = game;
+    }
 
     @Override
     public void show() {
@@ -50,8 +57,11 @@ public class LoadingScreen implements Screen {
         viewport.apply();
         if(isFacGame) {
             Gdx.gl.glClearColor(GameTwoConstants.BACKGROUND_COLOR.r, GameTwoConstants.BACKGROUND_COLOR.g, GameTwoConstants.BACKGROUND_COLOR.b, 1);
-        } else if(isObgGame){
+        } else if(isObjGame){
             Gdx.gl.glClearColor(GameThreeConstants.LOADING_COLOR.r, GameThreeConstants.LOADING_COLOR.g, GameThreeConstants.LOADING_COLOR.b, 1);
+        } else if(isSpGame){
+            //Gdx.gl.glClearColor(0.54f, 0.75f, 0.97f, 1);
+            Gdx.gl.glClearColor(GameFourConstants.LOADING_COLOR.r, GameThreeConstants.LOADING_COLOR.g, GameThreeConstants.LOADING_COLOR.b, 1);
         }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -76,7 +86,7 @@ public class LoadingScreen implements Screen {
                 final GlyphLayout promptLayout_one = new GlyphLayout(font, GameTwoConstants.TITLE_ONE);
                 font.draw(batch, promptLayout_one, (GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_one.width) * 5 / 4,
                         GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_two.height + 1.5f * promptLayout_three.height);
-            } else if(isObgGame){
+            } else if(isObjGame){
 
                 font.setColor(GameThreeConstants.TITLE_COLOR);
                 final GlyphLayout promptLayout_three = new GlyphLayout(font, GameThreeConstants.TITLE_THREE);
@@ -97,8 +107,10 @@ public class LoadingScreen implements Screen {
         } else {
             if(isFacGame){
                 FacMemGame.setScreen(new ModeScreen(FacMemGame));
-            } else if(isObgGame) {
+            } else if(isObjGame) {
                 ObjRecGame.setScreen(new ObjectRecognitionDifficultyScreen(ObjRecGame));
+            } else if(isSpGame){
+                SpMemGame.setScreen(new DifficultyScreen(SpMemGame));
             }
 
         }

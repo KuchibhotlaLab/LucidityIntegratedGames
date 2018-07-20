@@ -5,19 +5,22 @@ import com.badlogic.gdx.Game;
 import java.util.ArrayList;
 
 /**
- * Created by lixiaoyan on 7/12/18.
+ * Created by lixiaoyan on 7/20/18.
  */
 
-public class ObjectRecognitionGame extends Game {
+public class SpacialMemoryGame extends Game {
     private String username;
     private boolean isLucid, isPatient, isCare;
     private String dateTime;
     private String coordinates;
     public ActionResolver actionResolver;
 
-    public ObjectRecognitionGame(ActionResolver a,  String uname, String date, String location,
-                                 boolean lucid, boolean patient, boolean care){
+
+    //TODO: reduce the amount of things passed by intent(they can all be extracted from action resolver)
+    public SpacialMemoryGame(ActionResolver a, String uname, String date, String location,
+                             boolean lucid, boolean patient, boolean care){
         username = uname;
+
         isLucid = lucid;
         isPatient = patient;
         isCare = care;
@@ -26,19 +29,23 @@ public class ObjectRecognitionGame extends Game {
         actionResolver = a;
     }
 
-
     @Override
     public void create() {
-        showDifficultyScreen();
+        showLoadingScreen();
     }
 
-    public void showDifficultyScreen() {setScreen(new LoadingScreen(this));}
+    public void showLoadingScreen() {
+        setScreen(new LoadingScreen(this));
+    }
+
     public String getUsername() {
         return username;
     }
+
     public boolean getLucid(){return isLucid;}
     public boolean getPatient(){return isPatient;}
     public boolean getCare(){return isCare;}
     public String getDateTime(){return dateTime;}
     public String getLocation(){return coordinates;}
 }
+

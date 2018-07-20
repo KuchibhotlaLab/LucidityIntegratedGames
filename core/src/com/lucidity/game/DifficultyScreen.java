@@ -17,7 +17,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public class DifficultyScreen extends InputAdapter implements Screen {
     public static final String TAG = DifficultyScreen.class.getName();
 
-    WorkingMemoryGame game;
+    WorkingMemoryGame memGame;
+    SpacialMemoryGame spaGame;
+    boolean isMem, isSpa = false;
 
     ShapeRenderer renderer;
     SpriteBatch batch;
@@ -27,7 +29,12 @@ public class DifficultyScreen extends InputAdapter implements Screen {
     private float elapsed;
 
     public DifficultyScreen(WorkingMemoryGame game) {
-        this.game = game;
+        isMem = true;
+        this.memGame = game;
+    }
+    public DifficultyScreen(SpacialMemoryGame game) {
+        isSpa = true;
+        this.spaGame = game;
     }
 
     @Override
@@ -50,28 +57,42 @@ public class DifficultyScreen extends InputAdapter implements Screen {
 
 
         if(elapsed < 4) {
-            Gdx.gl.glClearColor(1.0f,0.98f,0.78f, 1);
+            if(isMem){
+                Gdx.gl.glClearColor(1.0f,0.98f,0.78f, 1);
+            } else if(isSpa){
+                Gdx.gl.glClearColor(GameFourConstants.BACKGROUND_COLOR.r,GameFourConstants.BACKGROUND_COLOR.g,GameFourConstants.BACKGROUND_COLOR.b, 1);
+            }
             Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
             batch.begin();
-            font.setColor(new Color(0.01f, 0.4f, 0.44f, 1));
-            font.getData().setScale(GameOneConstants.TITLE_SCALE);
+            if(isMem){
+                font.setColor(new Color(0.01f, 0.4f, 0.44f, 1));
+                font.getData().setScale(GameOneConstants.TITLE_SCALE);
 
-            final GlyphLayout promptLayout_two = new GlyphLayout(font, GameOneConstants.TITLE_TWO);
-            font.draw(batch, promptLayout_two, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_two.width) /2,
-                    GameOneConstants.DIFFICULTY_WORLD_SIZE * 2);
+                final GlyphLayout promptLayout_two = new GlyphLayout(font, GameOneConstants.TITLE_TWO);
+                font.draw(batch, promptLayout_two, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_two.width) /2,
+                        GameOneConstants.DIFFICULTY_WORLD_SIZE * 2);
 
 
-            final GlyphLayout promptLayout_one = new GlyphLayout(font, GameOneConstants.TITLE_ONE);
-            font.draw(batch, promptLayout_one, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_one.width) / 2,
-                    GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_two.height);
+                final GlyphLayout promptLayout_one = new GlyphLayout(font, GameOneConstants.TITLE_ONE);
+                font.draw(batch, promptLayout_one, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_one.width) / 2,
+                        GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_two.height);
 
+
+            } else if (isSpa){
+
+            }
 
             batch.end();
 
         } else {
-            Gdx.gl.glClearColor(GameOneConstants.BACKGROUND_COLOR.r, GameOneConstants.BACKGROUND_COLOR.g, GameOneConstants.BACKGROUND_COLOR.b, 1);
+            if(isMem){
+                Gdx.gl.glClearColor(GameOneConstants.BACKGROUND_COLOR.r, GameOneConstants.BACKGROUND_COLOR.g, GameOneConstants.BACKGROUND_COLOR.b, 1);
+
+            } else if(isSpa){
+                Gdx.gl.glClearColor(GameFourConstants.BACKGROUND_COLOR.r,GameFourConstants.BACKGROUND_COLOR.g,GameFourConstants.BACKGROUND_COLOR.b, 1);
+            }
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
             renderer.setProjectionMatrix(viewport.getCamera().combined);
@@ -139,16 +160,30 @@ public class DifficultyScreen extends InputAdapter implements Screen {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Vector2 worldTouch = viewport.unproject(new Vector2(screenX, screenY));
 
-        if (worldTouch.dst(GameOneConstants.EASY_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
-            game.showMemoryScreen(GameOneConstants.Difficulty.EASY);
-        }
+        if(isMem) {
+            if (worldTouch.dst(GameOneConstants.EASY_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
+                memGame.showMemoryScreen(GameOneConstants.Difficulty.EASY);
+            }
 
-        if (worldTouch.dst(GameOneConstants.MEDIUM_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
-            game.showMemoryScreen(GameOneConstants.Difficulty.MEDIUM);
-        }
+            if (worldTouch.dst(GameOneConstants.MEDIUM_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
+                memGame.showMemoryScreen(GameOneConstants.Difficulty.MEDIUM);
+            }
 
-        if (worldTouch.dst(GameOneConstants.HARD_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
-            game.showMemoryScreen(GameOneConstants.Difficulty.HARD);
+            if (worldTouch.dst(GameOneConstants.HARD_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
+                memGame.showMemoryScreen(GameOneConstants.Difficulty.HARD);
+            }
+        } else if(isSpa){
+            if (worldTouch.dst(GameOneConstants.EASY_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
+                spaGame.setScreen(new SpacialScreen(spaGame, 0, 0, GameFourConstants.DIFFICULTY_EASY));
+            }
+
+            if (worldTouch.dst(GameOneConstants.MEDIUM_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
+                spaGame.setScreen(new SpacialScreen(spaGame, 0, 0, GameFourConstants.DIFFICULTY_MEDIUM));
+            }
+
+            if (worldTouch.dst(GameOneConstants.HARD_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
+                spaGame.setScreen(new SpacialScreen(spaGame, 0, 0, GameFourConstants.DIFFICULTY_HARD));
+            }
         }
 
         return true;

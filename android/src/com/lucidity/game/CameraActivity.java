@@ -41,8 +41,9 @@ public class CameraActivity extends AppCompatActivity {
     private String timeS;
     ImageView targetImage;
     private Uri uri;
-    //reference: stackoverflow.com/questions/13023788
 
+
+    //reference: stackoverflow.com/questions/13023788
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

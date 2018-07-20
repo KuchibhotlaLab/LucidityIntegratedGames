@@ -110,12 +110,13 @@ public class PersonDependentGameLauncher extends AndroidApplication {
                 e.printStackTrace();
             }
 
+            ActionResolverAndroid a = new ActionResolverAndroid(getApplicationContext(), username, isLucid, isCare, isPatient);
             locationListener = new myLocationListener();
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             getLocation();
 
             AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-            initialize(new FacialMemoryGame(username, picturesForGame, tagsForGame,
+            initialize(new FacialMemoryGame(a, username, picturesForGame, tagsForGame,
                     currentDateTimeString, coordinates, isLucid, isPatient, isCare), config);
         }
     }
@@ -213,7 +214,6 @@ public class PersonDependentGameLauncher extends AndroidApplication {
 
         @Override
         public void onLocationChanged(Location location) {
-            // TODO Auto-generated method stub
             if(location!=null){
                 locationManager.removeUpdates(locationListener);
                 coordinates = location.getLongitude() + " " + location.getLatitude();
@@ -225,19 +225,15 @@ public class PersonDependentGameLauncher extends AndroidApplication {
 
         @Override
         public void onProviderDisabled(String provider) {
-            // TODO Auto-generated method stub
 
         }
 
         @Override
         public void onProviderEnabled(String provider) {
-            // TODO Auto-generated method stub
-
         }
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            // TODO Auto-generated method stub
 
         }
 

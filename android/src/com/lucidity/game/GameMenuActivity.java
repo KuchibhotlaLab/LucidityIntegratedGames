@@ -34,6 +34,7 @@ public class GameMenuActivity extends AppCompatActivity {
                 i.putExtra("isLucid", isLucid);
                 i.putExtra("isCare", isCare);
                 i.putExtra("isPatient", isPatient);
+                i.putExtra("gametype", "memory");
                 startActivity(i);
 
             }
@@ -60,6 +61,20 @@ public class GameMenuActivity extends AppCompatActivity {
                 i.putExtra("isLucid", isLucid);
                 i.putExtra("isCare", isCare);
                 i.putExtra("isPatient", isPatient);
+                startActivity(i);
+
+            }
+        });
+
+        Button btnGame4 = findViewById(R.id.game4_button);
+        btnGame4.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
+                i.putExtra("username", username);
+                i.putExtra("isLucid", isLucid);
+                i.putExtra("isCare", isCare);
+                i.putExtra("isPatient", isPatient);
+                i.putExtra("gametype", "space");
                 startActivity(i);
 
             }

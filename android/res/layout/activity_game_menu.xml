@@ -119,7 +119,24 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:paddingTop="15dp">
+
+                <Button
+                    android:id="@+id/game4_button"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Spcial Memory Test" />
+                <!--android:text="@string/reminders"
+                android:textColor="#fff" />-->
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="top|center_horizontal"
+                    android:scaleType="fitXY" />
 
             </FrameLayout>
 

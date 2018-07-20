@@ -46,6 +46,8 @@ public class ObjectRecognitionGameLauncher extends AndroidApplication {
             isPatient = extras.getBoolean("isPatient");
         }
 
+        ActionResolverAndroid a = new ActionResolverAndroid(getApplicationContext(), username, isLucid, isCare, isPatient);
+
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -58,7 +60,7 @@ public class ObjectRecognitionGameLauncher extends AndroidApplication {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         getLocation();
 
-        initialize(new ObjectRecognitionGame(username, currentDateTimeString, coordinates, isLucid, isPatient, isCare), config);
+        initialize(new ObjectRecognitionGame(a, username, currentDateTimeString, coordinates, isLucid, isPatient, isCare), config);
     }
 
     private void getLocation(){
@@ -105,7 +107,6 @@ public class ObjectRecognitionGameLauncher extends AndroidApplication {
 
         @Override
         public void onLocationChanged(Location location) {
-            // TODO Auto-generated method stub
             if(location!=null){
                 locationManager.removeUpdates(locationListener);
                 coordinates = location.getLongitude() + " " + location.getLatitude();
@@ -117,19 +118,16 @@ public class ObjectRecognitionGameLauncher extends AndroidApplication {
 
         @Override
         public void onProviderDisabled(String provider) {
-            // TODO Auto-generated method stub
 
         }
 
         @Override
         public void onProviderEnabled(String provider) {
-            // TODO Auto-generated method stub
 
         }
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            // TODO Auto-generated method stub
 
         }
 

@@ -35,11 +35,13 @@ public class CaregiverHomePage extends AppCompatActivity {
         Button btnGame = findViewById(R.id.administer_games);
         btnGame.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), GameMenuActivity.class);
+                /*Intent i = new Intent(getApplicationContext(), GameMenuActivity.class);
                 i.putExtra("username", username);
                 i.putExtra("isLucid", false);
                 i.putExtra("isCare", true);
                 i.putExtra("isPatient", false);
+                startActivity(i);*/
+                Intent i = new Intent(getApplicationContext(), FaceDetectActivity.class);
                 startActivity(i);
             }
         });

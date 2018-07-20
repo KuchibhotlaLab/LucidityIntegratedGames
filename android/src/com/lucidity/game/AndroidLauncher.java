@@ -38,6 +38,8 @@ public class AndroidLauncher extends AndroidApplication {
     private boolean gps_enabled = false;
     private boolean network_enabled = false;
 
+    String gameType;
+
     @Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,9 +50,11 @@ public class AndroidLauncher extends AndroidApplication {
             isLucid = extras.getBoolean("isLucid");
             isCare = extras.getBoolean("isCare");
             isPatient = extras.getBoolean("isPatient");
+            gameType = extras.getString("gametype");
         }
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 
+        ActionResolverAndroid a = new ActionResolverAndroid(getApplicationContext(), username, isLucid, isCare, isPatient);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -62,7 +66,11 @@ public class AndroidLauncher extends AndroidApplication {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         getLocation();
 
-		initialize(new WorkingMemoryGame(username, currentDateTimeString, coordinates, isLucid, isPatient, isCare), config);
+        if(gameType.equals("memory")){
+            initialize(new WorkingMemoryGame(a, username, currentDateTimeString, coordinates, isLucid, isPatient, isCare), config);
+        } else if(gameType.equals("space")){
+            initialize(new SpacialMemoryGame(a, username, currentDateTimeString, coordinates, isLucid, isPatient, isCare), config);
+        }
     }
 
     private void getLocation(){
@@ -109,7 +117,6 @@ public class AndroidLauncher extends AndroidApplication {
 
         @Override
         public void onLocationChanged(Location location) {
-            // TODO Auto-generated method stub
             if(location!=null){
                 locationManager.removeUpdates(locationListener);
                 coordinates = location.getLongitude() + " " + location.getLatitude();
@@ -121,19 +128,16 @@ public class AndroidLauncher extends AndroidApplication {
 
         @Override
         public void onProviderDisabled(String provider) {
-            // TODO Auto-generated method stub
 
         }
 
         @Override
         public void onProviderEnabled(String provider) {
-            // TODO Auto-generated method stub
 
         }
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            // TODO Auto-generated method stub
 
         }
 

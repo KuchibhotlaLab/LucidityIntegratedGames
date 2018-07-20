@@ -96,7 +96,7 @@ public class EndScreen extends InputAdapter implements Screen {
 
     @Override
     public void show() {
-
+        Gdx.input.setInputProcessor(this);
     }
 
     @Override
@@ -153,8 +153,11 @@ public class EndScreen extends InputAdapter implements Screen {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        exit = true;
-        return true;
+        //TODO: return to where the game came from
+        gameIndep.actionResolver.FaceGame();
+        gameDep.actionResolver.ObjectGame();
+        gameOb.actionResolver.MemoryGame();
+        return false;
     }
 
 }

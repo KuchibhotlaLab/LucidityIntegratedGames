@@ -7,8 +7,11 @@ public class WorkingMemoryGame extends Game {
     private boolean isLucid, isPatient, isCare;
     private String currentDateTime;
     private String coordinates;
+    public ActionResolver actionResolver;
 
-    public WorkingMemoryGame(String uname, String date, String location, boolean lucid, boolean patient, boolean care){
+
+    public WorkingMemoryGame(ActionResolver a, String uname, String date, String location, boolean lucid, boolean patient, boolean care){
+        this.actionResolver = a;
         isLucid = lucid;
         isPatient = patient;
         isCare = care;

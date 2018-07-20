@@ -15,8 +15,11 @@ public class FacialMemoryGame extends Game {
     private boolean isLucid, isPatient, isCare;
     private String dateTime;
     private String coordinates;
+    public ActionResolver actionResolver;
 
-    public FacialMemoryGame(String uname, ArrayList<String> pnames, ArrayList<ArrayList<String>> ptags,
+
+    //TODO: reduce the amount of things passed by intent(they can all be extracted from action resolver)
+    public FacialMemoryGame(ActionResolver a, String uname, ArrayList<String> pnames, ArrayList<ArrayList<String>> ptags,
                             String date, String location, boolean lucid, boolean patient, boolean care){
         username = uname;
         picturenames = pnames;
@@ -26,6 +29,7 @@ public class FacialMemoryGame extends Game {
         isCare = care;
         dateTime = date;
         coordinates = location;
+        actionResolver = a;
     }
 
     @Override

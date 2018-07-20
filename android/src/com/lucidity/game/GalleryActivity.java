@@ -44,6 +44,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+//TODO: download picture from cloud to local if there are none
 public class GalleryActivity extends AppCompatActivity {
 
     //Stores the username of the user

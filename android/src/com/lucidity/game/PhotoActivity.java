@@ -151,7 +151,6 @@ public class PhotoActivity extends AppCompatActivity {
                 //this is the single image gotten from gallery
                 bmp = getBitmapFromUri(selectedImage);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 

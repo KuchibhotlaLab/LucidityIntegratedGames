@@ -105,7 +105,8 @@
 
         <activity android:name=".CameraActivity" />
         <activity android:name=".GameMenuActivity" />
-        <activity android:name=".TrackingActivity"></activity>
+        <activity android:name=".TrackingActivity" />
+        <activity android:name=".FaceDetectActivity"></activity>
     </application>
 
 </manifest>
