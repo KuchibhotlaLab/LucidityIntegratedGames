@@ -21,6 +21,7 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -29,7 +30,7 @@ public class AndroidLauncher extends AndroidApplication {
     final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private String username;
     private boolean isLucid, isPatient, isCare;
-    private String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+    private String currentDateTimeString;
     String coordinates = " ";
 
     private LocationManager locationManager;
@@ -57,6 +58,10 @@ public class AndroidLauncher extends AndroidApplication {
                 this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
             }
         }
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        currentDateTimeString = dateFormat.format(date);
 
         locationListener = new myLocationListener();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

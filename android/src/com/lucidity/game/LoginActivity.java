@@ -180,8 +180,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (success == 1) {
                     // successfully found user and verified password
-                    // remember log in status for future
-                    login.newLogin(username);
 
                     //Go to main activity
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -189,6 +187,9 @@ public class LoginActivity extends AppCompatActivity {
                     //Pass username with correct case through to other activities
                     username = msg;
                     intent.putExtra("username", username);
+
+                    //remember login status for future
+                    login.newLogin(username);
 
                     startActivity(intent);
                     //close this screen
