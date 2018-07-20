@@ -15,6 +15,7 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -55,6 +56,10 @@ public class ObjectRecognitionGameLauncher extends AndroidApplication {
                 this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
             }
         }
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        currentDateTimeString = dateFormat.format(date);
 
         locationListener = new myLocationListener();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

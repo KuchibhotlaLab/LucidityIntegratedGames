@@ -24,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -111,6 +112,10 @@ public class PersonDependentGameLauncher extends AndroidApplication {
             }
 
             ActionResolverAndroid a = new ActionResolverAndroid(getApplicationContext(), username, isLucid, isCare, isPatient);
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = new Date();
+            currentDateTimeString = dateFormat.format(date);
+
             locationListener = new myLocationListener();
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             getLocation();
