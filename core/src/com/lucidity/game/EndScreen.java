@@ -25,11 +25,12 @@ public class EndScreen extends InputAdapter implements Screen {
     WorkingMemoryGame gameIndep;
     FacialMemoryGame gameDep;
     ObjectRecognitionGame gameOb;
+    SpacialMemoryGame gameSpa;
 
     ExtendViewport memoryViewport;
     ScreenViewport hudViewport;
 
-    boolean isGameOne, isGameTwo, isGameThree = false;
+    boolean isGameOne, isGameTwo, isGameThree, isGameFour = false;
 
 
     int screenWidth;
@@ -49,14 +50,7 @@ public class EndScreen extends InputAdapter implements Screen {
         this.trial = trials;
         isGameOne = true;
 
-        screenWidth = Gdx.graphics.getWidth();
-        screenHeight = Gdx.graphics.getHeight();
-
         memoryViewport = new ExtendViewport(GameOneConstants.WORLD_SIZE, GameOneConstants.WORLD_SIZE);
-        hudViewport = new ScreenViewport();
-
-        batch = new SpriteBatch();
-        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular.fnt"), false);
     }
 
 
@@ -66,14 +60,7 @@ public class EndScreen extends InputAdapter implements Screen {
         this.trial = trials;
         isGameTwo = true;
 
-        screenWidth = Gdx.graphics.getWidth();
-        screenHeight = Gdx.graphics.getHeight();
-
         memoryViewport = new ExtendViewport(GameTwoConstants.WORLD_SIZE, GameTwoConstants.WORLD_SIZE);
-        hudViewport = new ScreenViewport();
-
-        batch = new SpriteBatch();
-        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular.fnt"), false);
     }
 
     public EndScreen(ObjectRecognitionGame game, int points, int trials) {
@@ -82,20 +69,31 @@ public class EndScreen extends InputAdapter implements Screen {
         this.trial = trials;
         isGameThree = true;
 
-        screenWidth = Gdx.graphics.getWidth();
-        screenHeight = Gdx.graphics.getHeight();
-
         memoryViewport = new ExtendViewport(GameThreeConstants.WORLD_SIZE, GameThreeConstants.WORLD_SIZE);
-        hudViewport = new ScreenViewport();
+    }
 
-        batch = new SpriteBatch();
-        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular.fnt"), false);
+    public EndScreen(SpacialMemoryGame game, int points, int trials) {
+        this.gameSpa = game;
+        this.score = points;
+        this.trial = trials;
+        isGameFour = true;
+
+        memoryViewport = new ExtendViewport(GameFourConstants.WORLD_SIZE, GameFourConstants.WORLD_SIZE);
+
     }
 
 
 
     @Override
     public void show() {
+
+        screenWidth = Gdx.graphics.getWidth();
+        screenHeight = Gdx.graphics.getHeight();
+
+        hudViewport = new ScreenViewport();
+
+        batch = new SpriteBatch();
+        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular.fnt"), false);
         Gdx.input.setInputProcessor(this);
     }
 
@@ -119,6 +117,9 @@ public class EndScreen extends InputAdapter implements Screen {
             Gdx.gl.glClearColor(GameTwoConstants.BACKGROUND_COLOR.r, GameTwoConstants.BACKGROUND_COLOR.g, GameTwoConstants.BACKGROUND_COLOR.b, 1);
         } else if(isGameThree) {
             Gdx.gl.glClearColor(GameThreeConstants.BACKGROUND_COLOR.r, GameThreeConstants.BACKGROUND_COLOR.g, GameThreeConstants.BACKGROUND_COLOR.b, 1);
+        } else if(isGameFour){
+            Gdx.gl.glClearColor(GameFourConstants.BACKGROUND_COLOR.r, GameFourConstants.BACKGROUND_COLOR.g, GameFourConstants.BACKGROUND_COLOR.b, 1);
+
         }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -156,7 +157,8 @@ public class EndScreen extends InputAdapter implements Screen {
         //TODO: return to where the game came from
         gameIndep.actionResolver.FaceGame();
         gameDep.actionResolver.ObjectGame();
-        gameOb.actionResolver.MemoryGame();
+        gameOb.actionResolver.ObjectGame();
+        gameSpa.actionResolver.MemoryGame();
         return false;
     }
 

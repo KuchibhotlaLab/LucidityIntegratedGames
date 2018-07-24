@@ -20,6 +20,8 @@ public class ActionResolverAndroid implements ActionResolver {
     boolean isCare;
     boolean isPatient;
 
+    String gameType;
+
 
     public ActionResolverAndroid(Context context, String user, boolean lucid, boolean care, boolean patient) {
         handler = new Handler();
@@ -28,6 +30,17 @@ public class ActionResolverAndroid implements ActionResolver {
         isLucid = lucid;
         isCare = care;
         isPatient = patient;
+
+    }
+
+    public ActionResolverAndroid(Context context, String user, boolean lucid, boolean care, boolean patient, String game) {
+        handler = new Handler();
+        this.context = context;
+        username = user;
+        isLucid = lucid;
+        isCare = care;
+        isPatient = patient;
+        gameType = game;
     }
 
     public void MemoryGame() {
@@ -39,6 +52,7 @@ public class ActionResolverAndroid implements ActionResolver {
                 i.putExtra("isLucid", isLucid);
                 i.putExtra("isCare", isCare);
                 i.putExtra("isPatient", isPatient);
+                i.putExtra("gametype", gameType);
                 context.startActivity(i);
             }
         });
@@ -76,5 +90,18 @@ public class ActionResolverAndroid implements ActionResolver {
         });
     }
 
-    public void SpaceGame(){}
+    public void SpaceGame(){
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Intent i = new Intent(context, ObjectRecognitionGameLauncher.class);
+                i.putExtra("username", username);
+                i.putExtra("isLucid", isLucid);
+                i.putExtra("isCare", isCare);
+                i.putExtra("isPatient", isPatient);
+                i.putExtra("gametype", gameType);
+                context.startActivity(i);
+            }
+        });
+    }
 }
