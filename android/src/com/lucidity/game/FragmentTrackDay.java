@@ -1,5 +1,7 @@
 package com.lucidity.game;
 
+import android.app.DatePickerDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -9,10 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.support.v4.app.Fragment;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -22,7 +28,20 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class FragmentTrackDay extends Fragment implements OnChartGestureListener, OnChartValueSelectedListener {
     final String[] labelsDay = {"12:00 AM", "", "6:00 AM", "", "12:00 PM", "", "6:00 PM", "", "12:00 AM"};
@@ -30,40 +49,61 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
     private LineChart chart;
     private long tsStart;
 
+    private String username;
+    private String date;
+
+    // JSON parser class
+    JSONParser jsonParser = new JSONParser();
+
+    //JSONArray of results
+    JSONArray scoresJSON = null;
+
+    // JSON Node names
+    private static final String TAG_SUCCESS = "success";
+
+    // url to get scores for one day
+    private static String url_get_scores_day = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/get_scores_day.php";
+
+    private ArrayList<String> timesRaw;
+    private ArrayList<Integer> y;
+
+    View rootView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_track_day, container, false);
+        rootView = inflater.inflate(R.layout.fragment_track_day, container, false);
 
         chart = rootView.findViewById(R.id.linechart);
         chart.setOnChartGestureListener(this);
         chart.setOnChartValueSelectedListener(this);
 
-        ArrayList<Entry> entries = new ArrayList<>();
-        String[] timesRaw = {"2018-07-13 05:03:02", "2018-07-13 7:33:50",
-                "2018-07-13 12:14:23", "2018-07-13 16:26:14", "2018-07-13 22:59:59"};
-        long[] tsSeconds = new long[timesRaw.length];
-        long[] x = new long[timesRaw.length];
-        java.sql.Timestamp ts = java.sql.Timestamp.valueOf(timesRaw[0].substring(0, 10) + " 00:00:00");
-        tsStart = ts.getTime() / 1000;
-        for (int i = 0; i < timesRaw.length; i++) {
-            ts = java.sql.Timestamp.valueOf(timesRaw[i]);
-            tsSeconds[i] = ts.getTime() / 1000;
-            x[i] = tsSeconds[i] - tsStart;
-        }
-        int y[] = {2, 5, 10, 6, 11};
-        for (int i = 0; i < 5; i++) {
-            entries.add(new Entry(x[i], y[i]));
-        }
-        LineDataSet dataSet = new LineDataSet(entries, "Scores");
-        dataSet.setDrawValues(false);
-        dataSet.setColor(ContextCompat.getColor(getContext(),R.color.colorLightPurple));
-        dataSet.setCircleColorHole(ContextCompat.getColor(getContext(),R.color.colorLightPurple));
-        dataSet.setCircleColor(ContextCompat.getColor(getContext(),R.color.colorLightPurple));
-        LineData data = new LineData(dataSet);
-        chart.setData(data);
+        Login login = new Login(getActivity());
+        username = login.getUsername();
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date currDate = new Date();
+        date = dateFormat.format(currDate);
+
+        Button btnChangeDay = rootView.findViewById(R.id.change_day);
+        btnChangeDay.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                int yearNum = Integer.valueOf(date.substring(0,4));
+                int monthNum = Integer.valueOf(date.substring(5,7));
+                int dayNum = Integer.valueOf(date.substring(8,10));
+                DatePickerDialog dialog = new DatePickerDialog(getActivity(),
+                        new dateSelector(), yearNum, monthNum - 1, dayNum);
+                dialog.show();
+            }
+        });
+
+        setData(date);
+
         chart.getDescription().setEnabled(false);
+        chart.setScaleEnabled(false);
+        chart.getLegend().setEnabled(false);
+        chart.getAxisRight().setEnabled(false);
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -78,7 +118,10 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
             }
         });
 
-        chart.getLegend().setEnabled(false);
+        YAxis yAxis = chart.getAxisLeft();
+        yAxis.setAxisMinimum(0);
+        yAxis.setAxisMaximum(5);
+        yAxis.setLabelCount(6, true);
 
         return rootView;
     }
@@ -152,5 +195,131 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
     @Override
     public void onNothingSelected() {
         Log.i("Nothing selected", "Nothing selected.");
+    }
+
+    class dateSelector implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            String monthString = Integer.toString(monthOfYear + 1);
+            if (monthString.length() == 1) {monthString = "0" + monthString;}
+            String dayString = Integer.toString(dayOfMonth);
+            if (dayString.length() == 1) {dayString = "0" + dayString;}
+            date = year + "-" + monthString + "-" + dayString;
+            setData(date);
+        }
+    }
+
+    public void setData(String date){
+        chart.clear();
+        TextView tv = rootView.findViewById(R.id.day_label);
+        tv.setText(date.substring(5));
+
+        timesRaw = new ArrayList<>();
+        y = new ArrayList<>();
+
+        GetScores task = new GetScores(date);
+        task.execute();
+        //wait for task to finish
+        try {
+            task.get(1000, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Entry> entries = new ArrayList<>();
+        long[] tsSeconds = new long[timesRaw.size()];
+        long[] x = new long[timesRaw.size()];
+        java.sql.Timestamp ts = java.sql.Timestamp.valueOf(date + " 00:00:00");
+        tsStart = ts.getTime() / 1000;
+        for (int i = 0; i < timesRaw.size(); i++) {
+            ts = java.sql.Timestamp.valueOf(timesRaw.get(i));
+            tsSeconds[i] = ts.getTime() / 1000;
+            x[i] = tsSeconds[i] - tsStart;
+        }
+        for (int i = 0; i < timesRaw.size(); i++) {
+            entries.add(new Entry(x[i], y.get(i)));
+        }
+
+        LineDataSet dataSet;
+
+        //draw an empty chart if there are no entries, make a dummmy entry so chart does not crash
+        if (entries.isEmpty()) {
+            ArrayList<Entry> temp = new ArrayList<>();
+            temp.add(new Entry(0,0));
+            dataSet = new LineDataSet(temp, "scores");
+            dataSet.setDrawCircles(false);
+            dataSet.setDrawValues(false);
+            dataSet.setHighlightEnabled(false);
+        } else {
+            dataSet = new LineDataSet(entries, "Scores");
+            dataSet.setDrawValues(false);
+            dataSet.setColor(ContextCompat.getColor(getContext(), R.color.colorLightPurple));
+            dataSet.setCircleColorHole(ContextCompat.getColor(getContext(), R.color.colorLightPurple));
+            dataSet.setCircleColor(ContextCompat.getColor(getContext(), R.color.colorLightPurple));
+        }
+
+        LineData data = new LineData(dataSet);
+        chart.setData(data);
+    }
+
+    /**
+     * Background Async Task to get the scores for a particular day
+     * */
+    class GetScores extends AsyncTask<String, String, String> {
+
+        private String date;
+
+        public GetScores(String d)
+        {
+            date = d;
+        }
+
+        /**
+         * Getting everything from MySQL
+         * */
+        protected String doInBackground(String... args) {
+
+            // Check for success tag
+            int success;
+            try {
+                // Building Parameters
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                params.add(new BasicNameValuePair("username", username));
+                params.add(new BasicNameValuePair("date", date));
+
+                // getting pictures and tags from web
+                JSONObject json = jsonParser.makeHttpRequest(
+                        url_get_scores_day, "GET", params);
+
+                // check your log for json response
+                Log.d("get scores", json.toString());
+
+                // json success tag
+                success = json.getInt(TAG_SUCCESS);
+                if (success == 1) {
+
+                    // Get array of scores
+                    scoresJSON = json.getJSONArray("scores");
+
+                    // loop through pictures found
+                    for (int i = 0; i < scoresJSON.length(); i++) {
+                        JSONObject scoreObject = scoresJSON.getJSONObject(i);
+
+                        // add pictures and tags to Arraylists in order
+                        timesRaw.add(scoreObject.getString("datetime"));
+                        y.add(scoreObject.getInt("score"));
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return "complete";
+        }
     }
 }

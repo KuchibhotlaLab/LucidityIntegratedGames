@@ -37,5 +37,6 @@
     <string name="day">Day</string>
     <string name="week">Week</string>
     <string name="month">Month</string>
+    <string name="set_day">Change Day</string>
     <string name="scores">Scores</string>
 </resources>

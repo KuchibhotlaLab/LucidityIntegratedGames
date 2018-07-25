@@ -60,12 +60,11 @@ public class PersonDependentGameLauncher extends AndroidApplication {
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
 
-    // products JSONArray
+    //JSONArray of results
     JSONArray picturesJSON = null;
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
-    private static final String TAG_MESSAGE = "message";
 
     // url to get pictures and tags
     private static String url_get_pictures_and_tags = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/get_pictures_and_tags.php";
