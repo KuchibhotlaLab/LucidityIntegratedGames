@@ -245,11 +245,11 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
                 }
 
 
-                showSelect(sameSelected);
+                selectState(sameSelected);
                 renderer.rect(same.x, same.y, same.getWidth(), same.getHeight());
 
 
-                showSelect(diffSelected);
+                selectState(diffSelected);
                 renderer.rect(diff.x, diff.y, diff.getWidth(), diff.getHeight());
                 renderer.end();
 
@@ -311,16 +311,16 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             } else {
 
 
-                showSelect(selectOne);
+                selectState(selectOne);
                 renderer.rect(one.x, one.y, one.getWidth(), one.getHeight());
 
-                showSelect(selectTwo);
+                selectState(selectTwo);
                 renderer.rect(two.x, two.y, two.getWidth(), two.getHeight());
 
-                showSelect(selectThree);
+                selectState(selectThree);
                 renderer.rect(three.x, three.y, three.getWidth(), three.getHeight());
 
-                showSelect(selectFour);
+                selectState(selectFour);
                 renderer.rect(four.x, four.y, four.getWidth(), four.getHeight());
                 renderer.end();
 
@@ -710,7 +710,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
     }
 
-    private void showSelect(boolean selected){
+    private void selectState(boolean selected){
         if(!selected){
             renderer.setColor(GameThreeConstants.TITLE_COLOR);
         } else {

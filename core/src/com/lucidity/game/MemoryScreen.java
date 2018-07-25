@@ -103,7 +103,6 @@ public class MemoryScreen extends InputAdapter implements Screen {
         attemptTime = new double[5][3];
         trialSuccess = new int[5];
 
-        //changed for portrait
         screenWidth = Gdx.graphics.getWidth();
         screenHeight = Gdx.graphics.getHeight();
 
