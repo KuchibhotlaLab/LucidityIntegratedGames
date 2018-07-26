@@ -65,7 +65,7 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
     private static String url_get_scores_day = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/get_scores_day.php";
 
     private ArrayList<String> timesRaw;
-    private ArrayList<Integer> y;
+    private ArrayList<Integer> allScores;
 
     View rootView;
 
@@ -93,7 +93,7 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
                 int monthNum = Integer.valueOf(date.substring(5,7));
                 int dayNum = Integer.valueOf(date.substring(8,10));
                 DatePickerDialog dialog = new DatePickerDialog(getActivity(),
-                        new dateSelector(), yearNum, monthNum - 1, dayNum);
+                        new DateSelector(), yearNum, monthNum - 1, dayNum);
                 dialog.show();
             }
         });
@@ -104,17 +104,18 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
         chart.setScaleEnabled(false);
         chart.getLegend().setEnabled(false);
         chart.getAxisRight().setEnabled(false);
+        chart.setExtraOffsets(5f, 0, 25f, 0);
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setAxisMinimum(0);
-        xAxis.setAxisMaximum(86400);
+        xAxis.setAxisMaximum(48);
         xAxis.setLabelCount(9, true);
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
 
-                return labelsDay[(int) value/10800];
+                return labelsDay[(int) value/6];
             }
         });
 
@@ -197,7 +198,7 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
         Log.i("Nothing selected", "Nothing selected.");
     }
 
-    class dateSelector implements DatePickerDialog.OnDateSetListener {
+    class DateSelector implements DatePickerDialog.OnDateSetListener {
 
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear,
@@ -211,13 +212,13 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
         }
     }
 
-    public void setData(String date){
+    private void setData(String date){
         chart.clear();
         TextView tv = rootView.findViewById(R.id.day_label);
-        tv.setText(date.substring(5));
+        tv.setText(date.substring(5) + "-" + date.substring(0,4));
 
         timesRaw = new ArrayList<>();
-        y = new ArrayList<>();
+        allScores = new ArrayList<>();
 
         GetScores task = new GetScores(date);
         task.execute();
@@ -234,16 +235,32 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
 
         ArrayList<Entry> entries = new ArrayList<>();
         long[] tsSeconds = new long[timesRaw.size()];
-        long[] x = new long[timesRaw.size()];
+        int[] tsDiff = new int[timesRaw.size()];
         java.sql.Timestamp ts = java.sql.Timestamp.valueOf(date + " 00:00:00");
         tsStart = ts.getTime() / 1000;
         for (int i = 0; i < timesRaw.size(); i++) {
             ts = java.sql.Timestamp.valueOf(timesRaw.get(i));
             tsSeconds[i] = ts.getTime() / 1000;
-            x[i] = tsSeconds[i] - tsStart;
+            long tsDiffSecond = tsSeconds[i] - tsStart;
+            tsDiff[i] = Math.round(tsDiffSecond / 1800f);
         }
-        for (int i = 0; i < timesRaw.size(); i++) {
-            entries.add(new Entry(x[i], y.get(i)));
+
+        ArrayList<Integer> timesCondensed = new ArrayList<>();
+        ArrayList<Float> scoresCondensed = new ArrayList<>();
+        if (!timesRaw.isEmpty()) {
+            int score = allScores.get(0);
+            float count = 1;
+            for (int j = 1; j < timesRaw.size(); j++){
+                if(tsDiff[j] == tsDiff[j-1]) {
+                    score += allScores.get(j);
+                    count++;
+                } else{
+                    entries.add(new Entry(tsDiff[j-1],score / count));
+                    score = allScores.get(j);
+                    count = 1;
+                }
+            }
+            entries.add(new Entry(tsDiff[tsDiff.length-1],score / count));
         }
 
         LineDataSet dataSet;
@@ -313,7 +330,7 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
 
                         // add pictures and tags to Arraylists in order
                         timesRaw.add(scoreObject.getString("datetime"));
-                        y.add(scoreObject.getInt("score"));
+                        allScores.add(scoreObject.getInt("score"));
                     }
                 }
             } catch (JSONException e) {
