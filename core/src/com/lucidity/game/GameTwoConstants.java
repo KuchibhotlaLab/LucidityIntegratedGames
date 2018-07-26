@@ -29,6 +29,7 @@ public class GameTwoConstants {
     public static final Color CHOICE_COLOR = new Color(0.96f, 0.45f, 0.5f, 1);
     public static final Color BUTTON_COLOR = new Color(0.21f, 0.36f, 0.49f, 1);
     public static final Color OUTLINE_COLOR = new Color(0.42f, 0.36f, 0.48f, 1);
+    public static final Color TITLE_COLOR = OUTLINE_COLOR;
 
     public static final float TITLE_SCALE = 4f;
     public static final String TITLE_ONE = "FACIAL";

@@ -11,4 +11,6 @@ public interface ActionResolver {
     public void FaceGame();
     public void ObjectGame();
     public void SpaceGame();
+    public boolean getLucidity();
+    public boolean getCare();
 }

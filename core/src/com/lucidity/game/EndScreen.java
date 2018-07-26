@@ -119,16 +119,32 @@ public class EndScreen extends InputAdapter implements Screen {
             Gdx.gl.glClearColor(GameThreeConstants.BACKGROUND_COLOR.r, GameThreeConstants.BACKGROUND_COLOR.g, GameThreeConstants.BACKGROUND_COLOR.b, 1);
         } else if(isGameFour){
             Gdx.gl.glClearColor(GameFourConstants.BACKGROUND_COLOR.r, GameFourConstants.BACKGROUND_COLOR.g, GameFourConstants.BACKGROUND_COLOR.b, 1);
-
         }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
-        font.getData().setScale(4f);
-        final GlyphLayout promptLayout = new GlyphLayout(font, "Your score is " + Integer.toString(score) + "/" + Integer.toString(trial));
-        font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
-        font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2,
-                screenHeight / 2);
+        font.getData().setScale(3.5f);
+        if(isGameOne){
+            font.setColor(GameOneConstants.TITLE_COLOR);
+        } else if(isGameTwo) {
+            font.setColor(GameTwoConstants.OUTLINE_COLOR);
+        } else if(isGameThree) {
+            font.setColor(GameThreeConstants.TITLE_COLOR);
+        } else if(isGameFour){
+            font.setColor(GameFourConstants.TITLE_COLOR);
+        }
+        final GlyphLayout scoreLayout = new GlyphLayout(font, "Your score is " + Integer.toString(score) + "/" + Integer.toString(trial));
+        font.draw(batch, scoreLayout, (screenWidth - scoreLayout.width)/2,
+                screenHeight * 2 / 3);
+
+        final GlyphLayout promptLayout_two = new GlyphLayout(font, GameOneConstants.END_INSTRUCTIONS_TWO);
+        font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width)/2,
+                screenHeight / 3);
+
+        final GlyphLayout promptLayout_one = new GlyphLayout(font, GameOneConstants.END_INSTRUCTIONS_ONE);
+        font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width)/2,
+                screenHeight / 3 + 1.5f * promptLayout_two.height);
+
         batch.end();
 
         if(exit){
@@ -154,11 +170,31 @@ public class EndScreen extends InputAdapter implements Screen {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        //TODO: return to where the game came from
-        gameIndep.actionResolver.FaceGame();
-        gameDep.actionResolver.ObjectGame();
-        gameOb.actionResolver.ObjectGame();
-        gameSpa.actionResolver.MemoryGame();
+        //TODO: randomize game order if necessary
+        if(isGameOne){
+            if(gameIndep.actionResolver.getLucidity() || gameIndep.actionResolver.getCare()){
+                gameIndep.actionResolver.FaceGame();
+                Gdx.app.exit();
+            } else {
+                Gdx.app.exit();
+            }
+        } else if(isGameTwo){
+            if(gameDep.actionResolver.getLucidity() || gameDep.actionResolver.getCare()){
+                gameDep.actionResolver.ObjectGame();
+                Gdx.app.exit();
+            } else {
+                Gdx.app.exit();
+            }
+        } else if(isGameThree){
+            if(gameOb.actionResolver.getLucidity() || gameOb.actionResolver.getCare()){
+                gameOb.actionResolver.SpaceGame();
+                Gdx.app.exit();
+            } else {
+                Gdx.app.exit();
+            }
+        } else if(isGameFour){
+            Gdx.app.exit();
+        }
         return false;
     }
 

@@ -1,5 +1,7 @@
 package com.lucidity.game;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -20,9 +22,6 @@ public class ActionResolverAndroid implements ActionResolver {
     boolean isCare;
     boolean isPatient;
 
-    String gameType;
-
-
     public ActionResolverAndroid(Context context, String user, boolean lucid, boolean care, boolean patient) {
         handler = new Handler();
         this.context = context;
@@ -31,16 +30,6 @@ public class ActionResolverAndroid implements ActionResolver {
         isCare = care;
         isPatient = patient;
 
-    }
-
-    public ActionResolverAndroid(Context context, String user, boolean lucid, boolean care, boolean patient, String game) {
-        handler = new Handler();
-        this.context = context;
-        username = user;
-        isLucid = lucid;
-        isCare = care;
-        isPatient = patient;
-        gameType = game;
     }
 
     public void MemoryGame() {
@@ -52,12 +41,10 @@ public class ActionResolverAndroid implements ActionResolver {
                 i.putExtra("isLucid", isLucid);
                 i.putExtra("isCare", isCare);
                 i.putExtra("isPatient", isPatient);
-                i.putExtra("gametype", gameType);
+                i.putExtra("gametype", "memory");
                 context.startActivity(i);
             }
         });
-
-
     }
 
     public void FaceGame() {
@@ -94,14 +81,22 @@ public class ActionResolverAndroid implements ActionResolver {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Intent i = new Intent(context, ObjectRecognitionGameLauncher.class);
+                Intent i = new Intent(context, AndroidLauncher.class);
                 i.putExtra("username", username);
                 i.putExtra("isLucid", isLucid);
                 i.putExtra("isCare", isCare);
                 i.putExtra("isPatient", isPatient);
-                i.putExtra("gametype", gameType);
+                i.putExtra("gametype", "space");
                 context.startActivity(i);
             }
         });
+        if(context instanceof Activity){
+            ((Activity)context).finish();
+        }
     }
+
+    public boolean getLucidity(){
+        return isLucid;
+    }
+    public boolean getCare(){return isCare;}
 }
