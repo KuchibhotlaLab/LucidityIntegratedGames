@@ -3,10 +3,17 @@ package com.lucidity.game;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -23,17 +30,16 @@ import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-//github.com/exizlynx/Face-Detect-Example
-//github.com/googlesamples/android-vision
+
+//github.com/googlesamples/android-vision/
 public class FaceDetectActivity extends AppCompatActivity{
-    /*private Preview mPreview;
-    private Camera mCamera;
-    List<Camera.Size> mSupportedPreviewSizes;*/
-
     private static final String TAG = "FaceTracker";
-
     private CameraSource mCameraSource = null;
     private CameraSourcePreview mPreview;
     private GraphicOverlay mGraphicOverlay;
@@ -41,22 +47,23 @@ public class FaceDetectActivity extends AppCompatActivity{
     private static final int RC_HANDLE_GMS = 9001;
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private String username;
+
 
     //TODO: pass isLucid as true in the intent that starts the games
-    /*Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
-                i.putExtra("username", username);
-                i.putExtra("isLucid", isLucid);
-                i.putExtra("isCare", isCare);
-                i.putExtra("isPatient", isPatient);
-                i.putExtra("gametype", "memory");
-                startActivity(i);
-                finish();*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_detect);
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            username = extras.getString("username");
+        }
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
@@ -282,6 +289,17 @@ public class FaceDetectActivity extends AppCompatActivity{
         public void onUpdate(FaceDetector.Detections<Face> detectionResults, Face face) {
             mOverlay.add(mFaceGraphic);
             mFaceGraphic.updateFace(face);
+            if(mFaceGraphic.preferableSize()){
+                takeScreenshot();
+                Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
+                i.putExtra("username", username);
+                i.putExtra("isLucid", false);
+                i.putExtra("isCare", true);
+                i.putExtra("isPatient", false);
+                i.putExtra("gametype", "memory");
+                startActivity(i);
+                finish();
+            }
         }
 
         /**
@@ -302,5 +320,52 @@ public class FaceDetectActivity extends AppCompatActivity{
         public void onDone() {
             mOverlay.remove(mFaceGraphic);
         }
+
+
     }
+
+
+    //stackoverflow.com/questions/2661536/how-to-programmatically-take-a-screenshot
+    private void takeScreenshot() {
+        Date now = new Date();
+        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+
+        try {
+            // image naming and path  to include sd card  appending name you choose for file
+            String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg";
+
+            // create bitmap screen capture
+            View v1 = getWindow().getDecorView().getRootView();
+            v1.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
+            v1.setDrawingCacheEnabled(false);
+
+            ContextWrapper cw = new ContextWrapper(getApplicationContext());
+            // path to /data/data/yourapp/app_data/imageDir
+            File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+            String imgName = "1";
+            File imageFile = new File(directory, imgName);
+
+            FileOutputStream outputStream = new FileOutputStream(imageFile);
+            int quality = 100;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+            outputStream.flush();
+            outputStream.close();
+
+            openScreenshot(imageFile);
+        } catch (Throwable e) {
+            // Several error may come out with file handling or DOM
+            e.printStackTrace();
+        }
+    }
+
+    private void openScreenshot(File imageFile) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri uri = Uri.fromFile(imageFile);
+        intent.setDataAndType(uri, "image/*");
+        startActivity(intent);
+    }
+
+
 }
