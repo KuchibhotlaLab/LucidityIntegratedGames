@@ -73,7 +73,7 @@ public class LoadingScreen implements Screen {
             font.getData().setScale(GameTwoConstants.TITLE_SCALE);
 
             if(isFacGame){
-                font.setColor(GameTwoConstants.OUTLINE_COLOR);
+                font.setColor(GameTwoConstants.TITLE_COLOR);
                 final GlyphLayout promptLayout_three = new GlyphLayout(font, GameTwoConstants.TITLE_THREE);
                 font.draw(batch, promptLayout_three, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_three.width) / 2,
                         GameOneConstants.DIFFICULTY_WORLD_SIZE * 2);

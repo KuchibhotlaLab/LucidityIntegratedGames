@@ -292,7 +292,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
                     }
                 }
 
-                font.setColor(GameThreeConstants.TITLE_COLOR);
+                font.setColor(Color.WHITE);
                 font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
                 final GlyphLayout layout_two = new GlyphLayout(font, GameThreeConstants.SAME_ANSWER_TEXT);
                 final float fontX_two = (screenWidth - layout_two.width) / 2;

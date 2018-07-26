@@ -42,6 +42,7 @@ public class CaregiverHomePage extends AppCompatActivity {
                 i.putExtra("isPatient", false);
                 startActivity(i);*/
                 Intent i = new Intent(getApplicationContext(), FaceDetectActivity.class);
+                i.putExtra("username", username);
                 startActivity(i);
             }
         });

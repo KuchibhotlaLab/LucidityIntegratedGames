@@ -63,7 +63,7 @@ public class DifficultyScreen extends InputAdapter implements Screen {
                 Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
                 batch.begin();
-                    font.setColor(new Color(0.01f, 0.4f, 0.44f, 1));
+                    font.setColor(new Color(GameOneConstants.TITLE_COLOR));
                     font.getData().setScale(GameOneConstants.TITLE_SCALE);
 
                     final GlyphLayout promptLayout_two = new GlyphLayout(font, GameOneConstants.TITLE_TWO);

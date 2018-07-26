@@ -41,4 +41,7 @@
     <string name="set_month">Change Month</string>
     <string name="label_7_days">Last 7 Days</string>
     <string name="scores">Scores</string>
+    <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
+    <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
+    <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
 </resources>

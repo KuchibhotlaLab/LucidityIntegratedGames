@@ -305,7 +305,7 @@ public class SpacialScreen extends InputAdapter implements Screen {
                     (int) (end.x + 0.25 * end.getWidth()),
                     (int) (end.y + 0.6 * end.getHeight()));
 
-            font.setColor(GameThreeConstants.TITLE_COLOR);
+            font.setColor(Color.WHITE);
             font.draw(batch, GameTwoConstants.SCORE_LABEL + Integer.toString(score),
                     GameTwoConstants.SCORE_CENTER, screenHeight - GameTwoConstants.SCORE_CENTER);
 
@@ -481,8 +481,9 @@ public class SpacialScreen extends InputAdapter implements Screen {
         int curBlocks = 0;
         while(curBlocks < roadBlockNum){
             int position = (int)(Math.random()*blocksHorizontal*blocksVertical);
-
-            if(!toRemember[position/blocksVertical%blocksHorizontal][position%blocksVertical]){
+            if(!toRemember[position/blocksVertical%blocksHorizontal][position%blocksVertical] &&
+                    nonSetRect(position/blocksVertical%blocksHorizontal, position%blocksVertical) &&
+                    !isCorner(position/blocksVertical%blocksHorizontal, position%blocksVertical)){
                 ++curBlocks;
                 toRemember[position/blocksVertical%blocksHorizontal][position%blocksVertical] = true;
             }
@@ -490,8 +491,25 @@ public class SpacialScreen extends InputAdapter implements Screen {
 
     }
 
-    public boolean correctPath(){
-        //boolean hp = hasPath(selected, new int[blocksHorizontal][blocksVertical]);
+    private boolean isCorner(int row, int col){
+        if(row == blocksHorizontal && col == blocksVertical - 1){
+            return toRemember[blocksHorizontal - 1][blocksVertical];
+        }
+        if(row == blocksHorizontal - 1 && col == blocksVertical ){
+            return toRemember[blocksHorizontal][blocksVertical - 1];
+        }
+
+        if(row == 0 && col == 1){
+            return toRemember[1][0];
+        }
+
+        if(row == 1 && col == 0){
+            return toRemember[0][1];
+        }
+        return false;
+    }
+
+    private boolean correctPath(){
         boolean hp = hasPath();
 
         if(!hp){
@@ -511,82 +529,88 @@ public class SpacialScreen extends InputAdapter implements Screen {
     }
 
     public boolean hasPath(){
-        boolean[][] temp = selected;
+        boolean[][] temp = new boolean[blocksHorizontal][blocksVertical];
+        temp[0][0] = true;
 
         for (int i = 0; i < blocksHorizontal; ++i) {
             for (int j = 0; j < blocksVertical; ++j) {
-                System.out.println("i: "+ i + ", j: "+ j);
-                if (i == 0 && j > 0 && j < blocksHorizontal - 1) {
-                    if ((selected[i + 1][j - 1] ||
-                            selected[i + 1][j + 1] ||
-                            selected[i][j + 1] ||
-                            selected[i][j - 1] ||
-                            selected[i + 1][j]) && selected[i][j]) {
-                        temp[i][j] = true;
+                if(i == 0){
+                    if(j == 0){
+                        if ((//temp[i + 1][j + 1] ||
+                                temp[i][j + 1] ||
+                                temp[i + 1][j]) && selected[i][j]) {
+                            temp[i][j] = true;
+                        }
+                    } else if(j > 0 && j < blocksHorizontal - 1){
+                        if ((//temp[i + 1][j - 1] ||
+                                //temp[i + 1][j + 1] ||
+                                temp[i][j + 1] ||
+                                temp[i][j - 1] ||
+                                temp[i + 1][j]) && selected[i][j]) {
+                            temp[i][j] = true;
+                        }
+                    } else {
+                        if((//selected[i + 1][j - 1] ||
+                                selected[i][j - 1] ||
+                                selected[i + 1][j]) && selected[i][j]){
+                            temp[i][j] = true;
+                        }
                     }
-                } else if ( i < blocksHorizontal - 1 && i > 0 && j == 0) {
-                    if ((selected[i - 1][j + 1] ||
-                            selected[i + 1][j + 1] ||
-                            selected[i][j + 1] ||
-                            selected[i + 1][j]) && selected[i][j]) {
-                        temp[i][j] = true;
-                    }
-                } else if (i == 0 && j == 0) {
-                    if ((selected[i + 1][j + 1] ||
-                            selected[i][j + 1] ||
-                            selected[i + 1][j]) && selected[i][j]) {
-                        temp[i][j] = true;
-                    }
-                } else if (i == blocksHorizontal - 1 && j == blocksVertical - 1) {
-                    if ((selected[i - 1][j - 1] ||
-                            selected[i][j - 1] ||
-                            selected[i - 1][j]) && selected[i][j]) {
-                        temp[i][j] = true;
-                    }
-                } else if ( i > 0 && i < blocksHorizontal - 1 && j == blocksVertical - 1) {
-                    if((selected[i-1][j-1] ||
-                            selected[i+1][j-1] ||
-                            selected[i][j-1] ||
-                            selected[i+1][j] ||
-                            selected[i-1][j]) && selected[i][j]) {
-                        temp[i][j] = true;
-                    }
+                }else if(i == blocksHorizontal - 1){
+                    if(j == 0){
+                        if ((//temp[i - 1][j + 1] ||
+                                temp[i][j + 1] ||
+                                temp[i - 1][j]) && selected[i][j]) {
+                            temp[i][j] = true;
+                        }
 
-                } else if (i == blocksHorizontal - 1 && j > 0 && j < blocksVertical - 1) {
-                    if((selected[i-1][j-1] ||
-                            selected[i-1][j+1] ||
-                            selected[i][j+1] ||
-                            selected[i][j-1] ||
-                            selected[i-1][j]) && selected[i][j]) {
-                        temp[i][j] = true;
+                    } else if(j > 0 && j < blocksHorizontal - 1){
+                        if((//temp[i-1][j-1] ||
+                                //temp[i-1][j+1] ||
+                                temp[i][j+1] ||
+                                temp[i][j-1] ||
+                                temp[i-1][j]) && selected[i][j]) {
+                            temp[i][j] = true;
+                        }
+
+                    } else {
+                        if ((//temp[i - 1][j - 1] ||
+                                temp[i][j - 1] ||
+                                temp[i - 1][j]) && selected[i][j]) {
+                            temp[i][j] = true;
+                        }
                     }
-                } else if(i == 0 && j == blocksVertical - 1){
-                    if((selected[i + 1][j - 1] ||
-                            selected[i][j - 1] ||
-                            selected[i + 1][j]) && selected[i][j]){
-                        temp[i][j] = true;
-                    }
-                } else if(i == blocksHorizontal - 1 && j == 0){
-                    if ((selected[i - 1][j + 1] ||
-                            selected[i][j + 1] ||
-                            selected[i - 1][j]) && selected[i][j]) {
-                        temp[i][j] = true;
+                } else {
+                    if(j == 0){
+                        if ((//temp[i - 1][j + 1] ||
+                                //temp[i + 1][j + 1] ||
+                                temp[i - 1][j] ||
+                                temp[i][j + 1] ||
+                                temp[i + 1][j]) && selected[i][j]) {
+                            temp[i][j] = true;
+                        }
+
+                    } else if(j > 0 && j < blocksHorizontal - 1){
+                        if ((//temp[i - 1][j - 1] ||
+                                //temp[i - 1][j + 1] ||
+                                //temp[i + 1][j - 1] ||
+                                //temp[i + 1][j + 1] ||
+                                temp[i][j + 1] ||
+                                temp[i][j - 1] ||
+                                temp[i + 1][j] ||
+                                temp[i - 1][j]) && selected[i][j]) {
+                            temp[i][j] = true;
+                        }
+
+                    } else {
+                        if ((//temp[i - 1][j - 1] ||
+                                temp[i][j - 1] ||
+                                temp[i - 1][j]) && selected[i][j]) {
+                            temp[i][j] = true;
+                        }
                     }
                 }
-
-
-                else {
-                    if ((selected[i - 1][j - 1] ||
-                            selected[i - 1][j + 1] ||
-                            selected[i + 1][j - 1] ||
-                            selected[i + 1][j + 1] ||
-                            selected[i][j + 1] ||
-                            selected[i][j - 1] ||
-                            selected[i + 1][j] ||
-                            selected[i - 1][j]) && selected[i][j]) {
-                        temp[i][j] = true;
-                    }
-                }
+                System.out.println(Arrays.deepToString(temp) );
             }
         }
 
@@ -595,7 +619,7 @@ public class SpacialScreen extends InputAdapter implements Screen {
 
 
 
-    public boolean nonSetRect(int rowNum, int colNum){
+    private boolean nonSetRect(int rowNum, int colNum){
         return (rowNum != startRow || colNum != startCol) && (rowNum != endRow || colNum != endCol);
     }
 
