@@ -25,7 +25,10 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -35,6 +38,7 @@ import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -204,6 +208,7 @@ public class FragmentTrackMonth extends Fragment {
             entries.add(new BarEntry (x[i], y[i]));
         }
         BarDataSet dataSet = new BarDataSet(entries, "Scores");
+        dataSet.setValueFormatter(new DataValueFormatter());
         dataSet.setColor(ContextCompat.getColor(getContext(),R.color.colorLightPurple));
         BarData data = new BarData(dataSet);
         data.setBarWidth(0.9f); // set custom bar width

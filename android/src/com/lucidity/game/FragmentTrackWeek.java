@@ -157,7 +157,7 @@ public class FragmentTrackWeek extends Fragment {
             entries.add(new BarEntry (x[i], y[i]));
         }
         BarDataSet dataSet = new BarDataSet(entries, "Scores");
-
+        dataSet.setValueFormatter(new DataValueFormatter());
         dataSet.setColor(ContextCompat.getColor(getContext(),R.color.colorLightPurple));
         BarData data = new BarData(dataSet);
         data.setBarWidth(0.9f); // set custom bar width

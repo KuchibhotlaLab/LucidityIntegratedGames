@@ -44,7 +44,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class FragmentTrackDay extends Fragment implements OnChartGestureListener, OnChartValueSelectedListener {
-    final String[] labelsDay = {"12:00 AM", "", "6:00 AM", "", "12:00 PM", "", "6:00 PM", "", "12:00 AM"};
+    final String[] labelsDay = {"12 AM", "3 AM", "6 AM", "9 AM", "12 PM", "3 PM", "6 PM", "9 PM", "12 AM"};
 
     private LineChart chart;
     private long tsStart;
@@ -276,6 +276,7 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
         } else {
             dataSet = new LineDataSet(entries, "Scores");
             dataSet.setDrawValues(false);
+            dataSet.setValueFormatter(new DataValueFormatter());
             dataSet.setColor(ContextCompat.getColor(getContext(), R.color.colorLightPurple));
             dataSet.setCircleColorHole(ContextCompat.getColor(getContext(), R.color.colorLightPurple));
             dataSet.setCircleColor(ContextCompat.getColor(getContext(), R.color.colorLightPurple));
