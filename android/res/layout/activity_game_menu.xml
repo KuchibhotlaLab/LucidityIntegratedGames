@@ -127,7 +127,7 @@
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_gravity="center_horizontal"
-                    android:text="Spcial Memory Test" />
+                    android:text="Spacial Memory Test" />
                 <!--android:text="@string/reminders"
                 android:textColor="#fff" />-->
 

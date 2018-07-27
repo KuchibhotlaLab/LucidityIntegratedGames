@@ -356,7 +356,7 @@ public class SpacialScreen extends InputAdapter implements Screen {
                     }
                 }
                 if(trial == 5) {
-                    //postScore();
+                    postScore();
                     game.setScreen(new EndScreen(game, score, trial));
                 }
                 ++trial;
@@ -615,6 +615,59 @@ public class SpacialScreen extends InputAdapter implements Screen {
         }
 
         return temp[endRow][endCol];
+    }
+
+    //Posts score and stats to MySQL database
+    private void postScore() {
+        Net.HttpRequest httpPost = new Net.HttpRequest(Net.HttpMethods.POST);
+        httpPost.setUrl("http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_spacialgame_score.php");
+
+        //set parameters
+        Map<String, String> json = new HashMap<String, String>();
+        json.put("username", game.getUsername());
+        json.put("time", game.getDateTime());
+        json.put("location", game.getLocation());
+        if (game.getLucid()) {
+            json.put("menu", "Lucid");
+        } else if (game.getPatient()) {
+            json.put("menu", "Patient");
+        } else if (game.getCare()) {
+            json.put("menu", "CareGiver");
+        }
+        if (gameMode == 2) {
+            json.put("difficulty", "Hard");
+        } else if(gameMode == 1) {
+            json.put("difficulty", "Medium");
+        } else{
+            json.put("difficulty", "Easy");
+        }
+        json.put("score", String.valueOf(score));
+        for (int i = 0; i < trial; i++) {
+            String trialNum = "trial" + (i + 1);
+            json.put(trialNum, String.valueOf(trialSuccess[i]));
+            json.put(trialNum + "time", String.valueOf(trialTime[i]));
+        }
+
+        httpPost.setContent(HttpParametersUtils.convertHttpParameters(json));
+
+        //Send JSON and Look for response
+        Gdx.net.sendHttpRequest(httpPost, new Net.HttpResponseListener() {
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                String status = httpResponse.getResultAsString().trim();
+                HashMap<String, String> map = new Gson().fromJson(status, new TypeToken<HashMap<String, String>>() {
+                }.getType());
+                System.out.println(map);
+            }
+
+            public void failed(Throwable t) {
+                String status = "failed";
+            }
+
+            @Override
+            public void cancelled() {
+
+            }
+        });
     }
 
 
