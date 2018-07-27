@@ -84,12 +84,12 @@ public class LoadingScreen implements Screen {
 
 
                 final GlyphLayout promptLayout_one = new GlyphLayout(font, GameTwoConstants.TITLE_ONE);
-                font.draw(batch, promptLayout_one, (GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_one.width) * 5 / 4,
+                font.draw(batch, promptLayout_one, (GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_one.width) * 9 / 10,
                         GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_two.height + 1.5f * promptLayout_three.height);
             } else if(isObjGame){
                 font.setColor(GameThreeConstants.TITLE_COLOR);
                 final GlyphLayout promptLayout_three = new GlyphLayout(font, GameThreeConstants.TITLE_THREE);
-                font.draw(batch, promptLayout_three, (GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_three.width) * 2/3,
+                font.draw(batch, promptLayout_three, (GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_three.width)  / 2,
                         GameOneConstants.DIFFICULTY_WORLD_SIZE * 2);
 
                 final GlyphLayout promptLayout_two = new GlyphLayout(font, GameThreeConstants.TITLE_TWO);
@@ -98,7 +98,7 @@ public class LoadingScreen implements Screen {
 
 
                 final GlyphLayout promptLayout_one = new GlyphLayout(font, GameThreeConstants.TITLE_ONE);
-                font.draw(batch, promptLayout_one, (GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_one.width) * 8 / 3,
+                font.draw(batch, promptLayout_one, (GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_one.width) * 5 / 4,
                         GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_two.height + 1.5f * promptLayout_three.height);
             } else if (isSpGame){
                 font.setColor(GameFourConstants.TITLE_COLOR);
@@ -107,7 +107,7 @@ public class LoadingScreen implements Screen {
                         GameOneConstants.DIFFICULTY_WORLD_SIZE * 2);
 
                 final GlyphLayout promptLayout_two = new GlyphLayout(font, GameFourConstants.TITLE_ONE);
-                font.draw(batch, promptLayout_two, (GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_two.width) * 2,
+                font.draw(batch, promptLayout_two, (GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_two.width) * 3 / 2,
                         GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_three.height);
             }
 

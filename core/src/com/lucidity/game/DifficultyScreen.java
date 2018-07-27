@@ -72,7 +72,7 @@ public class DifficultyScreen extends InputAdapter implements Screen {
 
 
                     final GlyphLayout promptLayout_one = new GlyphLayout(font, GameOneConstants.TITLE_ONE);
-                    font.draw(batch, promptLayout_one, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_one.width) / 2,
+                    font.draw(batch, promptLayout_one, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_one.width) ,
                             GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_two.height);
 
 

@@ -22,12 +22,12 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     private static final float BOX_STROKE_WIDTH = 5.0f;
 
     private static final int COLOR_CHOICES[] = {
-            Color.BLUE,
+            /*Color.BLUE,
             Color.CYAN,
             Color.GREEN,
             Color.MAGENTA,
             Color.RED,
-            Color.WHITE,
+            Color.WHITE,*/
             Color.YELLOW
     };
     private static int mCurrentColorIndex = 0;
@@ -106,7 +106,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     }
 
     public boolean preferableSize(){
-        System.out.println("Width is: " + width + "\n height is: " + height);
+        //System.out.println("Width is: " + width + "\n height is: " + height);
         return (width > 600) && (height > 500);
     }
 }

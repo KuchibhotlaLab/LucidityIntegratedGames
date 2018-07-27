@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -325,26 +326,34 @@ public class FaceDetectActivity extends AppCompatActivity{
     }
 
 
-    //stackoverflow.com/questions/2661536/how-to-programmatically-take-a-screenshot
+    //TODO: take screenshot of surface view
+    //stackoverflow.com/questions/27817577/
     private void takeScreenshot() {
         Date now = new Date();
         android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
 
         try {
             // image naming and path  to include sd card  appending name you choose for file
-            String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg";
+            //String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg";
 
+            String filename = now + ".jpg";
             // create bitmap screen capture
-            View v1 = getWindow().getDecorView().getRootView();
+            /*View v1 = getWindow().getDecorView().getRootView();
             v1.setDrawingCacheEnabled(true);
             Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
-            v1.setDrawingCacheEnabled(false);
+            v1.setDrawingCacheEnabled(false);*/
+
+            //stackoverflow.com/questions/18289544/
+            mPreview.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(mPreview.getDrawingCache());
+            mPreview.setDrawingCacheEnabled(false);
+
 
             ContextWrapper cw = new ContextWrapper(getApplicationContext());
-            // path to /data/data/yourapp/app_data/imageDir
+            // path to /data/data/yourapp/app_data/faceDir
             File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-            String imgName = "1";
-            File imageFile = new File(directory, imgName);
+            File subfolder = new File(directory, username);
+            File imageFile = new File(subfolder, filename);
 
             FileOutputStream outputStream = new FileOutputStream(imageFile);
             int quality = 100;
@@ -352,19 +361,10 @@ public class FaceDetectActivity extends AppCompatActivity{
             outputStream.flush();
             outputStream.close();
 
-            openScreenshot(imageFile);
         } catch (Throwable e) {
             // Several error may come out with file handling or DOM
             e.printStackTrace();
         }
-    }
-
-    private void openScreenshot(File imageFile) {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        Uri uri = Uri.fromFile(imageFile);
-        intent.setDataAndType(uri, "image/*");
-        startActivity(intent);
     }
 
 

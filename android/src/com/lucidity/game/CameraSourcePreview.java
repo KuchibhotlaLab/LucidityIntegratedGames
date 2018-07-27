@@ -2,6 +2,8 @@ package com.lucidity.game;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -130,7 +132,7 @@ public class CameraSourcePreview extends ViewGroup {
             height = tmp;
         }
 
-        final int layoutWidth = right - left;
+        /*final int layoutWidth = right - left;
         final int layoutHeight = bottom - top;
 
         // Computes height and width for potentially doing fit width.
@@ -145,7 +147,40 @@ public class CameraSourcePreview extends ViewGroup {
 
         for (int i = 0; i < getChildCount(); ++i) {
             getChildAt(i).layout(0, 0, childWidth, childHeight);
+        }*/
+
+        final int viewWidth = right - left;
+        final int viewHeight = bottom - top;
+        int childWidth;
+        int childHeight;
+        int childXOffset = 0;
+        int childYOffset = 0;
+        float widthRatio = (float) viewWidth / (float) width;
+        float heightRatio = (float) viewHeight / (float) height;
+
+        // To fill the view with the camera preview, while also preserving the correct aspect ratio,
+        // it is usually necessary to slightly oversize the child and to crop off portions along one
+        // of the dimensions.  We scale up based on the dimension requiring the most correction, and
+        // compute a crop offset for the other dimension.
+        if (widthRatio > heightRatio) {
+            childWidth = viewWidth;
+            childHeight = (int) ((float) height * widthRatio);
+            childYOffset = (childHeight - viewHeight) / 2;
+        } else {
+            childWidth = (int) ((float) width * heightRatio);
+            childHeight = viewHeight;
+            childXOffset = (childWidth - viewWidth) / 2;
         }
+
+        for (int i = 0; i < getChildCount(); ++i) {
+            // One dimension will be cropped.  We shift child over or up by this offset and adjust
+            // the size to maintain the proper aspect ratio.
+            getChildAt(i).layout(
+                    -1 * childXOffset, -1 * childYOffset,
+                    childWidth - childXOffset, childHeight - childYOffset);
+        }
+
+
 
         try {
             startIfReady();

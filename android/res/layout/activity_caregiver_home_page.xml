@@ -46,10 +46,12 @@
                 android:textColor="#fff" />
 
             <ImageView
-                android:layout_width="300dp"
+                android:layout_width="wrap_content"
                 android:layout_height="100dp"
+                android:adjustViewBounds="true"
+                android:maxHeight="0dp"
+                android:scaleType="fitCenter"
                 android:layout_gravity="bottom|center"
-                android:scaleType="fitXY"
                 android:src="@drawable/admintestbutton" />
         </FrameLayout>
 
@@ -70,10 +72,10 @@
                 android:textColor="#fff" />
 
             <ImageView
-                android:layout_width="300dp"
+                android:layout_width="wrap_content"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:scaleType="fitXY"
+                android:scaleType="fitCenter"
                 android:src="@drawable/trackingbutton" />
         </FrameLayout>
 
@@ -92,10 +94,10 @@
                 android:textColor="#fff" />
 
             <ImageView
-                android:layout_width="300dp"
+                android:layout_width="wrap_content"
                 android:layout_height="100dp"
                 android:layout_gravity="top|center"
-                android:scaleType="fitXY"
+                android:scaleType="fitCenter"
                 android:src="@drawable/settingsbutton" />
         </FrameLayout>
 
