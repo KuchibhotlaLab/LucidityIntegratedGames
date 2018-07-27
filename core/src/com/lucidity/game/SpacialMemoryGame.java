@@ -16,14 +16,12 @@ public class SpacialMemoryGame extends Game {
     public ActionResolver actionResolver;
 
 
-    //TODO: reduce the amount of things passed by intent(they can all be extracted from action resolver)
-    public SpacialMemoryGame(ActionResolver a, String uname, String date, String location,
-                             boolean lucid, boolean patient, boolean care){
-        username = uname;
+    public SpacialMemoryGame(ActionResolver a, String date, String location){
+        username = a.getUsername();
 
-        isLucid = lucid;
-        isPatient = patient;
-        isCare = care;
+        isLucid = a.getLucidity();
+        isPatient = a.getPatient();
+        isCare = a.getCare();
         dateTime = date;
         coordinates = location;
         actionResolver = a;

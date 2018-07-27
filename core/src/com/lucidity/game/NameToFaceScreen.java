@@ -72,7 +72,6 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
 
     float elapsed = 0;
     //cheap fix
-    //TODO: figure out how to properly time
     boolean delayOn= false;
     float delayed = -10000;
     int gameMode;

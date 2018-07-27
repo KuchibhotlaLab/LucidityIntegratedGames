@@ -327,6 +327,7 @@ public class FaceDetectActivity extends AppCompatActivity{
 
     //TODO: take screenshot of surface view
     //stackoverflow.com/questions/27817577/
+    //stackoverflow.com/questions/26545970/
     private void takeScreenshot() {
         Date now = new Date();
         android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);

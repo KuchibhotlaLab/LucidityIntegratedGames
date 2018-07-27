@@ -5,7 +5,6 @@ package com.lucidity.game;
  */
 
 
-//TODO: return to activity where game was called
 public interface ActionResolver {
     public void MemoryGame();
     public void FaceGame();
@@ -13,4 +12,6 @@ public interface ActionResolver {
     public void SpaceGame();
     public boolean getLucidity();
     public boolean getCare();
+    public boolean getPatient();
+    public String getUsername();
 }

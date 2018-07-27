@@ -10,13 +10,13 @@ public class WorkingMemoryGame extends Game {
     public ActionResolver actionResolver;
 
 
-    public WorkingMemoryGame(ActionResolver a, String uname, String date, String location, boolean lucid, boolean patient, boolean care){
+    public WorkingMemoryGame(ActionResolver a, String date, String location){
         this.actionResolver = a;
-        isLucid = lucid;
-        isPatient = patient;
-        isCare = care;
+        isLucid = a.getLucidity();
+        isPatient = a.getPatient();
+        isCare = a.getCare();
 
-    	username = uname;
+    	username = a.getUsername();
     	currentDateTime = date;
         coordinates = location;
     }

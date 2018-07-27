@@ -15,12 +15,11 @@ public class ObjectRecognitionGame extends Game {
     private String coordinates;
     public ActionResolver actionResolver;
 
-    public ObjectRecognitionGame(ActionResolver a,  String uname, String date, String location,
-                                 boolean lucid, boolean patient, boolean care){
-        username = uname;
-        isLucid = lucid;
-        isPatient = patient;
-        isCare = care;
+    public ObjectRecognitionGame(ActionResolver a, String date, String location){
+        username = a.getUsername();
+        isLucid = a.getLucidity();
+        isPatient = a.getPatient();
+        isCare = a.getCare();
         dateTime = date;
         coordinates = location;
         actionResolver = a;

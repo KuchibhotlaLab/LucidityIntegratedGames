@@ -19,7 +19,6 @@ import static com.lucidity.game.GameOneConstants.BACKGROUND_COLOR;
  */
 
 
-//TODO: properly dispose screen
 public class EndScreen extends InputAdapter implements Screen {
     public static final String TAG = EndScreen.class.getName();
     WorkingMemoryGame gameIndep;

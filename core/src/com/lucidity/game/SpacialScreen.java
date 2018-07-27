@@ -466,7 +466,7 @@ public class SpacialScreen extends InputAdapter implements Screen {
         toRemember = new boolean[blocksHorizontal][blocksVertical];
 
         //sets the start and end tiles
-        //TODO: make flexible if necessary
+        //TODO: make the start/end blocks flexible if necessary
         /*int positionStart = (int)(Math.random()*blocksHorizontal*blocksVertical);
         while(toRemember[positionStart/blocksVertical%blocksHorizontal][positionStart%blocksVertical]){
             positionStart = (int)(Math.random()*blocksHorizontal*blocksVertical);

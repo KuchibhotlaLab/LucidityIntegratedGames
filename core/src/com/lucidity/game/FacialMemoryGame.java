@@ -18,15 +18,15 @@ public class FacialMemoryGame extends Game {
     public ActionResolver actionResolver;
 
 
-    //TODO: reduce the amount of things passed by intent(they can all be extracted from action resolver)
-    public FacialMemoryGame(ActionResolver a, String uname, ArrayList<String> pnames, ArrayList<ArrayList<String>> ptags,
-                            String date, String location, boolean lucid, boolean patient, boolean care){
-        username = uname;
+    //TODO: reduce repetition in code/think location getter
+    public FacialMemoryGame(ActionResolver a, ArrayList<String> pnames, ArrayList<ArrayList<String>> ptags,
+                            String date, String location){
+        username = a.getUsername();
         picturenames = pnames;
         picturetags = ptags;
-        isLucid = lucid;
-        isPatient = patient;
-        isCare = care;
+        isLucid = a.getLucidity();
+        isPatient = a.getPatient();
+        isCare = a.getCare();
         dateTime = date;
         coordinates = location;
         actionResolver = a;
