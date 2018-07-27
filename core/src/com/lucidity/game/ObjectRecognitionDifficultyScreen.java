@@ -39,7 +39,7 @@ public class ObjectRecognitionDifficultyScreen extends InputAdapter implements S
         viewport = new FitViewport(GameThreeConstants.MODE_WORLD_SIZE, GameThreeConstants.MODE_WORLD_SIZE);
         Gdx.input.setInputProcessor(this);
 
-        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular.fnt"), false);
+        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
         font.getData().setScale(GameThreeConstants.MODE_LABEL_SCALE);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }

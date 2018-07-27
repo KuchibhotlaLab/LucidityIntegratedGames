@@ -41,7 +41,7 @@ public class GameOneConstants {
 
     public static final float DIFFICULTY_WORLD_SIZE = 480.0f;
     public static final float DIFFICULTY_BUBBLE_RADIUS = DIFFICULTY_WORLD_SIZE / 9;
-    public static final float DIFFICULTY_LABEL_SCALE = 1.5f;
+    public static final float DIFFICULTY_LABEL_SCALE = .3f;
 
     public static final Vector2 EASY_CENTER = new Vector2(DIFFICULTY_WORLD_SIZE / 4, DIFFICULTY_WORLD_SIZE / 2);
     public static final Vector2 MEDIUM_CENTER = new Vector2(DIFFICULTY_WORLD_SIZE / 2, DIFFICULTY_WORLD_SIZE / 2);
@@ -52,9 +52,9 @@ public class GameOneConstants {
     public static final String TOP_SCORE_LABEL = "Top Score: ";
     public static final int SCORE_CENTER = 70;
 
-    public static final float TITLE_SCALE = 4f;
-    public static final float NOTIFICATION_SCALE = 3f;
-    public static final float LABEL_SCALE = 2f;
+    public static final float TITLE_SCALE = .8f;
+    public static final float NOTIFICATION_SCALE = .6f;
+    public static final float LABEL_SCALE = .4f;
 
     public static final String TRIAL_LABEL = "Trial: ";
     public static final int TRIAL_CENTER = 400;

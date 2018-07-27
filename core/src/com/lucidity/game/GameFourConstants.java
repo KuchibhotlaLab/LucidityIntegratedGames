@@ -33,5 +33,5 @@ public class GameFourConstants {
     public static final String INSTRUCTIONS_FOUR = "without the road blocks";
     public static final String SUBMIT_TEXT = "Submit";
 
-    public static final float INSTRUCTION_SIZE = 3f;
+    public static final float INSTRUCTION_SIZE = .6f;
 }

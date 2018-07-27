@@ -13,7 +13,7 @@ public class GameThreeConstants {
 
     public static final float MODE_WORLD_SIZE = 480.0f;
     public static final float MODE_BUBBLE_RADIUS = MODE_WORLD_SIZE / 8;
-    public static final float MODE_LABEL_SCALE = 1f;
+    public static final float MODE_LABEL_SCALE = .2f;
 
     public static final Color LOADING_COLOR = new Color(0.96f,0.94f,0.8f, 1);
     public static final Color BACKGROUND_COLOR = new Color(0.87f,0.82f,0.62f, 1);
@@ -39,21 +39,21 @@ public class GameThreeConstants {
     public static final String PROMPT_ONE = "Please rememeber the shape";
     public static final String PROMPT_TWO = "and the color";
     public static final String PROMPT_THREE = "that appears on the screen";
-    public static final float PROMPT_SCALE = 2.5f;
+    public static final float PROMPT_SCALE = .5f;
 
     public static final String INSTRUCTION_ONE_ONE = "Select if the shape";
     public static final String INSTRUCTION_ONE_TWO = "Select if the shape and color";
     public static final String INSTRUCTION_TWO = "on the screen now";
     public static final String INSTRUCTION_THREE = "is the same as the";
     public static final String INSTRUCTION_FOUR = "previous one";
-    public static final float INSTRUCTION_SCALE = 2.75f;
+    public static final float INSTRUCTION_SCALE = .53f;
 
 
     public static final String SCORE_LABEL = "Score: ";
     public static final int SCORE_CENTER = 50;
     public static final String TRIAL_LABEL = "Trial: ";
 
-    public static final float ANSWER_SCALE = 2.5f;
+    public static final float ANSWER_SCALE = .5f;
     public static final String CORRECT_MESSAGE = "Correct!";
     public static final String INCORRECT_MESSAGE = "Incorrect!";
 

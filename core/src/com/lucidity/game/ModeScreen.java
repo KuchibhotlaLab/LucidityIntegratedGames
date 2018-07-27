@@ -39,7 +39,7 @@ public class ModeScreen extends InputAdapter implements Screen {
         viewport = new FitViewport(GameTwoConstants.MODE_WORLD_SIZE, GameTwoConstants.MODE_WORLD_SIZE);
         Gdx.input.setInputProcessor(this);
 
-        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular.fnt"), false);
+        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
         font.getData().setScale(GameTwoConstants.MODE_LABEL_SCALE);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
@@ -73,7 +73,7 @@ public class ModeScreen extends InputAdapter implements Screen {
         batch.setProjectionMatrix(viewport.getCamera().combined);
 
         batch.begin();
-        font.getData().setScale(1f);
+        font.getData().setScale(.2f);
         font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         final GlyphLayout mode_one_second = new GlyphLayout(font, GameTwoConstants.MODE_ONE_SECOND);

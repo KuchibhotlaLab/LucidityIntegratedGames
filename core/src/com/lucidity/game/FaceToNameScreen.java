@@ -127,7 +127,7 @@ FaceToNameScreen extends InputAdapter implements Screen {
         }
 
         batch = new SpriteBatch();
-        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular.fnt"), false);
+        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
 
         generateTrial();
     }

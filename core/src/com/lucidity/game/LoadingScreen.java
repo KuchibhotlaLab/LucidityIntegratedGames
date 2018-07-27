@@ -47,7 +47,7 @@ public class LoadingScreen implements Screen {
 
         viewport = new FitViewport(GameTwoConstants.MODE_WORLD_SIZE, GameTwoConstants.MODE_WORLD_SIZE);
 
-        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular.fnt"), false);
+        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
         font.getData().setScale(GameTwoConstants.MODE_LABEL_SCALE);
     }
 

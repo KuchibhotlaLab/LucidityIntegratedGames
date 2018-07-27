@@ -13,7 +13,7 @@ public class GameTwoConstants {
 
     public static final float MODE_WORLD_SIZE = 480.0f;
     public static final float MODE_BUBBLE_RADIUS = MODE_WORLD_SIZE * 2 / 9;
-    public static final float MODE_LABEL_SCALE = 1.5f;
+    public static final float MODE_LABEL_SCALE = .3f;
 
     public static final String MODE_ONE_FIRST = "Match face";
     public static final String MODE_ONE_SECOND = "to names";
@@ -31,7 +31,7 @@ public class GameTwoConstants {
     public static final Color OUTLINE_COLOR = new Color(0.42f, 0.36f, 0.48f, 1);
     public static final Color TITLE_COLOR = OUTLINE_COLOR;
 
-    public static final float TITLE_SCALE = 4f;
+    public static final float TITLE_SCALE = .8f;
     public static final String TITLE_ONE = "FACIAL";
     public static final String TITLE_TWO = "RECOGNITION";
     public static final String TITLE_THREE = "MEMORY TEST";
@@ -47,13 +47,13 @@ public class GameTwoConstants {
 
 
     public static final String PROMPT = "Who is ";
-    public static final float PROMPT_SCALE = 3f;
+    public static final float PROMPT_SCALE = .6f;
 
     public static final String SCORE_LABEL = "Score: ";
     public static final int SCORE_CENTER = 50;
     public static final String TRIAL_LABEL = "Trial: ";
 
-    public static final float ANSWER_SCALE = 2.5f;
+    public static final float ANSWER_SCALE = .5f;
     public static final String CORRECT_MESSAGE = "Correct!";
     public static final String INCORRECT_MESSAGE = "Incorrect!";
 

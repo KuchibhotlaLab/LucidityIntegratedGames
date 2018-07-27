@@ -139,7 +139,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
 
         batch = new SpriteBatch();
-        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular.fnt"), false);
+        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
 
         generateTrial(this.difficulty);
 
@@ -198,7 +198,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
             batch.begin();
-            font.getData().setScale(3f);
+            font.getData().setScale(.6f);
             font.setColor(Color.valueOf("#026670"));
 
             final GlyphLayout promptLayout_two = new GlyphLayout(font, GameOneConstants.WAIT_TWO);

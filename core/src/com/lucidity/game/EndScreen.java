@@ -93,7 +93,7 @@ public class EndScreen extends InputAdapter implements Screen {
         hudViewport = new ScreenViewport();
 
         batch = new SpriteBatch();
-        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular.fnt"), false);
+        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
         Gdx.input.setInputProcessor(this);
     }
 
@@ -123,7 +123,7 @@ public class EndScreen extends InputAdapter implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
-        font.getData().setScale(3.5f);
+        font.getData().setScale(.7f);
         if(isGameOne){
             font.setColor(GameOneConstants.TITLE_COLOR);
         } else if(isGameTwo) {

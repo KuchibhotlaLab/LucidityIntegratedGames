@@ -87,7 +87,7 @@ public class SpacialScreen extends InputAdapter implements Screen {
         screenHeight = Gdx.graphics.getHeight();
 
         batch = new SpriteBatch();
-        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular.fnt"), false);
+        font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
 
         end = new Rectangle();
         back = new Rectangle();
