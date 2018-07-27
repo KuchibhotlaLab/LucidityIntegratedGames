@@ -53,7 +53,6 @@ public class FaceDetectActivity extends AppCompatActivity{
     private String username;
 
 
-    //TODO: pass isLucid as true in the intent that starts the games
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

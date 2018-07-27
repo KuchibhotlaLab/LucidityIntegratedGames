@@ -73,9 +73,9 @@ public class AndroidLauncher extends AndroidApplication {
         getLocation();
 
         if(gameType.equals("memory")){
-            initialize(new WorkingMemoryGame(a, username, currentDateTimeString, coordinates, isLucid, isPatient, isCare), config);
+            initialize(new WorkingMemoryGame(a, currentDateTimeString, coordinates), config);
         } else if(gameType.equals("space")){
-            initialize(new SpacialMemoryGame(a, username, currentDateTimeString, coordinates, isLucid, isPatient, isCare), config);
+            initialize(new SpacialMemoryGame(a, currentDateTimeString, coordinates), config);
         }
     }
 

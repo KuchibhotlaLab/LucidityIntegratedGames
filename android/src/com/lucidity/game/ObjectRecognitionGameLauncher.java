@@ -65,7 +65,7 @@ public class ObjectRecognitionGameLauncher extends AndroidApplication {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         getLocation();
 
-        initialize(new ObjectRecognitionGame(a, username, currentDateTimeString, coordinates, isLucid, isPatient, isCare), config);
+        initialize(new ObjectRecognitionGame(a, currentDateTimeString, coordinates), config);
     }
 
     private void getLocation(){

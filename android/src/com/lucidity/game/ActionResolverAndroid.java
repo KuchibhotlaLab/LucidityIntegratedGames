@@ -99,4 +99,6 @@ public class ActionResolverAndroid implements ActionResolver {
         return isLucid;
     }
     public boolean getCare(){return isCare;}
+    public boolean getPatient(){return isPatient;}
+    public String getUsername(){return username;}
 }

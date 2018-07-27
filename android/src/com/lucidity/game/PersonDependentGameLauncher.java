@@ -120,8 +120,8 @@ public class PersonDependentGameLauncher extends AndroidApplication {
             getLocation();
 
             AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-            initialize(new FacialMemoryGame(a, username, picturesForGame, tagsForGame,
-                    currentDateTimeString, coordinates, isLucid, isPatient, isCare), config);
+            initialize(new FacialMemoryGame(a, picturesForGame, tagsForGame,
+                    currentDateTimeString, coordinates), config);
         }
     }
 
