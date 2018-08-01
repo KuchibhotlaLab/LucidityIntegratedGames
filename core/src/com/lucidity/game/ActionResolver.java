@@ -14,4 +14,7 @@ public interface ActionResolver {
     public boolean getCare();
     public boolean getPatient();
     public String getUsername();
+    public String getOrder();
+    public int getCounter();
+    public void NextGame();
 }

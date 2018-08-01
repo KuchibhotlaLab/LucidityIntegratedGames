@@ -119,11 +119,17 @@ public class MainActivity extends AppCompatActivity{
         Button btnGame = findViewById(R.id.lucid);
         btnGame.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), GameMenuActivity.class);
+                FullTestGenerator gen = new FullTestGenerator();
+
+                Intent i = new Intent(getApplicationContext(), AndroidLauncher.class);
                 i.putExtra("username", username);
                 i.putExtra("isLucid", true);
                 i.putExtra("isCare", false);
                 i.putExtra("isPatient", false);
+                i.putExtra("gametype", "check order");
+                i.putExtra("order", gen.toString());
+                i.putExtra("counter", 0);
+
                 startActivity(i);
             }
         });

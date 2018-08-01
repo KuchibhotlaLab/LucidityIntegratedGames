@@ -11,7 +11,6 @@ public class WorkingMemoryGame extends Game {
 
 
     public WorkingMemoryGame(ActionResolver a, String date, String location){
-        this.actionResolver = a;
         isLucid = a.getLucidity();
         isPatient = a.getPatient();
         isCare = a.getCare();
@@ -19,6 +18,7 @@ public class WorkingMemoryGame extends Game {
     	username = a.getUsername();
     	currentDateTime = date;
         coordinates = location;
+        actionResolver = a;
     }
 
 	@Override

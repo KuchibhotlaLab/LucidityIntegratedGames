@@ -465,7 +465,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
                 renderer.setColor(GameThreeConstants.EASY_COLOR);
                 Timer.schedule(new Timer.Task() {
                                    @Override
-                                   public void run() {game.setScreen(new ObjectRecognitionDifficultyScreen(game));
+                                   public void run() {game.setScreen(new DifficultyScreen(game));
                                    }
                                },
                         1);

@@ -19,15 +19,35 @@ public class ActionResolverAndroid implements ActionResolver {
     boolean isLucid;
     boolean isCare;
     boolean isPatient;
+    String order;
+    int counter;
 
-    public ActionResolverAndroid(Context context, String user, boolean lucid, boolean care, boolean patient) {
+    public ActionResolverAndroid(Context context, String user, boolean lucid, boolean care, boolean patient, String o, int c) {
         handler = new Handler();
         this.context = context;
         username = user;
         isLucid = lucid;
         isCare = care;
         isPatient = patient;
+        order = o;
+        counter = c;
+    }
 
+    public void NextGame() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Intent i = new Intent(context, AndroidLauncher.class);
+                i.putExtra("username", username);
+                i.putExtra("isLucid", isLucid);
+                i.putExtra("isCare", isCare);
+                i.putExtra("isPatient", isPatient);
+                i.putExtra("gametype", "check order");
+                i.putExtra("order", order);
+                i.putExtra("counter", counter + 1);
+                context.startActivity(i);
+            }
+        });
     }
 
     public void MemoryGame() {
@@ -97,4 +117,6 @@ public class ActionResolverAndroid implements ActionResolver {
     public boolean getCare(){return isCare;}
     public boolean getPatient(){return isPatient;}
     public String getUsername(){return username;}
+    public String getOrder(){return order;}
+    public int getCounter(){return counter;}
 }

@@ -291,12 +291,16 @@ public class FaceDetectActivity extends AppCompatActivity{
             mFaceGraphic.updateFace(face);
             if(mFaceGraphic.preferableSize()){
                 takeScreenshot();
+                FullTestGenerator gen = new FullTestGenerator();
                 Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
                 i.putExtra("username", username);
                 i.putExtra("isLucid", false);
                 i.putExtra("isCare", true);
                 i.putExtra("isPatient", false);
-                i.putExtra("gametype", "memory");
+                i.putExtra("gametype", "check order");
+                i.putExtra("order", gen.toString());
+                i.putExtra("counter", 0);
+
                 startActivity(i);
                 finish();
             }

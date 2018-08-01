@@ -18,8 +18,9 @@ public class DifficultyScreen extends InputAdapter implements Screen {
     public static final String TAG = DifficultyScreen.class.getName();
 
     WorkingMemoryGame memGame;
+    ObjectRecognitionGame obGame;
     SpacialMemoryGame spaGame;
-    boolean isMem, isSpa = false;
+    boolean isMem, isSpa, isOb = false;
 
     ShapeRenderer renderer;
     SpriteBatch batch;
@@ -36,6 +37,11 @@ public class DifficultyScreen extends InputAdapter implements Screen {
         isSpa = true;
         this.spaGame = game;
     }
+    public DifficultyScreen(ObjectRecognitionGame game) {
+        isOb = true;
+        this.obGame = game;
+    }
+
 
     @Override
     public void show() {
@@ -54,7 +60,6 @@ public class DifficultyScreen extends InputAdapter implements Screen {
     public void render(float delta) {
         elapsed += delta;
         viewport.apply();
-
 
         if(isMem){
             if(elapsed < 4) {
@@ -114,7 +119,42 @@ public class DifficultyScreen extends InputAdapter implements Screen {
 
                 batch.end();
             }
-        } else if (isSpa) {
+        } else if(isOb) {
+            Gdx.gl.glClearColor(GameThreeConstants.BACKGROUND_COLOR.r, GameThreeConstants.BACKGROUND_COLOR.g, GameThreeConstants.BACKGROUND_COLOR.b, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+            renderer.setProjectionMatrix(viewport.getCamera().combined);
+
+            renderer.begin(ShapeRenderer.ShapeType.Filled);
+
+            renderer.setColor(GameThreeConstants.EASY_COLOR);
+            renderer.circle(GameThreeConstants.EASY_CENTER.x, GameThreeConstants.EASY_CENTER.y, GameThreeConstants.MODE_BUBBLE_RADIUS);
+
+            renderer.setColor(GameThreeConstants.MEDIUM_COLOR);
+            renderer.circle(GameThreeConstants.MEDIUM_CENTER.x, GameThreeConstants.MEDIUM_CENTER.y, GameThreeConstants.MODE_BUBBLE_RADIUS);
+
+            renderer.setColor(GameThreeConstants.HARD_COLOR);
+            renderer.circle(GameThreeConstants.HARD_CENTER.x, GameThreeConstants.HARD_CENTER.y, GameThreeConstants.MODE_BUBBLE_RADIUS);
+
+            renderer.end();
+
+            batch.setProjectionMatrix(viewport.getCamera().combined);
+
+            batch.begin();
+            font.getData().setScale(GameThreeConstants.MODE_LABEL_SCALE);
+            font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+            final GlyphLayout easyLayout = new GlyphLayout(font, GameOneConstants.EASY_LABEL);
+            font.draw(batch, GameOneConstants.EASY_LABEL, GameThreeConstants.EASY_CENTER.x, GameThreeConstants.EASY_CENTER.y + easyLayout.height / 2, 0, Align.center, false);
+
+            final GlyphLayout mediumLayout = new GlyphLayout(font, GameOneConstants.MEDIUM_LABEL);
+            font.draw(batch, GameOneConstants.MEDIUM_LABEL, GameThreeConstants.MEDIUM_CENTER.x, GameThreeConstants.MEDIUM_CENTER.y + mediumLayout.height / 2, 0, Align.center, false);
+
+            final GlyphLayout hardLayout = new GlyphLayout(font, GameOneConstants.HARD_LABEL);
+            font.draw(batch, GameOneConstants.HARD_LABEL, GameThreeConstants.HARD_CENTER.x, GameThreeConstants.HARD_CENTER.y + hardLayout.height / 2, 0, Align.center, false);
+
+            batch.end();
+        } else if(isSpa) {
             Gdx.gl.glClearColor(GameFourConstants.BACKGROUND_COLOR.r, GameFourConstants.BACKGROUND_COLOR.g, GameFourConstants.BACKGROUND_COLOR.b, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -194,6 +234,18 @@ public class DifficultyScreen extends InputAdapter implements Screen {
 
             if (worldTouch.dst(GameOneConstants.HARD_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
                 memGame.showMemoryScreen(GameOneConstants.Difficulty.HARD);
+            }
+        } else if(isOb){
+            if (worldTouch.dst(GameOneConstants.EASY_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
+                obGame.setScreen(new ObjectRecognitionScreen(obGame, GameThreeConstants.DIFFICULTY_EASY));
+            }
+
+            if (worldTouch.dst(GameOneConstants.MEDIUM_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
+                obGame.setScreen(new ObjectRecognitionScreen(obGame, GameThreeConstants.DIFFICULTY_MEDIUM));
+            }
+
+            if (worldTouch.dst(GameOneConstants.HARD_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
+                obGame.setScreen(new ObjectRecognitionScreen(obGame, GameThreeConstants.DIFFICULTY_HARD));
             }
         } else if(isSpa){
             if (worldTouch.dst(GameOneConstants.EASY_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {

@@ -169,30 +169,34 @@ public class EndScreen extends InputAdapter implements Screen {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        //TODO: randomize game order if necessary
         if(isGameOne){
-            if(gameIndep.actionResolver.getLucidity() || gameIndep.actionResolver.getCare()){
-                gameIndep.actionResolver.FaceGame();
+            if(gameIndep.actionResolver.getCounter() == 3 || gameIndep.actionResolver.getPatient()){
                 Gdx.app.exit();
             } else {
+                gameIndep.actionResolver.NextGame();
                 Gdx.app.exit();
             }
         } else if(isGameTwo){
-            if(gameDep.actionResolver.getLucidity() || gameDep.actionResolver.getCare()){
-                gameDep.actionResolver.ObjectGame();
+            if(gameDep.actionResolver.getCounter() == 3 || gameDep.actionResolver.getPatient()){
                 Gdx.app.exit();
             } else {
+                gameDep.actionResolver.NextGame();
                 Gdx.app.exit();
             }
         } else if(isGameThree){
-            if(gameOb.actionResolver.getLucidity() || gameOb.actionResolver.getCare()){
-                gameOb.actionResolver.SpaceGame();
+            if(gameOb.actionResolver.getCounter() == 3 || gameOb.actionResolver.getPatient()){
                 Gdx.app.exit();
             } else {
+                gameOb.actionResolver.NextGame();
                 Gdx.app.exit();
             }
         } else if(isGameFour){
-            Gdx.app.exit();
+            if(gameSpa.actionResolver.getCounter() == 3 || gameSpa.actionResolver.getPatient()){
+                Gdx.app.exit();
+            } else {
+                gameSpa.actionResolver.NextGame();
+                Gdx.app.exit();
+            }
         }
         return false;
     }

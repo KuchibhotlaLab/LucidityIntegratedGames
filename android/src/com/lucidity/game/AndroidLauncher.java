@@ -44,6 +44,8 @@ public class AndroidLauncher extends AndroidApplication {
     private boolean isLucid, isPatient, isCare;
     private String currentDateTimeString;
     String coordinates = " ";
+    private String order = "";
+    private int gameCounter = 0;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -83,10 +85,29 @@ public class AndroidLauncher extends AndroidApplication {
             isCare = extras.getBoolean("isCare");
             isPatient = extras.getBoolean("isPatient");
             gameType = extras.getString("gametype");
+            if (gameType.equals("check order")) {
+                order = extras.getString("order");
+                gameCounter = extras.getInt("counter");
+                int nextGame = Integer.valueOf(order.substring(gameCounter, gameCounter +1));
+                switch (nextGame){
+                    case 0:
+                        gameType = "memory";
+                        break;
+                    case 1:
+                        gameType = "dep";
+                        break;
+                    case 2:
+                        gameType = "object";
+                        break;
+                    case 3:
+                        gameType = "space";
+                        break;
+                }
+            }
         }
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 
-        ActionResolverAndroid a = new ActionResolverAndroid(getApplicationContext(), username, isLucid, isCare, isPatient);
+        ActionResolverAndroid a = new ActionResolverAndroid(getApplicationContext(), username, isLucid, isCare, isPatient, order, gameCounter);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
