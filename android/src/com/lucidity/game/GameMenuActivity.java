@@ -43,11 +43,12 @@ public class GameMenuActivity extends AppCompatActivity {
         Button btnGame2 = findViewById(R.id.game2_button);
         btnGame2.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                Intent i = new Intent(getBaseContext(), PersonDependentGameLauncher.class);
+                Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
                 i.putExtra("username", username);
                 i.putExtra("isLucid", isLucid);
                 i.putExtra("isCare", isCare);
                 i.putExtra("isPatient", isPatient);
+                i.putExtra("gametype", "dep");
                 startActivity(i);
 
             }
@@ -56,11 +57,12 @@ public class GameMenuActivity extends AppCompatActivity {
         Button btnGame3 = findViewById(R.id.game3_button);
         btnGame3.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                Intent i = new Intent(getBaseContext(), ObjectRecognitionGameLauncher.class);
+                Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
                 i.putExtra("username", username);
                 i.putExtra("isLucid", isLucid);
                 i.putExtra("isCare", isCare);
                 i.putExtra("isPatient", isPatient);
+                i.putExtra("gametype", "object");
                 startActivity(i);
 
             }

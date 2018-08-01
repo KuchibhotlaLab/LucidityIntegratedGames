@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.location.LocationListener;
@@ -19,14 +20,25 @@ import android.util.Log;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class AndroidLauncher extends AndroidApplication {
+    final int WRITE_REQUEST_CODE = 1;
     final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private String username;
     private boolean isLucid, isPatient, isCare;
@@ -40,6 +52,24 @@ public class AndroidLauncher extends AndroidApplication {
     private boolean network_enabled = false;
 
     String gameType;
+
+    //gives the names of pictures to use for the person dependent game
+    private ArrayList<String> picturesForGame;
+    //gives an arraylist of tags for each picture in the picture list
+    //tags are ordered so that the name of the person/object is first, then the relation, then other tags
+    private ArrayList<ArrayList<String>> tagsForGame;
+
+    // JSON parser class
+    JSONParser jsonParser = new JSONParser();
+
+    //JSONArray of results
+    JSONArray picturesJSON = null;
+
+    // JSON Node names
+    private static final String TAG_SUCCESS = "success";
+
+    // url to get pictures and tags
+    private static String url_get_pictures_and_tags = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/get_pictures_and_tags.php";
 
     //TODO: getlastlocation returns null if idling for too long- to fix
     @Override
@@ -62,6 +92,9 @@ public class AndroidLauncher extends AndroidApplication {
                     && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
             }
+            if (this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                this.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_REQUEST_CODE);
+            }
         }
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -74,8 +107,78 @@ public class AndroidLauncher extends AndroidApplication {
 
         if(gameType.equals("memory")){
             initialize(new WorkingMemoryGame(a, currentDateTimeString, coordinates), config);
+        } else if(gameType.equals("dep")){
+            picturesForGame = new ArrayList<>();
+            tagsForGame = new ArrayList<>();
+            GetPicturesAndTags task = new GetPicturesAndTags();
+
+            task.execute();
+            //wait for task to finish
+            try {
+                task.get(1000, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            }
+            initialize(new FacialMemoryGame(a, picturesForGame, tagsForGame,
+                    currentDateTimeString, coordinates), config);
+        } else if(gameType.equals("object")) {
+            initialize(new ObjectRecognitionGame(a, currentDateTimeString, coordinates), config);
         } else if(gameType.equals("space")){
             initialize(new SpacialMemoryGame(a, currentDateTimeString, coordinates), config);
+        }
+    }
+
+    /**
+     * Background Async Task to get the images and tags for the person dependent game
+     * */
+    class GetPicturesAndTags extends AsyncTask<String, String, String> {
+
+        /**
+         * Getting everything from MySQL
+         * */
+        protected String doInBackground(String... args) {
+
+            // Check for success tag
+            int success;
+            try {
+                // Building Parameters
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                params.add(new BasicNameValuePair("username", username));
+
+                // getting pictures and tags from web
+                JSONObject json = jsonParser.makeHttpRequest(
+                        url_get_pictures_and_tags, "GET", params);
+
+                // check your log for json response
+                Log.d("get pictures and tags", json.toString());
+
+                // json success tag
+                success = json.getInt(TAG_SUCCESS);
+                if (success == 1) {
+
+                    // Get array of pictures and tags
+                    picturesJSON = json.getJSONArray("pictures");
+
+                    // loop through pictures found
+                    for (int i = 0; i < picturesJSON.length(); i++) {
+                        JSONObject picObject = picturesJSON.getJSONObject(i);
+
+                        // add pictures and tags to Arraylists in order
+                        picturesForGame.add(picObject.getString("picname"));
+                        ArrayList<String> picTags = new ArrayList<>();
+                        picTags.add(picObject.getString("tagname"));
+                        picTags.add(picObject.getString("tagrelation"));
+                        tagsForGame.add(picTags);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return "complete";
         }
     }
 

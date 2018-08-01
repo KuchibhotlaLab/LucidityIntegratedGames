@@ -114,7 +114,25 @@ public class LoadingScreen implements Screen {
             batch.end();
         } else {
             if(isFacGame){
-                FacMemGame.setScreen(new ModeScreen(FacMemGame));
+                if (FacMemGame.actionResolver.getLucidity() || FacMemGame.actionResolver.getCare()) {
+                    int modeSelect = (int)(Math.random() * 4);
+                    switch (modeSelect) {
+                        case 0:
+                            FacMemGame.setScreen(new FaceToNameScreen(FacMemGame, 0, 1, GameTwoConstants.MODE_NAME));
+                            break;
+                        case 1:
+                            FacMemGame.setScreen(new FaceToNameScreen(FacMemGame, 0, 1, GameTwoConstants.MODE_ATTR));
+                            break;
+                        case 2:
+                            FacMemGame.setScreen(new NameToFaceScreen(FacMemGame, 0, 1, GameTwoConstants.MODE_NAME));
+                            break;
+                        case 3:
+                            FacMemGame.setScreen(new NameToFaceScreen(FacMemGame, 0, 1, GameTwoConstants.MODE_ATTR));
+                            break;
+                    }
+                } else {
+                    FacMemGame.setScreen(new ModeScreen(FacMemGame));
+                }
             } else if(isObjGame) {
                 ObjRecGame.setScreen(new ObjectRecognitionDifficultyScreen(ObjRecGame));
             } else if(isSpGame){

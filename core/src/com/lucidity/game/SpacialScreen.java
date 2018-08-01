@@ -158,7 +158,7 @@ public class SpacialScreen extends InputAdapter implements Screen {
             renderer.begin(ShapeRenderer.ShapeType.Filled);
             for (int i = 0; i < blocksHorizontal; i++) {
                 for (int j = 0; j < blocksVertical; j++) {
-                    selectState(toRemember[i][j]);
+                    drawRoadBlock(toRemember[i][j]);
                     renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                 }
             }
@@ -446,6 +446,14 @@ public class SpacialScreen extends InputAdapter implements Screen {
             renderer.setColor(GameFourConstants.TITLE_COLOR);
         } else {
             renderer.setColor(GameFourConstants.EASY_COLOR);
+        }
+    }
+
+    private void drawRoadBlock(boolean blockSelected){
+        if(!blockSelected){
+            renderer.setColor(GameFourConstants.TITLE_COLOR);
+        } else {
+            renderer.setColor(GameFourConstants.ROADBLOCK_COLOR);
         }
     }
 

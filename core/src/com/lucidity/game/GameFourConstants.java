@@ -19,6 +19,7 @@ public class GameFourConstants {
     public static final Color EASY_COLOR = new Color(0.25f,0.56f,0.88f, 1);
     public static final Color MEDIUM_COLOR = TITLE_COLOR;
     public static final Color HARD_COLOR = new Color(0f,0.32f,0.64f, 1);
+    public static final Color ROADBLOCK_COLOR = new Color(1f,0f,0f, 1);
 
     public static final int DIFFICULTY_EASY = 0;
     public static final int DIFFICULTY_MEDIUM = 1;

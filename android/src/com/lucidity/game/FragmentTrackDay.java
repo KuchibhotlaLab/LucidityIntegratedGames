@@ -245,8 +245,6 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
             tsDiff[i] = Math.round(tsDiffSecond / 1800f);
         }
 
-        ArrayList<Integer> timesCondensed = new ArrayList<>();
-        ArrayList<Float> scoresCondensed = new ArrayList<>();
         if (!timesRaw.isEmpty()) {
             int score = allScores.get(0);
             float count = 1;

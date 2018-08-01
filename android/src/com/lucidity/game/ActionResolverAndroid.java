@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 
-import com.lucidity.game.ActionResolver;
-
 /**
  * Created by lixiaoyan on 7/20/18.
  */
@@ -51,27 +49,27 @@ public class ActionResolverAndroid implements ActionResolver {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Intent i = new Intent(context, PersonDependentGameLauncher.class);
+                Intent i = new Intent(context, AndroidLauncher.class);
                 i.putExtra("username", username);
                 i.putExtra("isLucid", isLucid);
                 i.putExtra("isCare", isCare);
                 i.putExtra("isPatient", isPatient);
+                i.putExtra("gametype", "dep");
                 context.startActivity(i);
             }
         });
-
-
     }
 
     public void ObjectGame() {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Intent i = new Intent(context, ObjectRecognitionGameLauncher.class);
+                Intent i = new Intent(context, AndroidLauncher.class);
                 i.putExtra("username", username);
                 i.putExtra("isLucid", isLucid);
                 i.putExtra("isCare", isCare);
                 i.putExtra("isPatient", isPatient);
+                i.putExtra("gametype", "object");
                 context.startActivity(i);
             }
         });
@@ -95,9 +93,7 @@ public class ActionResolverAndroid implements ActionResolver {
         }
     }
 
-    public boolean getLucidity(){
-        return isLucid;
-    }
+    public boolean getLucidity(){return isLucid;}
     public boolean getCare(){return isCare;}
     public boolean getPatient(){return isPatient;}
     public String getUsername(){return username;}
