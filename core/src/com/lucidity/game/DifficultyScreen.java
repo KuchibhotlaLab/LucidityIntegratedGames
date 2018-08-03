@@ -225,38 +225,47 @@ public class DifficultyScreen extends InputAdapter implements Screen {
 
         if(isMem) {
             if (worldTouch.dst(GameOneConstants.EASY_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
-                memGame.showMemoryScreen(GameOneConstants.Difficulty.EASY);
+                memGame.actionResolver.setDifficulty(GameOneConstants.DIFFICULTY_EASY);
+                memGame.showMemoryScreen(GameOneConstants.DIFFICULTY_EASY);
             }
 
             if (worldTouch.dst(GameOneConstants.MEDIUM_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
-                memGame.showMemoryScreen(GameOneConstants.Difficulty.MEDIUM);
+                memGame.actionResolver.setDifficulty(GameOneConstants.DIFFICULTY_MEDIUM);
+                memGame.showMemoryScreen(GameOneConstants.DIFFICULTY_MEDIUM);
             }
 
             if (worldTouch.dst(GameOneConstants.HARD_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
-                memGame.showMemoryScreen(GameOneConstants.Difficulty.HARD);
+                memGame.actionResolver.setDifficulty(GameOneConstants.DIFFICULTY_HARD);
+                memGame.showMemoryScreen(GameOneConstants.DIFFICULTY_HARD);
             }
         } else if(isOb){
             if (worldTouch.dst(GameOneConstants.EASY_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
+                obGame.actionResolver.setDifficulty(GameThreeConstants.DIFFICULTY_EASY);
                 obGame.setScreen(new ObjectRecognitionScreen(obGame, GameThreeConstants.DIFFICULTY_EASY));
             }
 
             if (worldTouch.dst(GameOneConstants.MEDIUM_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
+                obGame.actionResolver.setDifficulty(GameThreeConstants.DIFFICULTY_MEDIUM);
                 obGame.setScreen(new ObjectRecognitionScreen(obGame, GameThreeConstants.DIFFICULTY_MEDIUM));
             }
 
             if (worldTouch.dst(GameOneConstants.HARD_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
+                obGame.actionResolver.setDifficulty(GameThreeConstants.DIFFICULTY_HARD);
                 obGame.setScreen(new ObjectRecognitionScreen(obGame, GameThreeConstants.DIFFICULTY_HARD));
             }
         } else if(isSpa){
             if (worldTouch.dst(GameOneConstants.EASY_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
+                spaGame.actionResolver.setDifficulty(GameFourConstants.DIFFICULTY_EASY);
                 spaGame.setScreen(new SpacialScreen(spaGame, GameFourConstants.DIFFICULTY_EASY));
             }
 
             if (worldTouch.dst(GameOneConstants.MEDIUM_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
+                spaGame.actionResolver.setDifficulty(GameFourConstants.DIFFICULTY_MEDIUM);
                 spaGame.setScreen(new SpacialScreen(spaGame,  GameFourConstants.DIFFICULTY_MEDIUM));
             }
 
             if (worldTouch.dst(GameOneConstants.HARD_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
+                spaGame.actionResolver.setDifficulty(GameFourConstants.DIFFICULTY_HARD);
                 spaGame.setScreen(new SpacialScreen(spaGame,  GameFourConstants.DIFFICULTY_HARD));
             }
         }

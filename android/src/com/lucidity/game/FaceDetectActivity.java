@@ -300,6 +300,7 @@ public class FaceDetectActivity extends AppCompatActivity{
                 i.putExtra("gametype", "check order");
                 i.putExtra("order", gen.toString());
                 i.putExtra("counter", 0);
+                i.putExtra("difficulty", -1);
 
                 startActivity(i);
                 finish();
@@ -356,7 +357,7 @@ public class FaceDetectActivity extends AppCompatActivity{
             ContextWrapper cw = new ContextWrapper(getApplicationContext());
             // path to /data/data/yourapp/app_data/faceDir
             File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-            File subfolder = new File(directory, username);
+            File subfolder = new File(directory, "face_detect");
             File imageFile = new File(subfolder, filename);
 
             FileOutputStream outputStream = new FileOutputStream(imageFile);

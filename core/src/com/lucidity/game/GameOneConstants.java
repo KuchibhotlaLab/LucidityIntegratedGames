@@ -8,32 +8,13 @@ public class GameOneConstants {
     public static final Color BACKGROUND_COLOR = new Color(0.93f,0.92f,0.9f, 1);
     public static final Color TITLE_COLOR = new Color(0.01f, 0.4f, 0.44f, 1);
 
-    public static final float PLAYER_HEAD_RADIUS = 0.5f;
-    public static final float PLAYER_HEAD_HEIGHT = 4.0f * PLAYER_HEAD_RADIUS;
-    public static final float PLAYER_LIMB_WIDTH = 0.1f;
-    public static final int PLAYER_HEAD_SEGMENTS = 20;
-    public static final Color PLAYER_COLOR = Color.BLACK;
-    public static final float PLAYER_MOVEMENT_SPEED = 10.0f;
-
-    public static final float ACCELEROMETER_SENSITIVITY = 0.5f;
-    public static final float GRAVITATIONAL_ACCELERATION = 9.8f;
-
-    public static final float ICICLES_HEIGHT = 1.0f;
-    public static final float ICICLES_WIDTH = 0.5f;
-    public static final Vector2 ICICLES_ACCELERATION = new Vector2(0, -5.0f);
-    public static final Color ICICLE_COLOR = Color.WHITE;
-    public static final int INITIAL_ICICLES_ARRAY_CAPACITY = 100;
-
-    public static final float HUD_FONT_REFERENCE_SCREEN_SIZE = 480.0f;
-    public static final float HUD_MARGIN = 20.0f;
+    public static final int DIFFICULTY_EASY = 0;
+    public static final int DIFFICULTY_MEDIUM = 1;
+    public static final int DIFFICULTY_HARD = 2;
 
     public static final String EASY_LABEL = "Easy";
     public static final String MEDIUM_LABEL = "Medium";
     public static final String HARD_LABEL = "Hard";
-
-    public static final float EASY_SPAWNS_PER_SECOND = 5;
-    public static final float MEDIUM_SPAWNS_PER_SECOND = 15;
-    public static final float HARD_SPAWNS_PER_SECOND = 25;
 
     public static final Color EASY_COLOR = new Color(1.0f,0.98f,0.78f, 1);
     public static final Color MEDIUM_COLOR = new Color(0.98f,0.92f,0.72f, 1);
@@ -75,19 +56,4 @@ public class GameOneConstants {
 
     public static final Color CORRECT_COLOR = new Color(0.6f, 0.89f, 0.55f, 1);
     public static final Color INCORRECT_COLOR = new Color(1f, 0.41f, 0.38f, 1);
-
-
-    public enum Difficulty {
-        EASY(EASY_SPAWNS_PER_SECOND, EASY_LABEL),
-        MEDIUM(MEDIUM_SPAWNS_PER_SECOND, MEDIUM_LABEL),
-        HARD(HARD_SPAWNS_PER_SECOND, HARD_LABEL);
-
-        float spawnRate;
-        String label;
-
-        Difficulty(float spawnRate, String label) {
-            this.spawnRate = spawnRate;
-            this.label = label;
-        }
-    }
 }

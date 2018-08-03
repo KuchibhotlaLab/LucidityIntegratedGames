@@ -6,15 +6,12 @@ package com.lucidity.game;
 
 
 public interface ActionResolver {
-    public void MemoryGame();
-    public void FaceGame();
-    public void ObjectGame();
-    public void SpaceGame();
     public boolean getLucidity();
     public boolean getCare();
     public boolean getPatient();
     public String getUsername();
-    public String getOrder();
     public int getCounter();
     public void NextGame();
+    public int getDifficulty();
+    public void setDifficulty(int d);
 }

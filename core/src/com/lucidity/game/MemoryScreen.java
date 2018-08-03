@@ -34,11 +34,12 @@ import java.util.Map;
 import sun.rmi.runtime.Log;
 
 import static com.lucidity.game.GameOneConstants.BACKGROUND_COLOR;
+import static com.lucidity.game.GameOneConstants.DIFFICULTY_MEDIUM;
 
 public class MemoryScreen extends InputAdapter implements Screen {
     public static final String TAG = MemoryScreen.class.getName();
     WorkingMemoryGame game;
-    GameOneConstants.Difficulty difficulty;
+    int difficulty;
 
     ExtendViewport memoryViewport;
     ScreenViewport hudViewport;
@@ -84,14 +85,14 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
 
     //TODO: add trial time and deal with the complexity
-    public MemoryScreen(WorkingMemoryGame game, GameOneConstants.Difficulty difficulty, int points, int trials) {
+    public MemoryScreen(WorkingMemoryGame game, int diff, int points, int trials) {
         this.game = game;
 
-        this.difficulty = difficulty;
-        if(this.difficulty.label.equals("Easy")){
+        this.difficulty = diff;
+        if(this.difficulty == GameOneConstants.DIFFICULTY_EASY){
             blocksVertical = 1;
             blocksHorizontal = 2;
-        } else if(this.difficulty.label.equals("Medium")){
+        } else if(this.difficulty == GameOneConstants.DIFFICULTY_MEDIUM){
             blocksHorizontal = 2;
             blocksVertical = 2;
         } else {
@@ -428,16 +429,16 @@ public class MemoryScreen extends InputAdapter implements Screen {
         return true;
     }
 
-    private void generateTrial(GameOneConstants.Difficulty difficulty){
+    private void generateTrial(int difficulty){
         int blocks;
         int predicted = 0;
         elapsed = 0;
         timerStart = true;
         toRemember = new int[blocksHorizontal][blocksVertical];
         attemps = 0;
-        if(this.difficulty.label.equals("Easy")){
+        if(this.difficulty == GameOneConstants.DIFFICULTY_EASY){
             blocks = 1;
-        } else if(this.difficulty.label.equals("Medium")){
+        } else if(this.difficulty == GameOneConstants.DIFFICULTY_MEDIUM){
             blocks = 2;
         } else {
             blocks = 4;
@@ -482,7 +483,13 @@ public class MemoryScreen extends InputAdapter implements Screen {
         } else if (game.getCare()) {
             json.put("menu", "CareGiver");
         }
-        json.put("difficulty", difficulty.label);
+        if (difficulty == 2) {
+            json.put("difficulty", "Hard");
+        } else if(difficulty == 1) {
+            json.put("difficulty", "Medium");
+        } else{
+            json.put("difficulty", "Easy");
+        }
         json.put("score", String.valueOf(score));
         for (int i = 0; i < trial; i++) {
             String trialNum = "trial" + (i+1);

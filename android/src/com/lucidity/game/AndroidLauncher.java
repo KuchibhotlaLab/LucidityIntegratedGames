@@ -46,6 +46,7 @@ public class AndroidLauncher extends AndroidApplication {
     String coordinates = " ";
     private String order = "";
     private int gameCounter = 0;
+    private int difficulty;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -85,6 +86,7 @@ public class AndroidLauncher extends AndroidApplication {
             isCare = extras.getBoolean("isCare");
             isPatient = extras.getBoolean("isPatient");
             gameType = extras.getString("gametype");
+            difficulty = extras.getInt("difficulty");
             if (gameType.equals("check order")) {
                 order = extras.getString("order");
                 gameCounter = extras.getInt("counter");
@@ -107,7 +109,7 @@ public class AndroidLauncher extends AndroidApplication {
         }
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 
-        ActionResolverAndroid a = new ActionResolverAndroid(getApplicationContext(), username, isLucid, isCare, isPatient, order, gameCounter);
+        ActionResolverAndroid a = new ActionResolverAndroid(getApplicationContext(), username, isLucid, isCare, isPatient, order, gameCounter, difficulty);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -225,14 +227,13 @@ public class AndroidLauncher extends AndroidApplication {
             System.out.println("Not enough permission");
         }
 
-        if (gps_enabled) {
+        /*if (gps_enabled) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
             Location lastLocation=locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if(" ".equals(coordinates)){
                 coordinates = lastLocation.getLongitude() + " " + lastLocation.getLatitude();
             }
-        }
-
+        }*/
         if (network_enabled) {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
             Location lastLocation=locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -240,7 +241,6 @@ public class AndroidLauncher extends AndroidApplication {
                 coordinates = lastLocation.getLongitude() + " " + lastLocation.getLatitude();
             }
         }
-
     }
 
     private class myLocationListener implements LocationListener{

@@ -97,13 +97,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:paddingTop="15dp">
+                android:paddingTop="15dp"
+                android:paddingRight="15dp">
 
                 <Button
                     android:id="@+id/game3_button"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_gravity="top|right|center_horizontal"
                     android:text="Object Recognition Test" />
                 <!--android:text="@string/reminders"
                 android:textColor="#fff" />-->
@@ -112,7 +113,7 @@
                     android:id="@+id/imageView3"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
-                    android:layout_gravity="top|center_horizontal"
+                    android:layout_gravity="top|right|center_horizontal"
                     android:scaleType="fitXY" />
             </FrameLayout>
 
@@ -120,13 +121,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:paddingTop="15dp">
+                android:paddingTop="15dp"
+                android:paddingLeft="15dp">
 
                 <Button
                     android:id="@+id/game4_button"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_gravity="top|left|center_horizontal"
                     android:text="Spacial Memory Test" />
                 <!--android:text="@string/reminders"
                 android:textColor="#fff" />-->
@@ -135,7 +137,7 @@
                     android:id="@+id/imageView4"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
-                    android:layout_gravity="top|center_horizontal"
+                    android:layout_gravity="top|left|center_horizontal"
                     android:scaleType="fitXY" />
 
             </FrameLayout>

@@ -134,9 +134,19 @@ public class LoadingScreen implements Screen {
                     FacMemGame.setScreen(new ModeScreen(FacMemGame));
                 }
             } else if(isObjGame) {
-                ObjRecGame.setScreen(new DifficultyScreen(ObjRecGame));
+                int diff = ObjRecGame.actionResolver.getDifficulty();
+                if(diff == -1) {
+                    ObjRecGame.setScreen(new DifficultyScreen(ObjRecGame));
+                } else {
+                    ObjRecGame.setScreen(new ObjectRecognitionScreen(ObjRecGame, diff));
+                }
             } else if(isSpGame){
-                SpMemGame.setScreen(new DifficultyScreen(SpMemGame));
+                int diff = SpMemGame.actionResolver.getDifficulty();
+                if(diff == -1) {
+                    SpMemGame.setScreen(new DifficultyScreen(SpMemGame));
+                } else {
+                    SpMemGame.setScreen(new SpacialScreen(SpMemGame, diff));
+                }
             }
 
         }

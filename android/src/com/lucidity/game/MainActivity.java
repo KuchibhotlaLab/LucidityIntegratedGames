@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity{
                 i.putExtra("gametype", "check order");
                 i.putExtra("order", gen.toString());
                 i.putExtra("counter", 0);
+                i.putExtra("difficulty", -1);
 
                 startActivity(i);
             }

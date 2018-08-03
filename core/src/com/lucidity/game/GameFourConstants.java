@@ -25,7 +25,7 @@ public class GameFourConstants {
     public static final int DIFFICULTY_MEDIUM = 1;
     public static final int DIFFICULTY_HARD = 2;
 
-    public static final String TITLE_ONE = "Spacial";
+    public static final String TITLE_ONE = "Spatial";
     public static final String TITLE_TWO = "Memory Test";
 
     public static final String INSTRUCTIONS = "Remember the roadblocks";

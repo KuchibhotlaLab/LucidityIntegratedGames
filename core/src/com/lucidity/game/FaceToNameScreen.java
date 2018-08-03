@@ -454,9 +454,6 @@ FaceToNameScreen extends InputAdapter implements Screen {
                 attr2 = correct;
             }
         }
-
-
-
     }
 
     //Posts score and stats to MySQL database

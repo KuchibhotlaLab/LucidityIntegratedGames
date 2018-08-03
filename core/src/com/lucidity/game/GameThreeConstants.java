@@ -36,7 +36,7 @@ public class GameThreeConstants {
     public static final int DIFFICULTY_MEDIUM = 1;
     public static final int DIFFICULTY_HARD = 2;
 
-    public static final String PROMPT_ONE = "Please rememeber the shape";
+    public static final String PROMPT_ONE = "Please remember the shape";
     public static final String PROMPT_TWO = "and the color";
     public static final String PROMPT_THREE = "that appears on the screen";
     public static final float PROMPT_SCALE = .5f;
