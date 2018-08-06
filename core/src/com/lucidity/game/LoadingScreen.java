@@ -1,6 +1,7 @@
 package com.lucidity.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -13,11 +14,12 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
  * Created by lixiaoyan on 7/6/18.
  */
 
-public class LoadingScreen implements Screen {
+public class LoadingScreen extends InputAdapter implements Screen {
+    private WorkingMemoryGame memGame;
     private FacialMemoryGame FacMemGame;
     private ObjectRecognitionGame ObjRecGame;
     private SpacialMemoryGame SpMemGame;
-    boolean isFacGame, isObjGame, isSpGame = false;
+    boolean isMemGame, isFacGame, isObjGame, isSpGame = false;
 
     ShapeRenderer renderer;
     SpriteBatch batch;
@@ -25,6 +27,14 @@ public class LoadingScreen implements Screen {
 
     BitmapFont font;
     float elapsed;
+
+    int screenWidth = Gdx.graphics.getWidth();
+    int screenHeight = Gdx.graphics.getHeight();
+
+    public LoadingScreen(WorkingMemoryGame game) {
+        isMemGame = true;
+        this.memGame = game;
+    }
 
     public LoadingScreen(FacialMemoryGame game) {
         isFacGame = true;
@@ -49,18 +59,20 @@ public class LoadingScreen implements Screen {
 
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
         font.getData().setScale(GameTwoConstants.MODE_LABEL_SCALE);
+        Gdx.input.setInputProcessor(this);
     }
 
     @Override
     public void render(float delta) {
         elapsed += delta;
         viewport.apply();
-        if(isFacGame) {
+        if(isMemGame) {
+            Gdx.gl.glClearColor(GameOneConstants.LOADING_COLOR.r, GameOneConstants.LOADING_COLOR.g, GameOneConstants.LOADING_COLOR.b, 1);
+        } else if(isFacGame) {
             Gdx.gl.glClearColor(GameTwoConstants.BACKGROUND_COLOR.r, GameTwoConstants.BACKGROUND_COLOR.g, GameTwoConstants.BACKGROUND_COLOR.b, 1);
         } else if(isObjGame){
             Gdx.gl.glClearColor(GameThreeConstants.LOADING_COLOR.r, GameThreeConstants.LOADING_COLOR.g, GameThreeConstants.LOADING_COLOR.b, 1);
         } else if(isSpGame){
-            //Gdx.gl.glClearColor(0.54f, 0.75f, 0.97f, 1);
             Gdx.gl.glClearColor(GameFourConstants.LOADING_COLOR.r, GameFourConstants.LOADING_COLOR.g, GameFourConstants.LOADING_COLOR.b, 1);
         }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -72,7 +84,17 @@ public class LoadingScreen implements Screen {
             batch.begin();
             font.getData().setScale(GameTwoConstants.TITLE_SCALE);
 
-            if(isFacGame){
+            if(isMemGame) {
+                font.setColor(GameOneConstants.TITLE_COLOR);
+                final GlyphLayout promptLayout_two = new GlyphLayout(font, GameOneConstants.TITLE_TWO);
+                font.draw(batch, promptLayout_two, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_two.width) /2,
+                        GameOneConstants.DIFFICULTY_WORLD_SIZE * 2);
+
+
+                final GlyphLayout promptLayout_one = new GlyphLayout(font, GameOneConstants.TITLE_ONE);
+                font.draw(batch, promptLayout_one, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_one.width) ,
+                        GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_two.height);
+            } else if(isFacGame){
                 font.setColor(GameTwoConstants.TITLE_COLOR);
                 final GlyphLayout promptLayout_three = new GlyphLayout(font, GameTwoConstants.TITLE_THREE);
                 font.draw(batch, promptLayout_three, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_three.width) / 2,
@@ -113,42 +135,78 @@ public class LoadingScreen implements Screen {
 
             batch.end();
         } else {
-            if(isFacGame){
-                if (FacMemGame.actionResolver.getLucidity() || FacMemGame.actionResolver.getCare()) {
-                    int modeSelect = (int)(Math.random() * 4);
-                    switch (modeSelect) {
-                        case 0:
-                            FacMemGame.setScreen(new FaceToNameScreen(FacMemGame, 0, 1, GameTwoConstants.MODE_NAME));
-                            break;
-                        case 1:
-                            FacMemGame.setScreen(new FaceToNameScreen(FacMemGame, 0, 1, GameTwoConstants.MODE_ATTR));
-                            break;
-                        case 2:
-                            FacMemGame.setScreen(new NameToFaceScreen(FacMemGame, 0, 1, GameTwoConstants.MODE_NAME));
-                            break;
-                        case 3:
-                            FacMemGame.setScreen(new NameToFaceScreen(FacMemGame, 0, 1, GameTwoConstants.MODE_ATTR));
-                            break;
-                    }
-                } else {
-                    FacMemGame.setScreen(new ModeScreen(FacMemGame));
-                }
-            } else if(isObjGame) {
-                int diff = ObjRecGame.actionResolver.getDifficulty();
-                if(diff == -1) {
-                    ObjRecGame.setScreen(new DifficultyScreen(ObjRecGame));
-                } else {
-                    ObjRecGame.setScreen(new ObjectRecognitionScreen(ObjRecGame, diff));
-                }
-            } else if(isSpGame){
-                int diff = SpMemGame.actionResolver.getDifficulty();
-                if(diff == -1) {
-                    SpMemGame.setScreen(new DifficultyScreen(SpMemGame));
-                } else {
-                    SpMemGame.setScreen(new SpacialScreen(SpMemGame, diff));
-                }
-            }
+            Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
+            batch.begin();
+            font.getData().setScale(GameOneConstants.NOTIFICATION_SCALE);
+
+            if(isMemGame) {
+                font.setColor(GameOneConstants.TITLE_COLOR);
+                final GlyphLayout instructLayout_one = new GlyphLayout(font, GameOneConstants.INSTRUCT_ONE);
+                font.draw(batch, instructLayout_one, (screenWidth - instructLayout_one.width)/2,
+                        screenHeight * 0.75f );
+
+                final GlyphLayout instructLayout_two = new GlyphLayout(font, GameOneConstants.INSTRUCT_TWO);
+                font.draw(batch, instructLayout_two, (screenWidth - instructLayout_two.width)/2,
+                        screenHeight * 0.75f - 2.0f * instructLayout_one.height);
+
+                final GlyphLayout instructLayout_three = new GlyphLayout(font, GameOneConstants.INSTRUCT_THREE);
+                font.draw(batch, instructLayout_three, (screenWidth - instructLayout_three.width)/2,
+                        screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height);
+            } else if(isFacGame){
+                font.setColor(GameTwoConstants.TITLE_COLOR);
+                final GlyphLayout instructLayout_one = new GlyphLayout(font, GameTwoConstants.INSTRUCT_ONE);
+                font.draw(batch, instructLayout_one, (screenWidth - instructLayout_one.width)/2,
+                        screenHeight * 0.75f );
+
+                final GlyphLayout instructLayout_two = new GlyphLayout(font, GameTwoConstants.INSTRUCT_TWO);
+                font.draw(batch, instructLayout_two, (screenWidth - instructLayout_two.width)/2,
+                        screenHeight * 0.75f - 2.0f * instructLayout_one.height);
+
+                final GlyphLayout instructLayout_three = new GlyphLayout(font, GameTwoConstants.INSTRUCT_THREE);
+                font.draw(batch, instructLayout_three, (screenWidth - instructLayout_three.width)/2,
+                        screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height);
+            } else if(isObjGame){
+                font.setColor(GameThreeConstants.TITLE_COLOR);
+                final GlyphLayout instructLayout_one = new GlyphLayout(font, GameThreeConstants.INSTRUCT_ONE);
+                font.draw(batch, instructLayout_one, (screenWidth - instructLayout_one.width)/2,
+                        screenHeight * 0.75f );
+
+                final GlyphLayout instructLayout_two = new GlyphLayout(font, GameThreeConstants.INSTRUCT_TWO);
+                font.draw(batch, instructLayout_two, (screenWidth - instructLayout_two.width)/2,
+                        screenHeight * 0.75f - 2.0f * instructLayout_one.height);
+
+                final GlyphLayout instructLayout_three = new GlyphLayout(font, GameThreeConstants.INSTRUCT_THREE);
+                font.draw(batch, instructLayout_three, (screenWidth - instructLayout_three.width)/2,
+                        screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height);
+
+                final GlyphLayout instructLayout_four = new GlyphLayout(font, GameThreeConstants.INSTRUCT_FOUR);
+                font.draw(batch, instructLayout_four, (screenWidth - instructLayout_four.width)/2,
+                        screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height - 2.0f * instructLayout_three.height);
+            } else if (isSpGame){
+                font.setColor(GameFourConstants.TITLE_COLOR);
+                final GlyphLayout instructLayout_one = new GlyphLayout(font, GameFourConstants.INSTRUCT_ONE);
+                font.draw(batch, instructLayout_one, (screenWidth - instructLayout_one.width)/2,
+                        screenHeight * 0.75f );
+
+                final GlyphLayout instructLayout_two = new GlyphLayout(font, GameFourConstants.INSTRUCT_TWO);
+                font.draw(batch, instructLayout_two, (screenWidth - instructLayout_two.width)/2,
+                        screenHeight * 0.75f - 2.0f * instructLayout_one.height);
+
+                final GlyphLayout instructLayout_three = new GlyphLayout(font, GameFourConstants.INSTRUCT_THREE);
+                font.draw(batch, instructLayout_three, (screenWidth - instructLayout_three.width)/2,
+                        screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height);
+
+                final GlyphLayout instructLayout_four = new GlyphLayout(font, GameFourConstants.INSTRUCT_FOUR);
+                font.draw(batch, instructLayout_four, (screenWidth - instructLayout_four.width)/2,
+                        screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height - 2.0f * instructLayout_three.height);
+
+                final GlyphLayout instructLayout_five = new GlyphLayout(font, GameFourConstants.INSTRUCT_FIVE);
+                font.draw(batch, instructLayout_five, (screenWidth - instructLayout_five.width)/2,
+                        screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height
+                                - 2.0f * instructLayout_three.height - 2.0f * instructLayout_four.height);
+            }
+            batch.end();
         }
     }
 
@@ -175,5 +233,52 @@ public class LoadingScreen implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (isMemGame) {
+            int diff = memGame.actionResolver.getDifficulty();
+            if (diff == -1) {
+                memGame.setScreen(new DifficultyScreen(memGame));
+            } else {
+                memGame.setScreen(new MemoryScreen(memGame, diff,0,1));
+            }
+        } else if (isFacGame) {
+            if (FacMemGame.actionResolver.getLucidity() || FacMemGame.actionResolver.getCare()) {
+                int modeSelect = (int) (Math.random() * 4);
+                switch (modeSelect) {
+                    case 0:
+                        FacMemGame.setScreen(new FaceToNameScreen(FacMemGame, 0, 1, GameTwoConstants.MODE_NAME));
+                        break;
+                    case 1:
+                        FacMemGame.setScreen(new FaceToNameScreen(FacMemGame, 0, 1, GameTwoConstants.MODE_ATTR));
+                        break;
+                    case 2:
+                        FacMemGame.setScreen(new NameToFaceScreen(FacMemGame, 0, 1, GameTwoConstants.MODE_NAME));
+                        break;
+                    case 3:
+                        FacMemGame.setScreen(new NameToFaceScreen(FacMemGame, 0, 1, GameTwoConstants.MODE_ATTR));
+                        break;
+                }
+            } else {
+                FacMemGame.setScreen(new ModeScreen(FacMemGame));
+            }
+        } else if (isObjGame) {
+            int diff = ObjRecGame.actionResolver.getDifficulty();
+            if (diff == -1) {
+                ObjRecGame.setScreen(new DifficultyScreen(ObjRecGame));
+            } else {
+                ObjRecGame.setScreen(new ObjectRecognitionScreen(ObjRecGame, diff));
+            }
+        } else if (isSpGame) {
+            int diff = SpMemGame.actionResolver.getDifficulty();
+            if (diff == -1) {
+                SpMemGame.setScreen(new DifficultyScreen(SpMemGame));
+            } else {
+                SpMemGame.setScreen(new SpacialScreen(SpMemGame, diff));
+            }
+        }
+        return false;
     }
 }

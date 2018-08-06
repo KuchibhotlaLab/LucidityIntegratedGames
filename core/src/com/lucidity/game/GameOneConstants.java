@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class GameOneConstants {
     public static final float WORLD_SIZE = 10.0f;
+    public static final Color LOADING_COLOR = new Color(1.0f,0.98f,0.78f, 1);
     public static final Color BACKGROUND_COLOR = new Color(0.93f,0.92f,0.9f, 1);
     public static final Color TITLE_COLOR = new Color(0.01f, 0.4f, 0.44f, 1);
 
@@ -50,6 +51,9 @@ public class GameOneConstants {
     public static final String PROMPT_TWO = "of the lit up boxes.";
     public static final String WAIT_ONE = "Select the blocks";
     public static final String WAIT_TWO = "after this screen ends";
+    public static final String INSTRUCT_ONE = "Remember the position";
+    public static final String INSTRUCT_TWO = "of the lit up boxes,";
+    public static final String INSTRUCT_THREE = "then select the correct ones.";
 
     public static final String END_INSTRUCTIONS_ONE = "Please tap anywhere";
     public static final String END_INSTRUCTIONS_TWO = "to continue";

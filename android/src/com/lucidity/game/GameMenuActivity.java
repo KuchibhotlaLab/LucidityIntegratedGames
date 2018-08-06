@@ -35,6 +35,7 @@ public class GameMenuActivity extends AppCompatActivity {
                 i.putExtra("isCare", isCare);
                 i.putExtra("isPatient", isPatient);
                 i.putExtra("gametype", "memory");
+                i.putExtra("difficulty", -1);
                 startActivity(i);
 
             }
@@ -49,6 +50,7 @@ public class GameMenuActivity extends AppCompatActivity {
                 i.putExtra("isCare", isCare);
                 i.putExtra("isPatient", isPatient);
                 i.putExtra("gametype", "dep");
+                i.putExtra("difficulty", -1);
                 startActivity(i);
 
             }
@@ -63,6 +65,7 @@ public class GameMenuActivity extends AppCompatActivity {
                 i.putExtra("isCare", isCare);
                 i.putExtra("isPatient", isPatient);
                 i.putExtra("gametype", "object");
+                i.putExtra("difficulty", -1);
                 startActivity(i);
 
             }
@@ -77,6 +80,7 @@ public class GameMenuActivity extends AppCompatActivity {
                 i.putExtra("isCare", isCare);
                 i.putExtra("isPatient", isPatient);
                 i.putExtra("gametype", "space");
+                i.putExtra("difficulty", -1);
                 startActivity(i);
 
             }

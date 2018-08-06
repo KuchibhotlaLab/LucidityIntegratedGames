@@ -29,7 +29,7 @@
     <string name="settings_menu">Settings Menu</string>
     <string name="game_menu">Tests Menu</string>
     <string name="person_dependent">Dependent</string>
-    <string name="person_independent">Indepdendent</string>
+    <string name="person_independent">Independent</string>
     <string name="object_recog">Object Recognition</string>
     <string name="confirm">Confirm</string>
     <string name="prompt_name_image">Name</string>

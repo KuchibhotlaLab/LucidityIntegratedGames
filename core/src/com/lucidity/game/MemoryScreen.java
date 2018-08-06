@@ -84,7 +84,6 @@ public class MemoryScreen extends InputAdapter implements Screen {
     //cheap temporary fix
 
 
-    //TODO: add trial time and deal with the complexity
     public MemoryScreen(WorkingMemoryGame game, int diff, int points, int trials) {
         this.game = game;
 

@@ -22,22 +22,11 @@ public class WorkingMemoryGame extends Game {
     }
 
 	@Override
-	public void create() {
-        int diff = actionResolver.getDifficulty();
-        if (diff == -1) {
-            showDifficultyScreen();
-        } else {
-            showMemoryScreen(diff);
-        }
-	}
+	public void create() { showLoadingScreen(); }
 
-	public void showDifficultyScreen() {
-		setScreen(new DifficultyScreen(this));
-	}
-
-	public void showMemoryScreen(int difficulty) {
-		setScreen(new MemoryScreen(this, difficulty, 0, 1));
-	}
+    public void showLoadingScreen() {
+        setScreen(new LoadingScreen(this));
+    }
 
     public String getUsername() {
         return username;

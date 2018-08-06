@@ -62,6 +62,10 @@ public class GameTwoConstants {
     public static final String PROMPT_THREE = "person whose ";
     public static final String PROMPT_FOUR = "you see on the screen";
 
+    public static final String INSTRUCT_ONE = "Identify the person";
+    public static final String INSTRUCT_TWO = "displayed by face or";
+    public static final String INSTRUCT_THREE = "by name or relation.";
+
     public static final String BACK_TEXT = "Back";
     public static final String END_TEXT = "End";
 }

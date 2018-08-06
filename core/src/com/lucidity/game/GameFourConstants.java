@@ -34,5 +34,11 @@ public class GameFourConstants {
     public static final String INSTRUCTIONS_FOUR = "without the road blocks";
     public static final String SUBMIT_TEXT = "Submit";
 
+    public static final String INSTRUCT_ONE = "Remember the red";
+    public static final String INSTRUCT_TWO = " roadblocks, then draw";
+    public static final String INSTRUCT_THREE = "a path between the";
+    public static final String INSTRUCT_FOUR = "lit up blocks without";
+    public static final String INSTRUCT_FIVE = "going over the roadblocks.";
+
     public static final float INSTRUCTION_SIZE = .6f;
 }
