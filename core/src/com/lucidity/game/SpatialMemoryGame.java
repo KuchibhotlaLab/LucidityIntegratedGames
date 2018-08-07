@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Created by lixiaoyan on 7/20/18.
  */
 
-public class SpacialMemoryGame extends Game {
+public class SpatialMemoryGame extends Game {
     private String username;
     private boolean isLucid, isPatient, isCare;
     private String dateTime;
@@ -16,7 +16,7 @@ public class SpacialMemoryGame extends Game {
     public ActionResolver actionResolver;
 
 
-    public SpacialMemoryGame(ActionResolver a, String date, String location){
+    public SpatialMemoryGame(ActionResolver a, String date, String location){
         username = a.getUsername();
 
         isLucid = a.getLucidity();

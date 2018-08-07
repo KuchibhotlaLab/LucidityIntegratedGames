@@ -1,21 +1,17 @@
 package com.lucidity.game;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.net.HttpParametersUtils;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -23,8 +19,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +27,8 @@ import java.util.Map;
  * Created by lixiaoyan on 7/20/18.
  */
 
-public class SpacialScreen extends InputAdapter implements Screen {
-    private SpacialMemoryGame game;
+public class SpatialScreen extends InputAdapter implements Screen {
+    private SpatialMemoryGame game;
 
     ExtendViewport viewport;
     ScreenViewport hudViewport;
@@ -76,7 +70,7 @@ public class SpacialScreen extends InputAdapter implements Screen {
     private boolean disableTouchDown = true;
     private boolean delayOn = false;
 
-    public SpacialScreen(SpacialMemoryGame game, int mode) {
+    public SpatialScreen(SpatialMemoryGame game, int mode) {
         this.game = game;
         score = 0;
         trial = 1;
@@ -196,7 +190,11 @@ public class SpacialScreen extends InputAdapter implements Screen {
 
             for (int i = 0; i < blocksHorizontal; i++) {
                 for (int j = 0; j < blocksVertical; j++) {
-                    selectState(selected[i][j]);
+                    if(!selected[i][j]){
+                        renderer.setColor(GameFourConstants.TITLE_COLOR);
+                    } else {
+                        renderer.setColor(GameFourConstants.START_END_COLOR);
+                    }
                     renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                 }
             }
@@ -222,8 +220,13 @@ public class SpacialScreen extends InputAdapter implements Screen {
             renderer.begin(ShapeRenderer.ShapeType.Filled);
             for (int i = 0; i < blocksHorizontal; i++) {
                 for (int j = 0; j < blocksVertical; j++) {
-                    selectState(selected[i][j]);
-                    renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
+                    if (nonSetRect(i,j)) {
+                        selectState(selected[i][j]);
+                        renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
+                    } else {
+                        renderer.setColor(GameFourConstants.START_END_COLOR);
+                        renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
+                    }
                 }
             }
             renderer.end();
@@ -598,7 +601,7 @@ public class SpacialScreen extends InputAdapter implements Screen {
                             temp[i][j] = true;
                         }
 
-                    } else if(j > 0 && j < blocksHorizontal - 1){
+                    } else if(j < blocksHorizontal - 1){
                         if ((//temp[i - 1][j - 1] ||
                                 //temp[i - 1][j + 1] ||
                                 //temp[i + 1][j - 1] ||
@@ -628,7 +631,7 @@ public class SpacialScreen extends InputAdapter implements Screen {
     //Posts score and stats to MySQL database
     private void postScore() {
         Net.HttpRequest httpPost = new Net.HttpRequest(Net.HttpMethods.POST);
-        httpPost.setUrl("http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_spacialgame_score.php");
+        httpPost.setUrl("http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_spatialgame_score.php");
 
         //set parameters
         Map<String, String> json = new HashMap<String, String>();

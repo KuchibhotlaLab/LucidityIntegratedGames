@@ -19,7 +19,7 @@ public class DifficultyScreen extends InputAdapter implements Screen {
 
     WorkingMemoryGame memGame;
     ObjectRecognitionGame obGame;
-    SpacialMemoryGame spaGame;
+    SpatialMemoryGame spaGame;
     boolean isMem, isSpa, isOb = false;
 
     ShapeRenderer renderer;
@@ -33,7 +33,7 @@ public class DifficultyScreen extends InputAdapter implements Screen {
         isMem = true;
         this.memGame = game;
     }
-    public DifficultyScreen(SpacialMemoryGame game) {
+    public DifficultyScreen(SpatialMemoryGame game) {
         isSpa = true;
         this.spaGame = game;
     }
@@ -233,17 +233,17 @@ public class DifficultyScreen extends InputAdapter implements Screen {
         } else if(isSpa){
             if (worldTouch.dst(GameOneConstants.EASY_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
                 spaGame.actionResolver.setDifficulty(GameFourConstants.DIFFICULTY_EASY);
-                spaGame.setScreen(new SpacialScreen(spaGame, GameFourConstants.DIFFICULTY_EASY));
+                spaGame.setScreen(new SpatialScreen(spaGame, GameFourConstants.DIFFICULTY_EASY));
             }
 
             if (worldTouch.dst(GameOneConstants.MEDIUM_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
                 spaGame.actionResolver.setDifficulty(GameFourConstants.DIFFICULTY_MEDIUM);
-                spaGame.setScreen(new SpacialScreen(spaGame,  GameFourConstants.DIFFICULTY_MEDIUM));
+                spaGame.setScreen(new SpatialScreen(spaGame,  GameFourConstants.DIFFICULTY_MEDIUM));
             }
 
             if (worldTouch.dst(GameOneConstants.HARD_CENTER) < GameOneConstants.DIFFICULTY_BUBBLE_RADIUS) {
                 spaGame.actionResolver.setDifficulty(GameFourConstants.DIFFICULTY_HARD);
-                spaGame.setScreen(new SpacialScreen(spaGame,  GameFourConstants.DIFFICULTY_HARD));
+                spaGame.setScreen(new SpatialScreen(spaGame,  GameFourConstants.DIFFICULTY_HARD));
             }
         }
 

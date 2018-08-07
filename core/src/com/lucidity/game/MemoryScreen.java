@@ -242,33 +242,36 @@ public class MemoryScreen extends InputAdapter implements Screen {
             }
 
 
-            //change the color of the submit button when it is pressed
-            if (onSubmit) {
-                renderer.setColor(Color.valueOf("#9FEDD7"));
+            if (elapsed > 6) {
+                //change the color of the submit button when it is pressed
+                if (onSubmit) {
+                    renderer.setColor(Color.valueOf("#9FEDD7"));
 
-                Timer.schedule(new Timer.Task() {
-                                   @Override
-                                   public void run() {onSubmit = false;
-                                   }
-                               },
-                        30/30.0f);
+                    Timer.schedule(new Timer.Task() {
+                                       @Override
+                                       public void run() {
+                                           onSubmit = false;
+                                       }
+                                   },
+                            30 / 30.0f);
 
-                //offset for displaying "incorrect"
-            } else {
-                renderer.setColor(Color.valueOf("#026670"));
+                    //offset for displaying "incorrect"
+                } else {
+                    renderer.setColor(Color.valueOf("#026670"));
+                }
+                renderer.rect(btnSubmit.x, btnSubmit.y, btnSubmit.getWidth(), btnSubmit.getHeight());
+
+
+                if (onEnd) {
+                    //END THE GAME
+                    renderer.setColor(Color.valueOf("#9FEDD7"));
+                    game.setScreen(new EndScreen(game, score, trial));
+
+                } else {
+                    renderer.setColor(Color.valueOf("#026670"));
+                }
+                renderer.rect(btnEnd.x, btnEnd.y, btnEnd.getWidth(), btnEnd.getHeight());
             }
-            renderer.rect(btnSubmit.x, btnSubmit.y, btnSubmit.getWidth(), btnSubmit.getHeight());
-
-
-            if (onEnd) {
-                //END THE GAME
-                renderer.setColor(Color.valueOf("#9FEDD7"));
-                game.setScreen(new EndScreen(game, score, trial));
-
-            } else {
-                renderer.setColor(Color.valueOf("#026670"));
-            }
-            renderer.rect(btnEnd.x, btnEnd.y, btnEnd.getWidth(), btnEnd.getHeight());
             renderer.end();
 
 
@@ -295,15 +298,17 @@ public class MemoryScreen extends InputAdapter implements Screen {
             font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 
-            //prints text on submit button
-            font.draw(batch, "Submit",
-                    (int) (btnSubmit.x + 0.25 * btnSubmit.getWidth()),
-                    (int) (btnSubmit.y + 0.6 * btnSubmit.getHeight()));
+            if (elapsed > 6) {
+                //prints text on submit button
+                font.draw(batch, "Submit",
+                        (int) (btnSubmit.x + 0.25 * btnSubmit.getWidth()),
+                        (int) (btnSubmit.y + 0.6 * btnSubmit.getHeight()));
 
-            //prints text on end button
-            font.draw(batch, "End",
-                    (int) (btnEnd.x + 0.4 * btnEnd.getWidth()),
-                    (int) (btnEnd.y + 0.6 * btnEnd.getHeight()));
+                //prints text on end button
+                font.draw(batch, "End",
+                        (int) (btnEnd.x + 0.4 * btnEnd.getWidth()),
+                        (int) (btnEnd.y + 0.6 * btnEnd.getHeight()));
+            }
 
             //prints the correct/incorrect message when the person clicks submit
             if(suppressed){

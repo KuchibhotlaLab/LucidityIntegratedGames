@@ -18,7 +18,7 @@ public class LoadingScreen extends InputAdapter implements Screen {
     private WorkingMemoryGame memGame;
     private FacialMemoryGame FacMemGame;
     private ObjectRecognitionGame ObjRecGame;
-    private SpacialMemoryGame SpMemGame;
+    private SpatialMemoryGame SpMemGame;
     boolean isMemGame, isFacGame, isObjGame, isSpGame = false;
 
     ShapeRenderer renderer;
@@ -45,7 +45,7 @@ public class LoadingScreen extends InputAdapter implements Screen {
         this.ObjRecGame = game;
     }
 
-    public LoadingScreen(SpacialMemoryGame game) {
+    public LoadingScreen(SpatialMemoryGame game) {
         isSpGame = true;
         this.SpMemGame = game;
     }
@@ -140,71 +140,83 @@ public class LoadingScreen extends InputAdapter implements Screen {
             batch.begin();
             font.getData().setScale(GameOneConstants.NOTIFICATION_SCALE);
 
-            if(isMemGame) {
+            if (isMemGame) {
                 font.setColor(GameOneConstants.TITLE_COLOR);
                 final GlyphLayout instructLayout_one = new GlyphLayout(font, GameOneConstants.INSTRUCT_ONE);
-                font.draw(batch, instructLayout_one, (screenWidth - instructLayout_one.width)/2,
-                        screenHeight * 0.75f );
+                font.draw(batch, instructLayout_one, (screenWidth - instructLayout_one.width) / 2,
+                        screenHeight * 0.75f);
 
                 final GlyphLayout instructLayout_two = new GlyphLayout(font, GameOneConstants.INSTRUCT_TWO);
-                font.draw(batch, instructLayout_two, (screenWidth - instructLayout_two.width)/2,
+                font.draw(batch, instructLayout_two, (screenWidth - instructLayout_two.width) / 2,
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height);
 
                 final GlyphLayout instructLayout_three = new GlyphLayout(font, GameOneConstants.INSTRUCT_THREE);
-                font.draw(batch, instructLayout_three, (screenWidth - instructLayout_three.width)/2,
+                font.draw(batch, instructLayout_three, (screenWidth - instructLayout_three.width) / 2,
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height);
-            } else if(isFacGame){
+            } else if (isFacGame) {
                 font.setColor(GameTwoConstants.TITLE_COLOR);
                 final GlyphLayout instructLayout_one = new GlyphLayout(font, GameTwoConstants.INSTRUCT_ONE);
-                font.draw(batch, instructLayout_one, (screenWidth - instructLayout_one.width)/2,
-                        screenHeight * 0.75f );
+                font.draw(batch, instructLayout_one, (screenWidth - instructLayout_one.width) / 2,
+                        screenHeight * 0.75f);
 
                 final GlyphLayout instructLayout_two = new GlyphLayout(font, GameTwoConstants.INSTRUCT_TWO);
-                font.draw(batch, instructLayout_two, (screenWidth - instructLayout_two.width)/2,
+                font.draw(batch, instructLayout_two, (screenWidth - instructLayout_two.width) / 2,
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height);
 
                 final GlyphLayout instructLayout_three = new GlyphLayout(font, GameTwoConstants.INSTRUCT_THREE);
-                font.draw(batch, instructLayout_three, (screenWidth - instructLayout_three.width)/2,
+                font.draw(batch, instructLayout_three, (screenWidth - instructLayout_three.width) / 2,
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height);
-            } else if(isObjGame){
+            } else if (isObjGame) {
                 font.setColor(GameThreeConstants.TITLE_COLOR);
                 final GlyphLayout instructLayout_one = new GlyphLayout(font, GameThreeConstants.INSTRUCT_ONE);
-                font.draw(batch, instructLayout_one, (screenWidth - instructLayout_one.width)/2,
-                        screenHeight * 0.75f );
+                font.draw(batch, instructLayout_one, (screenWidth - instructLayout_one.width) / 2,
+                        screenHeight * 0.75f);
 
                 final GlyphLayout instructLayout_two = new GlyphLayout(font, GameThreeConstants.INSTRUCT_TWO);
-                font.draw(batch, instructLayout_two, (screenWidth - instructLayout_two.width)/2,
+                font.draw(batch, instructLayout_two, (screenWidth - instructLayout_two.width) / 2,
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height);
 
                 final GlyphLayout instructLayout_three = new GlyphLayout(font, GameThreeConstants.INSTRUCT_THREE);
-                font.draw(batch, instructLayout_three, (screenWidth - instructLayout_three.width)/2,
+                font.draw(batch, instructLayout_three, (screenWidth - instructLayout_three.width) / 2,
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height);
 
                 final GlyphLayout instructLayout_four = new GlyphLayout(font, GameThreeConstants.INSTRUCT_FOUR);
-                font.draw(batch, instructLayout_four, (screenWidth - instructLayout_four.width)/2,
+                font.draw(batch, instructLayout_four, (screenWidth - instructLayout_four.width) / 2,
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height - 2.0f * instructLayout_three.height);
-            } else if (isSpGame){
+            } else if (isSpGame) {
                 font.setColor(GameFourConstants.TITLE_COLOR);
                 final GlyphLayout instructLayout_one = new GlyphLayout(font, GameFourConstants.INSTRUCT_ONE);
-                font.draw(batch, instructLayout_one, (screenWidth - instructLayout_one.width)/2,
-                        screenHeight * 0.75f );
+                font.draw(batch, instructLayout_one, (screenWidth - instructLayout_one.width) / 2,
+                        screenHeight * 0.75f);
 
                 final GlyphLayout instructLayout_two = new GlyphLayout(font, GameFourConstants.INSTRUCT_TWO);
-                font.draw(batch, instructLayout_two, (screenWidth - instructLayout_two.width)/2,
+                font.draw(batch, instructLayout_two, (screenWidth - instructLayout_two.width) / 2,
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height);
 
                 final GlyphLayout instructLayout_three = new GlyphLayout(font, GameFourConstants.INSTRUCT_THREE);
-                font.draw(batch, instructLayout_three, (screenWidth - instructLayout_three.width)/2,
+                font.draw(batch, instructLayout_three, (screenWidth - instructLayout_three.width) / 2,
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height);
 
                 final GlyphLayout instructLayout_four = new GlyphLayout(font, GameFourConstants.INSTRUCT_FOUR);
-                font.draw(batch, instructLayout_four, (screenWidth - instructLayout_four.width)/2,
+                font.draw(batch, instructLayout_four, (screenWidth - instructLayout_four.width) / 2,
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height - 2.0f * instructLayout_three.height);
 
                 final GlyphLayout instructLayout_five = new GlyphLayout(font, GameFourConstants.INSTRUCT_FIVE);
-                font.draw(batch, instructLayout_five, (screenWidth - instructLayout_five.width)/2,
+                font.draw(batch, instructLayout_five, (screenWidth - instructLayout_five.width) / 2,
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height
                                 - 2.0f * instructLayout_three.height - 2.0f * instructLayout_four.height);
+
+                final GlyphLayout instructLayout_six = new GlyphLayout(font, GameFourConstants.INSTRUCT_SIX);
+                font.draw(batch, instructLayout_six, (screenWidth - instructLayout_six.width) / 2,
+                        screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height
+                                - 2.0f * instructLayout_three.height - 2.0f * instructLayout_four.height
+                                - 2.0f * instructLayout_five.height);
+
+                final GlyphLayout instructLayout_seven = new GlyphLayout(font, GameFourConstants.INSTRUCT_SEVEN);
+                font.draw(batch, instructLayout_seven, (screenWidth - instructLayout_seven.width) / 2,
+                        screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height
+                                - 2.0f * instructLayout_three.height - 2.0f * instructLayout_four.height
+                                - 2.0f * instructLayout_five.height - 2.0f * instructLayout_six.height);
             }
             batch.end();
         }
@@ -276,7 +288,7 @@ public class LoadingScreen extends InputAdapter implements Screen {
             if (diff == -1) {
                 SpMemGame.setScreen(new DifficultyScreen(SpMemGame));
             } else {
-                SpMemGame.setScreen(new SpacialScreen(SpMemGame, diff));
+                SpMemGame.setScreen(new SpatialScreen(SpMemGame, diff));
             }
         }
         return false;

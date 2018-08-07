@@ -20,6 +20,7 @@ public class GameFourConstants {
     public static final Color MEDIUM_COLOR = TITLE_COLOR;
     public static final Color HARD_COLOR = new Color(0f,0.32f,0.64f, 1);
     public static final Color ROADBLOCK_COLOR = new Color(1f,0f,0f, 1);
+    public static final Color START_END_COLOR = new Color(0f,1f,0f, 1);
 
     public static final int DIFFICULTY_EASY = 0;
     public static final int DIFFICULTY_MEDIUM = 1;
@@ -30,15 +31,17 @@ public class GameFourConstants {
 
     public static final String INSTRUCTIONS = "Remember the roadblocks";
     public static final String INSTRUCTIONS_TWO = "Find a path between";
-    public static final String INSTRUCTIONS_THREE = "the lit up blocks";
+    public static final String INSTRUCTIONS_THREE = "the green blocks";
     public static final String INSTRUCTIONS_FOUR = "without the road blocks";
     public static final String SUBMIT_TEXT = "Submit";
 
     public static final String INSTRUCT_ONE = "Remember the red";
     public static final String INSTRUCT_TWO = " roadblocks, then draw";
-    public static final String INSTRUCT_THREE = "a path between the";
-    public static final String INSTRUCT_FOUR = "lit up blocks without";
+    public static final String INSTRUCT_THREE = "a connected path between";
+    public static final String INSTRUCT_FOUR = "the green blocks without";
     public static final String INSTRUCT_FIVE = "going over the roadblocks.";
+    public static final String INSTRUCT_SIX = "Two blocks must share";
+    public static final String INSTRUCT_SEVEN = "an edge to be connected.";
 
     public static final float INSTRUCTION_SIZE = .6f;
 }

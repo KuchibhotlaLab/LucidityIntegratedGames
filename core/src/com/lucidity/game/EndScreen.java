@@ -1,18 +1,14 @@
 package com.lucidity.game;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
-import static com.lucidity.game.GameOneConstants.BACKGROUND_COLOR;
 
 /**
  * Created by lixiaoyan on 6/29/18.
@@ -24,7 +20,7 @@ public class EndScreen extends InputAdapter implements Screen {
     WorkingMemoryGame gameIndep;
     FacialMemoryGame gameDep;
     ObjectRecognitionGame gameOb;
-    SpacialMemoryGame gameSpa;
+    SpatialMemoryGame gameSpa;
 
     ExtendViewport memoryViewport;
     ScreenViewport hudViewport;
@@ -71,7 +67,7 @@ public class EndScreen extends InputAdapter implements Screen {
         memoryViewport = new ExtendViewport(GameThreeConstants.WORLD_SIZE, GameThreeConstants.WORLD_SIZE);
     }
 
-    public EndScreen(SpacialMemoryGame game, int points, int trials) {
+    public EndScreen(SpatialMemoryGame game, int points, int trials) {
         this.gameSpa = game;
         this.score = points;
         this.trial = trials;

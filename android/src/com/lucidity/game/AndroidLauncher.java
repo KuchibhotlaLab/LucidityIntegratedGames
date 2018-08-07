@@ -1,20 +1,15 @@
 package com.lucidity.game;
 
-import android.*;
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.location.LocationListener;
-import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -26,13 +21,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -151,7 +144,7 @@ public class AndroidLauncher extends AndroidApplication {
         } else if(gameType.equals("object")) {
             initialize(new ObjectRecognitionGame(a, currentDateTimeString, coordinates), config);
         } else if(gameType.equals("space")){
-            initialize(new SpacialMemoryGame(a, currentDateTimeString, coordinates), config);
+            initialize(new SpatialMemoryGame(a, currentDateTimeString, coordinates), config);
         }
     }
 
