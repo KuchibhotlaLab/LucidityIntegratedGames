@@ -112,7 +112,6 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
         String locRoot = "data/user/0/com.lucidity.game/app_imageDir/" + username;
         File folder = new File(locRoot);
-        System.out.println(locRoot);
         File[] listOfFiles = folder.listFiles();
         validFiles = new ArrayList<File>();
         for(File file : listOfFiles){

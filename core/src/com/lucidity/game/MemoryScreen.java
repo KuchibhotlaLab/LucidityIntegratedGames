@@ -116,7 +116,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
                 block.width = (screenWidth * 5 / 6) / blocksHorizontal;
                 block.height = block.width;
                 block.x = i * block.width + screenWidth / 12;
-                block.y = j * block.height + screenHeight * 5 / 12;
+                block.y = j * block.height + screenHeight / 4;
                 grid[i][j] = block;
             }
         }
@@ -129,13 +129,13 @@ public class MemoryScreen extends InputAdapter implements Screen {
         btnSubmit.width = screenWidth / 3;
         btnSubmit.height = screenHeight / 12;
         btnSubmit.x = screenWidth * 13 / 24;
-        btnSubmit.y = screenHeight / 6;
+        btnSubmit.y = screenHeight / 8;
 
         btnEnd = new Rectangle();
         btnEnd.width = screenWidth / 3;
         btnEnd.height = screenHeight / 12;
         btnEnd.x = screenWidth / 8;
-        btnEnd.y = screenHeight / 6;
+        btnEnd.y = screenHeight / 8;
 
 
         batch = new SpriteBatch();

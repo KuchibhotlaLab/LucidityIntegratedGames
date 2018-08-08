@@ -48,11 +48,11 @@ public class GameOneConstants {
     public static final String CORRECT_MESSAGE = "Correct!";
     public static final String INCORRECT_MESSAGE = "Incorrect!";
     public static final String PROMPT_ONE = "Remember the position";
-    public static final String PROMPT_TWO = "of the lit up boxes.";
+    public static final String PROMPT_TWO = "of the light blue boxes.";
     public static final String WAIT_ONE = "Select the blocks";
     public static final String WAIT_TWO = "after this screen ends";
     public static final String INSTRUCT_ONE = "Remember the position";
-    public static final String INSTRUCT_TWO = "of the lit up boxes,";
+    public static final String INSTRUCT_TWO = "of the light blue boxes,";
     public static final String INSTRUCT_THREE = "then select the correct ones.";
 
     public static final String END_INSTRUCTIONS_ONE = "Please tap anywhere";

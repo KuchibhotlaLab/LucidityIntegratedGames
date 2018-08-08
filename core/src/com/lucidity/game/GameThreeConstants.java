@@ -46,6 +46,9 @@ public class GameThreeConstants {
     public static final String INSTRUCTION_TWO = "on the screen now";
     public static final String INSTRUCTION_THREE = "is the same as the";
     public static final String INSTRUCTION_FOUR = "previous one";
+    public static final String INSTRUCTION_HARD_ONE = "Select the object with";
+    public static final String INSTRUCTION_HARD_TWO = "the same shape and color";
+    public static final String INSTRUCTION_HARD_THREE = "as the previous one";
     public static final float INSTRUCTION_SCALE = .53f;
 
     public static final String INSTRUCT_ONE = "Remember the first object";

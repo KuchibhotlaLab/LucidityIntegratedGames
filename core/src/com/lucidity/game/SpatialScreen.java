@@ -106,7 +106,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
         btnSubmit.width = screenWidth / 2;
         btnSubmit.height = screenHeight / 12;
         btnSubmit.x = screenWidth  / 4;
-        btnSubmit.y = screenHeight / 6;
+        btnSubmit.y = screenHeight / 8;
 
         for (int i = 0; i < blocksHorizontal; i++) {
             for (int j = 0; j < blocksVertical; j++) {
@@ -114,7 +114,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
                 block.width = (screenWidth * 5 / 6) / blocksHorizontal;
                 block.height = block.width;
                 block.x = i * block.width + screenWidth / 12;
-                block.y = j * block.height + screenHeight  / 3;
+                block.y = j * block.height + screenHeight  / 4;
                 grid[i][j] = block;
                 selected[i][j] = false;
             }
@@ -328,17 +328,17 @@ public class SpatialScreen extends InputAdapter implements Screen {
             if (delayOn) {
                 if (correctPath()) {
                     font.setColor(GameOneConstants.CORRECT_COLOR);
-                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
-                    font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight / 9);
                     final GlyphLayout promptLayout = new GlyphLayout(font, GameThreeConstants.CORRECT_MESSAGE);
-                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight  / 9 + 1.5f * reactionLayout.height);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight  / 10);
+                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                    font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight / 10 - 1.5f * promptLayout.height);
 
                 } else {
                     font.setColor(GameOneConstants.INCORRECT_COLOR);
-                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
-                    font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight / 9);
                     final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
-                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight  / 9 + 1.5f * reactionLayout.height);
+                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight  / 10);
+                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                    font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight / 10 - 1.5f * promptLayout.height);
                 }
             }
 
@@ -394,7 +394,6 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
     @Override
     public void dispose() {
-
     }
 
     @Override
