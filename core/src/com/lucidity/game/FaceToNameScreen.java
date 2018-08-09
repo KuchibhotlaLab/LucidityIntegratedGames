@@ -49,6 +49,7 @@ FaceToNameScreen extends InputAdapter implements Screen {
     String username;
     ArrayList<String> imgNames;
     ArrayList<ArrayList<String>> imgTags;
+    ArrayList<String> imgGenders;
     int gameMode;
 
     Rectangle answer1, answer2, end, back;
@@ -68,6 +69,7 @@ FaceToNameScreen extends InputAdapter implements Screen {
     private long trialStartTime;
     private int[] trialSuccess;
     private double[] trialTime;
+    private ArrayList<Integer> picOrder;
 
     float elapsed = 0;
     //cheap fix
@@ -104,11 +106,13 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
         imgNames = game.getPicturenames();
         imgTags = game.getPicturetags();
+        imgGenders = game.getPicturegenders();
         username = game.getUsername();
 
         timerStart = true;
         trialTime = new double[5];
         trialSuccess = new int[5];
+        picOrder = new ArrayList<Integer>();
 
         String locRoot = "data/user/0/com.lucidity.game/app_imageDir/" + username;
         File folder = new File(locRoot);
@@ -127,6 +131,14 @@ FaceToNameScreen extends InputAdapter implements Screen {
         batch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
 
+        //Initializes ordering of five pics for trials with no repeats
+        for (int i = 0; i < 5; i++) {
+            int temp = (int) (Math.random() * validFiles.size());
+            while (picOrder.contains(temp)) {
+                temp = (int) (Math.random() * validFiles.size());
+            }
+            picOrder.add(temp);
+        }
         generateTrial();
     }
     @Override
@@ -422,12 +434,16 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
 
 
-        int picture = (int) (Math.random() * validFiles.size());
+        int picture = 0;
+        if (trial < 6) {
+            picture = picOrder.get(trial - 1);
+        }
         face = new Texture(Gdx.files.absolute(validFiles.get(picture).getPath()));
         display = new Sprite(face);
 
         int incorrect = (int) (Math.random() * validFiles.size());
-        while (incorrect == picture) {
+        String gender = imgGenders.get(imgNames.indexOf(validFiles.get(picture).getName()));
+        while (incorrect == picture || !gender.equals(imgGenders.get(imgNames.indexOf(validFiles.get(incorrect).getName())))) {
             incorrect = (int) (Math.random() * validFiles.size());
         }
 

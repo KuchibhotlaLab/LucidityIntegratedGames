@@ -64,11 +64,13 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
     String username;
     ArrayList<String> imgNames;
     ArrayList<ArrayList<String>> imgTags;
+    ArrayList<String> imgGenders;
 
     private boolean timerStart;
     private long trialStartTime;
     private int[] trialSuccess;
     private double[] trialTime;
+    private ArrayList<Integer> picOrder;
 
     float elapsed = 0;
     //cheap fix
@@ -106,10 +108,12 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
         imgNames = game.getPicturenames();
         imgTags = game.getPicturetags();
         username = game.getUsername();
+        imgGenders = game.getPicturegenders();
 
         timerStart = true;
         trialTime = new double[5];
         trialSuccess = new int[5];
+        picOrder = new ArrayList<Integer>();
         //data/data/com.lucidity.game/app_imageDir/username
         //data/user/0/com.lucidity.game/app_imageDir/Coco
         //data/user/0/com.lucidity.game/files -> local storage path
@@ -140,6 +144,15 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
                     validFiles.add(file);
                 }
             }
+        }
+
+        //Initializes ordering of five pics for trials with no repeats
+        for (int i = 0; i < 5; i++) {
+            int temp = (int) (Math.random() * validFiles.size());
+            while (picOrder.contains(temp)) {
+                temp = (int) (Math.random() * validFiles.size());
+            }
+            picOrder.add(temp);
         }
 
         generateTrial();
@@ -436,7 +449,10 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
         selectedOne = false;
         timerStart = true;
 
-        int position = (int) (Math.random() * validFiles.size());
+        int position = 0;
+        if (trial < 6) {
+            position = picOrder.get(trial - 1);
+        }
         int correct = (int) (Math.random() * 2);
 
         /*FileHandle file = validFiles.get(position);
@@ -463,8 +479,11 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
 
         correctAnswer = file.getName();
 
-        validFiles.remove(file);
         int incorrect = (int) (Math.random() * validFiles.size());
+        String gender = imgGenders.get(imgNames.indexOf(validFiles.get(position).getName()));
+        while (incorrect == position || !gender.equals(imgGenders.get(imgNames.indexOf(validFiles.get(incorrect).getName())))) {
+            incorrect = (int) (Math.random() * validFiles.size());
+        }
         if (correct == 0) {
             faceOne = new Texture(Gdx.files.absolute(file.getPath()));
             answerOneName = file.getName();
@@ -477,8 +496,6 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
             faceOne = new Texture(Gdx.files.absolute(validFiles.get(incorrect).getPath()));
             answerOneName = validFiles.get(incorrect).getName();
         }
-
-        validFiles.add(file);
 
         spriteOne = new Sprite(faceOne);
         spriteTwo = new Sprite(faceTwo);

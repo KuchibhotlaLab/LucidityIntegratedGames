@@ -12,6 +12,7 @@ public class FacialMemoryGame extends Game {
     private String username;
     private ArrayList<String> picturenames;
     private ArrayList<ArrayList<String>> picturetags;
+    private ArrayList<String> picturegenders;
     private boolean isLucid, isPatient, isCare;
     private String dateTime;
     private String coordinates;
@@ -20,10 +21,11 @@ public class FacialMemoryGame extends Game {
 
     //TODO: reduce repetition in code/think location getter
     public FacialMemoryGame(ActionResolver a, ArrayList<String> pnames, ArrayList<ArrayList<String>> ptags,
-                            String date, String location){
+                            ArrayList<String> pgenders, String date, String location){
         username = a.getUsername();
         picturenames = pnames;
         picturetags = ptags;
+        picturegenders = pgenders;
         isLucid = a.getLucidity();
         isPatient = a.getPatient();
         isCare = a.getCare();
@@ -48,6 +50,8 @@ public class FacialMemoryGame extends Game {
     public ArrayList<String> getPicturenames() { return picturenames; }
 
     public ArrayList<ArrayList<String>> getPicturetags() { return picturetags; }
+
+    public ArrayList<String> getPicturegenders() { return picturegenders; }
 
     public boolean getLucid(){return isLucid;}
     public boolean getPatient(){return isPatient;}

@@ -620,7 +620,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
         if(difficult == 0) {
             sameChance = 0.5;
         } else {
-            sameChance = 0.7;
+            sameChance = 0.65;
         }
         if (Math.random() < sameChance) {
             sShow = sAnswer;

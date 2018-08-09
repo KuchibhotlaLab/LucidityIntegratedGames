@@ -170,7 +170,8 @@ public class GalleryActivity extends AppCompatActivity {
             //Save image name and tags in MySQL
             String imageName = getIntent().getStringExtra("image-name");
             String imageRelation = getIntent().getStringExtra("image-relation");
-            SaveImage saveTask = new SaveImage(username, filename, imageName, imageRelation);
+            String gender = getIntent().getStringExtra("gender");
+            SaveImage saveTask = new SaveImage(username, filename, imageName, imageRelation, gender);
             saveTask.execute();
 
         }
@@ -378,13 +379,15 @@ public class GalleryActivity extends AppCompatActivity {
         private String fname;
         private String iname;
         private String irelation;
+        private String g;
 
-        public SaveImage(String username, String filename, String imageName, String imageRelation)
+        public SaveImage(String username, String filename, String imageName, String imageRelation, String gender)
         {
             uname = username;
             fname = filename;
             iname = imageName;
             irelation = imageRelation;
+            g = gender;
         }
 
         /**
@@ -398,6 +401,7 @@ public class GalleryActivity extends AppCompatActivity {
             params.add(new BasicNameValuePair("filename", fname));
             params.add(new BasicNameValuePair("imagename", iname));
             params.add(new BasicNameValuePair("imagerelation", irelation));
+            params.add(new BasicNameValuePair("gender", g));
 
             // getting JSON Object
             JSONObject json = jsonParser.makeHttpRequest(url_add_image,

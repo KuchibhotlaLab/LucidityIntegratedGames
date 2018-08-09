@@ -80,6 +80,31 @@
                     android:hint="@string/prompt_relation_image" />
             </android.support.design.widget.TextInputLayout>
 
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingTop="15dp">
+
+                <RadioButton
+                    android:id="@+id/photo_male"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Male" />
+
+                <RadioButton
+                    android:id="@+id/photo_female"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Female" />
+
+                <RadioButton
+                    android:id="@+id/photo_other"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Other" />
+            </TableRow>
+
             <Button
                 android:id="@+id/btn_to_gallery"
                 android:layout_width="300dp"

@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
@@ -89,6 +90,34 @@ public class PhotoActivity extends AppCompatActivity {
             }
         });*/
 
+        final RadioButton rb_male = findViewById(R.id.photo_male);
+        final RadioButton rb_female = findViewById(R.id.photo_female);
+        final RadioButton rb_other = findViewById(R.id.photo_other);
+
+        //Only one can be checked
+        rb_male.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rb_female.setChecked(false);
+                rb_other.setChecked(false);
+            }
+        });
+
+        rb_female.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rb_male.setChecked(false);
+                rb_other.setChecked(false);
+            }
+        });
+
+        rb_other.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rb_male.setChecked(false);
+                rb_female.setChecked(false);
+            }
+        });
 
         Button btn_confirm = findViewById(R.id.btn_to_gallery);
         btn_confirm.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +130,7 @@ public class PhotoActivity extends AppCompatActivity {
                     imName.setError("Please enter the name of the person/object pictured");
                 } else if(imRelation.getText().toString().trim().length() == 0){
                     imRelation.setError("Please enter the user's relation to the person/object pictured");
-                } else {
+                } else if (rb_male.isChecked() || rb_female.isChecked() || rb_other.isChecked()){
 
                     //reference: stackoverflow.com/questions/11010386
                     //Write file
@@ -113,15 +142,28 @@ public class PhotoActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
+                    String gender;
+                    if (rb_male.isChecked()){
+                        gender = "M";
+                    } else if (rb_female.isChecked()){
+                        gender = "F";
+                    } else {
+                        gender = "O";
+                    }
+
                     Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
                     intent.putExtra("image", image);
                     intent.putExtra("username", username);
                     intent.putExtra("image-name", imName.getText().toString());
                     intent.putExtra("image-relation", imRelation.getText().toString());
+                    intent.putExtra("gender", gender);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     //Close Page
                     finish();
+                } else {
+                    Toast.makeText(PhotoActivity.this,
+                            "Please Select a Gender", Toast.LENGTH_SHORT).show();
                 }
             }
         });

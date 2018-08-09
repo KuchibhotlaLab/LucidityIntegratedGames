@@ -54,6 +54,8 @@ public class AndroidLauncher extends AndroidApplication {
     //gives an arraylist of tags for each picture in the picture list
     //tags are ordered so that the name of the person/object is first, then the relation, then other tags
     private ArrayList<ArrayList<String>> tagsForGame;
+    //gives an arraylist of genders for each picture in the picture list, ordered the same way
+    private ArrayList<String> gendersForGame;
 
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
@@ -126,6 +128,7 @@ public class AndroidLauncher extends AndroidApplication {
         } else if(gameType.equals("dep")){
             picturesForGame = new ArrayList<>();
             tagsForGame = new ArrayList<>();
+            gendersForGame = new ArrayList<>();
             GetPicturesAndTags task = new GetPicturesAndTags();
 
             task.execute();
@@ -139,7 +142,8 @@ public class AndroidLauncher extends AndroidApplication {
             } catch (TimeoutException e) {
                 e.printStackTrace();
             }
-            initialize(new FacialMemoryGame(a, picturesForGame, tagsForGame,
+
+            initialize(new FacialMemoryGame(a, picturesForGame, tagsForGame, gendersForGame,
                     currentDateTimeString, coordinates), config);
         } else if(gameType.equals("object")) {
             initialize(new ObjectRecognitionGame(a, currentDateTimeString, coordinates), config);
@@ -189,6 +193,7 @@ public class AndroidLauncher extends AndroidApplication {
                         picTags.add(picObject.getString("tagname"));
                         picTags.add(picObject.getString("tagrelation"));
                         tagsForGame.add(picTags);
+                        gendersForGame.add(picObject.getString("gender"));
                     }
                 }
             } catch (JSONException e) {
