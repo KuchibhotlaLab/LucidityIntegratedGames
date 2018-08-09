@@ -162,12 +162,19 @@ FaceToNameScreen extends InputAdapter implements Screen {
         if(elapsed < 2) {
             batch.begin();
             font.getData().setScale(GameTwoConstants.PROMPT_SCALE);
-            final GlyphLayout promptLayout_two = new GlyphLayout(font, GameTwoConstants.PROMPT_TWO);
-            font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width)/2, screenHeight / 2);
 
-            final GlyphLayout promptLayout_one = new GlyphLayout(font, GameTwoConstants.PROMPT_ONE);
-            font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width)/2,
-                    screenHeight / 2 + 1.5f * promptLayout_two.height);
+            if (trial == 1) {
+                final GlyphLayout promptLayout_two = new GlyphLayout(font, GameTwoConstants.PROMPT_TWO);
+                font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2, screenHeight / 2);
+
+                final GlyphLayout promptLayout_one = new GlyphLayout(font, GameTwoConstants.PROMPT_ONE);
+                font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
+                        screenHeight / 2 + 1.5f * promptLayout_two.height);
+            } else {
+                final GlyphLayout promptLayout_next = new GlyphLayout(font, GameOneConstants.PROMPT_NEXT);
+                font.draw(batch, promptLayout_next, (screenWidth - promptLayout_next.width) / 2,
+                        screenHeight / 2);
+            }
 
             batch.end();
 

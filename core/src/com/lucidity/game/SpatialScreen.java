@@ -174,13 +174,8 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
             batch.begin();
 
-            final GlyphLayout layout_four = new GlyphLayout(font, GameFourConstants.INSTRUCTIONS_FOUR);
-            font.draw(batch, layout_four, (screenWidth - layout_four.width) / 2, screenHeight / 8);
-            final GlyphLayout layout_three = new GlyphLayout(font, GameFourConstants.INSTRUCTIONS_THREE);
-            font.draw(batch, layout_three, (screenWidth - layout_three.width) / 2, screenHeight / 8 + 1.5f * layout_four.height);
             final GlyphLayout layout_two = new GlyphLayout(font, GameFourConstants.INSTRUCTIONS_TWO);
-            font.draw(batch, layout_two, (screenWidth - layout_two.width) / 2, screenHeight  / 8 + 1.5f * layout_three.height + + 1.5f * layout_four.height);
-
+            font.draw(batch, layout_two, (screenWidth - layout_two.width) / 2, screenHeight  / 8);
 
             batch.end();
 

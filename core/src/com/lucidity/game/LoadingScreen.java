@@ -214,6 +214,9 @@ public class LoadingScreen extends InputAdapter implements Screen {
                                 - 2.0f * instructLayout_three.height - 2.0f * instructLayout_four.height
                                 - 2.0f * instructLayout_five.height - 2.0f * instructLayout_six.height);
             }
+            final GlyphLayout skipLayout = new GlyphLayout(font, GameOneConstants.LOADING_SCREEN_SKIP);
+            font.draw(batch, skipLayout, (screenWidth - skipLayout.width) / 2,
+                    screenHeight * 0.2f);
             batch.end();
         }
     }

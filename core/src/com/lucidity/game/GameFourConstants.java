@@ -29,10 +29,11 @@ public class GameFourConstants {
     public static final String TITLE_ONE = "Spatial";
     public static final String TITLE_TWO = "Memory Test";
 
-    public static final String INSTRUCTIONS = "Remember the roadblocks";
-    public static final String INSTRUCTIONS_TWO = "Find a path between";
+    public static final String INSTRUCTIONS = "Remember the roadblocks.";
+    /*public static final String INSTRUCTIONS_TWO = "Find a path between";
     public static final String INSTRUCTIONS_THREE = "the green blocks";
-    public static final String INSTRUCTIONS_FOUR = "without the road blocks";
+    public static final String INSTRUCTIONS_FOUR = "without the road blocks";*/
+    public static final String INSTRUCTIONS_TWO = "Find a viable path.";
     public static final String SUBMIT_TEXT = "Submit";
 
     public static final String INSTRUCT_ONE = "Remember the red";

@@ -49,6 +49,7 @@ public class GameOneConstants {
     public static final String INCORRECT_MESSAGE = "Incorrect!";
     public static final String PROMPT_ONE = "Remember the position";
     public static final String PROMPT_TWO = "of the light blue boxes.";
+    public static final String PROMPT_NEXT = "Starting next trial...";
     public static final String WAIT_ONE = "Select the blocks";
     public static final String WAIT_TWO = "after this screen ends";
     public static final String INSTRUCT_ONE = "Remember the position";
@@ -57,6 +58,7 @@ public class GameOneConstants {
 
     public static final String END_INSTRUCTIONS_ONE = "Please tap anywhere";
     public static final String END_INSTRUCTIONS_TWO = "to continue";
+    public static final String LOADING_SCREEN_SKIP = "Tap to continue";
 
     public static final Color CORRECT_COLOR = new Color(0.6f, 0.89f, 0.55f, 1);
     public static final Color INCORRECT_COLOR = new Color(1f, 0.41f, 0.38f, 1);

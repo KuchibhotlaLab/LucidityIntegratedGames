@@ -181,18 +181,24 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
             batch.begin();
             font.getData().setScale(GameTwoConstants.PROMPT_SCALE);
 
-            final GlyphLayout promptLayout_three = new GlyphLayout(font, GameTwoConstants.PROMPT_FOUR);
-            font.draw(batch, promptLayout_three, (screenWidth- promptLayout_three.width) / 2,
-                    screenHeight/2);
+            if (trial == 1) {
+                final GlyphLayout promptLayout_three = new GlyphLayout(font, GameTwoConstants.PROMPT_FOUR);
+                font.draw(batch, promptLayout_three, (screenWidth - promptLayout_three.width) / 2,
+                        screenHeight / 2);
 
-            final GlyphLayout promptLayout_two = new GlyphLayout(font, GameTwoConstants.PROMPT_THREE + attribute);
-            font.draw(batch, promptLayout_two, (screenWidth- promptLayout_two.width) / 2,
-                    screenHeight/2 + 1.5f * promptLayout_three.height);
+                final GlyphLayout promptLayout_two = new GlyphLayout(font, GameTwoConstants.PROMPT_THREE + attribute);
+                font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2,
+                        screenHeight / 2 + 1.5f * promptLayout_three.height);
 
 
-            final GlyphLayout promptLayout_one = new GlyphLayout(font, GameTwoConstants.PROMPT_ONE);
-            font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
-                    screenHeight/2 + 1.5f * promptLayout_three.height + 1.5f * promptLayout_two.height);
+                final GlyphLayout promptLayout_one = new GlyphLayout(font, GameTwoConstants.PROMPT_ONE);
+                font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
+                        screenHeight / 2 + 1.5f * promptLayout_three.height + 1.5f * promptLayout_two.height);
+            } else {
+                final GlyphLayout promptLayout_next = new GlyphLayout(font, GameOneConstants.PROMPT_NEXT);
+                font.draw(batch, promptLayout_next, (screenWidth - promptLayout_next.width) / 2,
+                        screenHeight / 2);
+            }
 
             batch.end();
 

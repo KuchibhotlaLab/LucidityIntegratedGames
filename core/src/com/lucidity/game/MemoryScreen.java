@@ -184,13 +184,19 @@ public class MemoryScreen extends InputAdapter implements Screen {
             font.setColor(Color.valueOf("#026670"));
             font.getData().setScale(GameOneConstants.NOTIFICATION_SCALE);
 
-            final GlyphLayout promptLayout_two = new GlyphLayout(font, GameOneConstants.PROMPT_TWO);
-            font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width)/2,
-                    screenHeight / 2);
+            if(trial == 1) {
+                final GlyphLayout promptLayout_two = new GlyphLayout(font, GameOneConstants.PROMPT_TWO);
+                font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2,
+                        screenHeight / 2);
 
-            final GlyphLayout promptLayout_one = new GlyphLayout(font, GameOneConstants.PROMPT_ONE);
-            font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width)/2,
-                    screenHeight / 2 + 1.5f * promptLayout_two.height);
+                final GlyphLayout promptLayout_one = new GlyphLayout(font, GameOneConstants.PROMPT_ONE);
+                font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
+                        screenHeight / 2 + 1.5f * promptLayout_two.height);
+            } else {
+                final GlyphLayout promptLayout_next = new GlyphLayout(font, GameOneConstants.PROMPT_NEXT);
+                font.draw(batch, promptLayout_next, (screenWidth - promptLayout_next.width) / 2,
+                        screenHeight / 2);
+            }
 
             batch.end();
         } else if (elapsed > 4 && elapsed <6) {

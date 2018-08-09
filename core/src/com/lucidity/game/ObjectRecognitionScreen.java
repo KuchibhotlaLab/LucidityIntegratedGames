@@ -152,22 +152,28 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             font.getData().setScale(GameThreeConstants.PROMPT_SCALE);
             font.setColor(GameThreeConstants.TITLE_COLOR);
 
-            final GlyphLayout promptLayout_three = new GlyphLayout(font, GameThreeConstants.PROMPT_THREE);
-            font.draw(batch, promptLayout_three, (screenWidth - promptLayout_three.width)/2, screenHeight * 2 / 3);
+            if (trial == 1) {
+                final GlyphLayout promptLayout_three = new GlyphLayout(font, GameThreeConstants.PROMPT_THREE);
+                font.draw(batch, promptLayout_three, (screenWidth - promptLayout_three.width) / 2, screenHeight * 2 / 3);
 
-            if(difficult == 1 || difficult == 2) {
-                final GlyphLayout promptLayout_two = new GlyphLayout(font, GameThreeConstants.PROMPT_TWO);
-                font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width)/2,
-                        screenHeight * 2 / 3 + 1.5f * promptLayout_three.height);
+                if (difficult == 1 || difficult == 2) {
+                    final GlyphLayout promptLayout_two = new GlyphLayout(font, GameThreeConstants.PROMPT_TWO);
+                    font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2,
+                            screenHeight * 2 / 3 + 1.5f * promptLayout_three.height);
 
-                final GlyphLayout promptLayout_one = new GlyphLayout(font, GameThreeConstants.PROMPT_ONE);
-                font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width)/2,
-                        screenHeight * 2 / 3 + 1.5f * promptLayout_two.height + 1.5f * promptLayout_three.height);
+                    final GlyphLayout promptLayout_one = new GlyphLayout(font, GameThreeConstants.PROMPT_ONE);
+                    font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
+                            screenHeight * 2 / 3 + 1.5f * promptLayout_two.height + 1.5f * promptLayout_three.height);
 
+                } else {
+                    final GlyphLayout promptLayout_one = new GlyphLayout(font, GameThreeConstants.PROMPT_ONE);
+                    font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
+                            screenHeight * 2 / 3 + 1.5f * promptLayout_three.height);
+                }
             } else {
-                final GlyphLayout promptLayout_one = new GlyphLayout(font, GameThreeConstants.PROMPT_ONE);
-                font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width)/2,
-                        screenHeight * 2 / 3 + 1.5f * promptLayout_three.height);
+                final GlyphLayout promptLayout_next = new GlyphLayout(font, GameOneConstants.PROMPT_NEXT);
+                font.draw(batch, promptLayout_next, (screenWidth - promptLayout_next.width) / 2,
+                        screenHeight / 2);
             }
 
             batch.end();
