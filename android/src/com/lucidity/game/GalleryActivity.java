@@ -43,12 +43,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
-//TODO: download picture from cloud to local if there are none
 public class GalleryActivity extends AppCompatActivity {
 
     //Stores the username of the user
     private String username;
+    private int mode;
 
     ArrayList<Bitmap> images = new ArrayList<>();
     BitmapAdapter gridAdapter = null;
@@ -77,10 +76,10 @@ public class GalleryActivity extends AppCompatActivity {
         if (extras != null) {
             username = extras.getString("username");
         }
+        mode = extras.getInt("mode");
 
         GridView gallery = findViewById(R.id.photoGalary);
         Bitmap bmp = null;
-        FloatingActionButton addImg = findViewById(R.id.add_img);
 
         //Used to upload to AWS S3 storage
         transferHelper = new TransferHelper();
@@ -180,64 +179,67 @@ public class GalleryActivity extends AppCompatActivity {
         gallery.setAdapter(gridAdapter);
         gallery.setOnItemClickListener(itemClickListener);
 
+        FloatingActionButton addImg = findViewById(R.id.add_img);
+        if (mode == 0){
+            addImg.setVisibility(View.GONE);
+        } else {
+            addImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(GalleryActivity.this);
+                    LayoutInflater inflater = ((Activity) GalleryActivity.this).getLayoutInflater();
+                    View dialogLayout = inflater.inflate(R.layout.add_image_dialog_short,
+                            null);
+
+                    final AlertDialog dialog = builder.create();
+                    dialog.getWindow().setSoftInputMode(
+                            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    dialog.setView(dialogLayout, 0, 0, 0, 0);
+                    dialog.setCanceledOnTouchOutside(true);
+                    dialog.setCancelable(true);
+                    WindowManager.LayoutParams wlmp = dialog.getWindow()
+                            .getAttributes();
+                    wlmp.gravity = Gravity.BOTTOM;
+
+                    Button btnGallery = (Button) dialogLayout.findViewById(R.id.btn_add_gallery);
+                    Button btnCamera = (Button) dialogLayout.findViewById(R.id.btn_add_camera);
+                    Button btnDismiss = (Button) dialogLayout.findViewById(R.id.btn_cancel_img_dialog);
 
 
-        addImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                    btnGallery.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(GalleryActivity.this);
-                LayoutInflater inflater = ((Activity) GalleryActivity.this).getLayoutInflater();
-                View dialogLayout = inflater.inflate(R.layout.add_image_dialog_short,
-                        null);
+                            Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
+                            intent.putExtra("username", username);
+                            startActivity(intent);
+                        }
+                    });
 
-                final AlertDialog dialog = builder.create();
-                dialog.getWindow().setSoftInputMode(
-                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                dialog.setView(dialogLayout, 0, 0, 0, 0);
-                dialog.setCanceledOnTouchOutside(true);
-                dialog.setCancelable(true);
-                WindowManager.LayoutParams wlmp = dialog.getWindow()
-                        .getAttributes();
-                wlmp.gravity = Gravity.BOTTOM;
+                    btnCamera.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                Button btnGallery = (Button) dialogLayout.findViewById(R.id.btn_add_gallery);
-                Button btnCamera = (Button) dialogLayout.findViewById(R.id.btn_add_camera);
-                Button btnDismiss = (Button) dialogLayout.findViewById(R.id.btn_cancel_img_dialog);
+                            Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
+                            intent.putExtra("username", username);
+                            startActivity(intent);
+                        }
+                    });
 
+                    btnDismiss.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
 
-                btnGallery.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                    builder.setView(dialogLayout);
 
-                        Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
-                        intent.putExtra("username", username);
-                        startActivity(intent);
-                    }
-                });
-
-                btnCamera.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
-                        intent.putExtra("username", username);
-                        startActivity(intent);
-                    }
-                });
-
-                btnDismiss.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
-                builder.setView(dialogLayout);
-
-                dialog.show();
-            }
-        });
+                    dialog.show();
+                }
+            });
+        }
 
     }
 
@@ -247,6 +249,7 @@ public class GalleryActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), DisplayImageActivity.class);
             intent.putExtra("image", l.getUrl());
             intent.putExtra("username", username);
+            intent.putExtra("mode", mode);
             startActivity(intent);
         }
     };

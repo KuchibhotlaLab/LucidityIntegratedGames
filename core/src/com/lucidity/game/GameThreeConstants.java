@@ -52,9 +52,8 @@ public class GameThreeConstants {
     public static final float INSTRUCTION_SCALE = .53f;
 
     public static final String INSTRUCT_ONE = "Remember the first object";
-    public static final String INSTRUCT_TWO = "displayed and determine";
-    public static final String INSTRUCT_THREE = "whether the second object";
-    public static final String INSTRUCT_FOUR = "is the same or not.";
+    public static final String INSTRUCT_TWO = "displayed and compare it";
+    public static final String INSTRUCT_THREE = "to a second object";
 
     public static final String SCORE_LABEL = "Score: ";
     public static final int SCORE_CENTER = 50;

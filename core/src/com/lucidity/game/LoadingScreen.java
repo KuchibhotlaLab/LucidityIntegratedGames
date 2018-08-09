@@ -179,10 +179,6 @@ public class LoadingScreen extends InputAdapter implements Screen {
                 final GlyphLayout instructLayout_three = new GlyphLayout(font, GameThreeConstants.INSTRUCT_THREE);
                 font.draw(batch, instructLayout_three, (screenWidth - instructLayout_three.width) / 2,
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height);
-
-                final GlyphLayout instructLayout_four = new GlyphLayout(font, GameThreeConstants.INSTRUCT_FOUR);
-                font.draw(batch, instructLayout_four, (screenWidth - instructLayout_four.width) / 2,
-                        screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height - 2.0f * instructLayout_three.height);
             } else if (isSpGame) {
                 font.setColor(GameFourConstants.TITLE_COLOR);
                 final GlyphLayout instructLayout_one = new GlyphLayout(font, GameFourConstants.INSTRUCT_ONE);

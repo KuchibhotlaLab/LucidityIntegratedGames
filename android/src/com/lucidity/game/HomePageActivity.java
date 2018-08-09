@@ -40,5 +40,16 @@ public class HomePageActivity extends AppCompatActivity {
 
             }
         });
+
+        Button btnPhotos = findViewById(R.id.photos_button);
+        btnPhotos.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), GalleryActivity.class);
+                i.putExtra("username", username);
+                i.putExtra("mode", 0);
+                startActivity(i);
+
+            }
+        });
     }
 }

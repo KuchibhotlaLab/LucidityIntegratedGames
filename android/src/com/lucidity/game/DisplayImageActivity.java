@@ -31,6 +31,8 @@ public class DisplayImageActivity extends AppCompatActivity {
     //Stores the username of the user
     private String username;
 
+    private int mode;
+
     //For communicating with AWS S3 storage
     private TransferHelper transferHelper;
     private AmazonS3Client s3;
@@ -55,6 +57,7 @@ public class DisplayImageActivity extends AppCompatActivity {
         if (extras != null) {
             username = extras.getString("username");
         }
+        mode = extras.getInt("mode");
 
         //Used to delete file from AWS S3 storage
         transferHelper = new TransferHelper();
@@ -85,24 +88,29 @@ public class DisplayImageActivity extends AppCompatActivity {
         });
 
         Button btnDelete = findViewById(R.id.delete);
-        btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                f.delete();
-                //Delete the file in AWS S3 storage
-                DeleteS3 deleteS3 = new DeleteS3(f.getName());
-                deleteS3.execute();
-                //Delete the file in MySQL database
-                DeleteMySQL deleteMySQL = new DeleteMySQL(username, f.getName());
-                deleteMySQL.execute();
-                Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
-                intent.putExtra("username", username);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
+        if (mode == 0){
+            btnDelete.setVisibility(View.GONE);
+        } else {
+            btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    f.delete();
+                    //Delete the file in AWS S3 storage
+                    DeleteS3 deleteS3 = new DeleteS3(f.getName());
+                    deleteS3.execute();
+                    //Delete the file in MySQL database
+                    DeleteMySQL deleteMySQL = new DeleteMySQL(username, f.getName());
+                    deleteMySQL.execute();
+                    Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
+                    intent.putExtra("username", username);
+                    intent.putExtra("mode", mode);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
 
-            }
-        });
+                }
+            });
+        }
     }
 
     /**

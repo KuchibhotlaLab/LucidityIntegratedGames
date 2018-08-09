@@ -124,6 +124,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
 
                         Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
                         intent.putExtra("username", username);
+                        intent.putExtra("mode", 1);
                         startActivity(intent);
                     }
                 });

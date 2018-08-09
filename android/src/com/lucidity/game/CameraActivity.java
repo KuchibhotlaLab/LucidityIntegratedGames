@@ -135,6 +135,7 @@ public class CameraActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
                     intent.putExtra("image", image);
                     intent.putExtra("username", username);
+                    intent.putExtra("mode", 1);
                     intent.putExtra("image-name", imName.getText().toString());
                     intent.putExtra("image-relation", imRelation.getText().toString());
                     intent.putExtra("gender", gender);

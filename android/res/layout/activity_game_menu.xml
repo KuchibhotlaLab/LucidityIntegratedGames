@@ -50,7 +50,11 @@
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_gravity="bottom|right"
-                    android:text="Block Memory Test" />
+                    android:background="@drawable/yellowsquarebutton"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:text="Block           Memory        Test"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="28sp" />
                 <!--android:text="@string/games"
                 android:textColor="#fff" />-->
 
@@ -74,7 +78,11 @@
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_gravity="bottom|left"
-                    android:text="Face Recognition Test" />
+                    android:background="@drawable/yellowsquarebutton"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:text="Face Recognition        Test"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="28sp" />
                 <!--android:text="@string/photos"
                 android:textColor="#fff" />-->
 
@@ -105,7 +113,11 @@
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_gravity="top|right|center_horizontal"
-                    android:text="Object Recognition Test" />
+                    android:background="@drawable/yellowsquarebutton"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:text="Object Recognition Test"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="28sp" />
                 <!--android:text="@string/reminders"
                 android:textColor="#fff" />-->
 
@@ -129,7 +141,11 @@
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_gravity="top|left|center_horizontal"
-                    android:text="Spatial Memory Test" />
+                    android:background="@drawable/yellowsquarebutton"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:text="Spatial Memory     Test"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="28sp" />
                 <!--android:text="@string/reminders"
                 android:textColor="#fff" />-->
 
