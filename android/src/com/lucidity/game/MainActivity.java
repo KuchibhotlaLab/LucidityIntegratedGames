@@ -57,13 +57,14 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Gets the username passed from previous activity
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            username = extras.getString("username");
-        }
+        //gets username and name from shared preferences
+        Login login = new Login(getApplicationContext());
+        username = login.getUsername();
+        name = login.getName();
 
-        new GetName().execute();
+        // display name at top of page
+        nameDisplay = (TextView) findViewById(R.id.name_display);
+        nameDisplay.setText("Hello, " + name);
 
         //Pop up menu for logging out
         final Button btnMenu = findViewById(R.id.button_menu);
@@ -107,11 +108,8 @@ public class MainActivity extends AppCompatActivity{
         Button main = findViewById(R.id.main);
         main.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Code here executes on main thread after user presses button
+                // Goes to home page activity for patient
                 Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
-                //Pass username through to other activities
-                intent.putExtra("username", username);
-                intent.putExtra("name", name);
                 startActivity(intent);
             }
         });
@@ -200,68 +198,6 @@ public class MainActivity extends AppCompatActivity{
     }
 
     /**
-     * Background Async Task to get the users name
-     * */
-    class GetName extends AsyncTask<String, String, String> {
-
-        /**
-         * Before starting background thread Show Progress Dialog
-         * */
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(MainActivity.this);
-            pDialog.setMessage("Getting name. Please wait...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
-        }
-
-        /**
-         * Getting name
-         * */
-        protected String doInBackground(String... args) {
-
-            // Check for success tag
-            int success;
-            try {
-                // Building Parameters
-                List<NameValuePair> params = new ArrayList<NameValuePair>();
-                params.add(new BasicNameValuePair("username", username));
-
-                // getting product details by making HTTP request
-                // Note that product details url will use GET request
-                JSONObject json = jsonParser.makeHttpRequest(
-                        url_get_name, "GET", params);
-
-                // check your log for json response
-                Log.d("get name", json.toString());
-
-                // json success tag
-                success = json.getInt(TAG_SUCCESS);
-                if (success == 1) {
-                    //save name in variable
-                    name = json.getString("name");
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        /**
-         * Display name at top after completion
-         * **/
-        protected void onPostExecute(String file_url) {
-            // dismiss the dialog once got all details
-            pDialog.dismiss();
-            // display name at top of page
-            nameDisplay = (TextView) findViewById(R.id.name_display);
-            nameDisplay.setText("Hello, " + name);
-        }
-    }
-
-    /**
      * Background Async Task to Verify the caregiver password
      * */
     class VerifyCaregiver extends AsyncTask<String, String, String> {
@@ -313,10 +249,6 @@ public class MainActivity extends AppCompatActivity{
                 if (success == 1) {
                     // successfully verified password
                     Intent intent = new Intent(getApplicationContext(), CaregiverHomePage.class);
-
-                    //Pass username through to other activities
-                    intent.putExtra("username", username);
-
                     startActivity(intent);
                 } else {
                     setError(inputTextObject, msg);

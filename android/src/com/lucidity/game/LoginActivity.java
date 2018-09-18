@@ -102,7 +102,6 @@ public class LoginActivity extends AppCompatActivity {
         // Proceed to main page if logged in
         if(login.LoggedIn()){
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.putExtra("username", login.getUsername());
             startActivity(intent);
             //close this screen
             finish();
@@ -158,6 +157,7 @@ public class LoginActivity extends AppCompatActivity {
             EditText pword = (EditText)findViewById(R.id.password);
             String username = uname.getText().toString();
             String password = pword.getText().toString();
+            String name = "";
 
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -180,16 +180,13 @@ public class LoginActivity extends AppCompatActivity {
                 if (success == 1) {
                     // successfully found user and verified password
 
+                    //remember login status for future
+                    username = msg;
+                    name = json.getString("name");
+                    login.newLogin(username, name);
+
                     //Go to main activity
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-
-                    //Pass username with correct case through to other activities
-                    username = msg;
-                    intent.putExtra("username", username);
-
-                    //remember login status for future
-                    login.newLogin(username);
-
                     startActivity(intent);
                     //close this screen
                     finish();

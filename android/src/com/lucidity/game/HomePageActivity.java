@@ -18,11 +18,10 @@ public class HomePageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            username = extras.getString("username");
-            name = extras.getString("name");
-        }
+        //gets username and name from shared preferences
+        Login login = new Login(getApplicationContext());
+        username = login.getUsername();
+        name = login.getName();
 
         // display name at top of page
         TextView nameDisplay = (TextView) findViewById(R.id.name_display);

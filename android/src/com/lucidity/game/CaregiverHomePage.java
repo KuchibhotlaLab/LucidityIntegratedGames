@@ -17,11 +17,9 @@ public class CaregiverHomePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_caregiver_home_page);
 
-        //Gets the username passed from previous activity
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            username = extras.getString("username");
-        }
+        //gets username and name from shared preferences
+        Login login = new Login(getApplicationContext());
+        username = login.getUsername();
 
         Button settings = findViewById(R.id.settings);
         settings.setOnClickListener(new View.OnClickListener() {
