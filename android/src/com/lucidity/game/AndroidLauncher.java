@@ -143,6 +143,11 @@ public class AndroidLauncher extends AndroidApplication {
                 e.printStackTrace();
             }
 
+            if(picturesForGame.size() < 4){
+                //TODO: call dialogue
+                //TODO: end activity
+                this.finish();
+            }
             initialize(new FacialMemoryGame(a, picturesForGame, tagsForGame, gendersForGame,
                     currentDateTimeString, coordinates), config);
         } else if(gameType.equals("object")) {

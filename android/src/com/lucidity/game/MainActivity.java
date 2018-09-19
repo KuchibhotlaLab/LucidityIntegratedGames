@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity{
 
                                 if (user_text.trim().length() == 0)
                                 {
-                                    userInput.setError("Please Enter Name");
+                                    userInput.setError("Password is incorrect");
                                 }
                                 else{
                                     /*Log.d(user_text,"string is empty");
@@ -174,8 +174,8 @@ public class MainActivity extends AppCompatActivity{
                                     });
                                     builder.create().show();*/
 
-                                    VerifyCaregiver verifyTask = new VerifyCaregiver(user_text, userInput);
-                                    verifyTask.execute();
+                                    //VerifyCaregiver verifyTask = new VerifyCaregiver(user_text, userInput);
+                                    //verifyTask.execute();
                                 }
                             }
                         })
@@ -190,10 +190,38 @@ public class MainActivity extends AppCompatActivity{
                 );
 
         // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
+        final AlertDialog alertDialog = alertDialogBuilder.create();
 
         // show it
         alertDialog.show();
+
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                String user_text = (userInput.getText()).toString();
+                final int[] succeed = new int[1];
+                if (user_text.trim().length() == 0)
+                {
+                    userInput.setError("Password is incorrect");
+                }
+                else{
+                    VerifyCaregiver verifyTask = new VerifyCaregiver(user_text, userInput, new AsyncResponse() {
+                        @Override
+                        public void processFinish(int output) {
+                            succeed[0] = output;
+                        }
+                    });
+                    verifyTask.execute();
+                }
+
+
+                if(succeed[0] == 1)
+                    alertDialog.dismiss();
+                //else dialog stays open. Make sure you have an obvious way to close the dialog especially if you set cancellable to false.
+            }
+        });
 
     }
 
@@ -204,11 +232,17 @@ public class MainActivity extends AppCompatActivity{
 
         private String inputText;
         private EditText inputTextObject;
+        private int success;
 
-        public VerifyCaregiver(String userText, EditText userInput)
+        public AsyncResponse delegate = null;
+
+
+
+        public VerifyCaregiver(String userText, EditText userInput, AsyncResponse delegate)
         {
             inputText = userText;
             inputTextObject = userInput;
+            this.delegate = delegate;
         }
 
         /**
@@ -243,7 +277,7 @@ public class MainActivity extends AppCompatActivity{
 
             // check for success tag
             try {
-                int success = json.getInt(TAG_SUCCESS);
+                success = json.getInt(TAG_SUCCESS);
                 String msg = json.getString(TAG_MESSAGE);
 
                 if (success == 1) {
@@ -263,10 +297,19 @@ public class MainActivity extends AppCompatActivity{
         /**
          * After completing background task Dismiss the progress dialog
          * **/
-        protected void onPostExecute(String file_url) {
+        /*protected void onPostExecute(String file_url) {
             // dismiss the dialog once done
             pDialog.dismiss();
+        }*/
+
+
+
+        @Override
+        protected void onPostExecute(String file_url) {
+            pDialog.dismiss();
+            delegate.processFinish(success);
         }
+
     }
 
     private void setError(final TextView text, final String value){
@@ -274,7 +317,15 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void run() {
                 text.setError(value);
+                System.out.println("reached");
             }
         });
     }
+
+
+}
+
+//stackoverflow.com/questions/2620444/
+interface AsyncResponse {
+    void processFinish(int output);
 }

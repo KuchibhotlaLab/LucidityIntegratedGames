@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import sun.rmi.runtime.Log;
+//import sun.rmi.runtime.Log;
 
 import static com.lucidity.game.GameOneConstants.BACKGROUND_COLOR;
 import static com.lucidity.game.GameOneConstants.DIFFICULTY_MEDIUM;
