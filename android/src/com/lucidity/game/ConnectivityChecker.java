@@ -6,6 +6,9 @@ import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+/*
+ *Class used for checking internet connection
+ */
 public class ConnectivityChecker {
 
     static Context context;
@@ -15,6 +18,7 @@ public class ConnectivityChecker {
         return new ConnectivityChecker();
     }
 
+    //Check for a network connection and return whether the device is connected or not
     public boolean isConnected() {
         try {
             ConnectivityManager cm =
@@ -30,6 +34,7 @@ public class ConnectivityChecker {
         return false;
     }
 
+    //Display a dialog for when there is no connection
     public void displayNoConnectionDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
         dialogBuilder.setTitle("Unable to Connect to Server");

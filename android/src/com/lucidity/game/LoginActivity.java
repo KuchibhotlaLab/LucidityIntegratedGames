@@ -16,11 +16,8 @@ import org.json.JSONObject;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.AsyncTask;
@@ -115,6 +112,7 @@ public class LoginActivity extends AppCompatActivity {
         mUserSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Check for internet connection then login
                 ConnectivityChecker checker = ConnectivityChecker.getInstance(LoginActivity.this);
                 if (checker.isConnected()){
                     new LoginUser().execute();

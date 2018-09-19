@@ -42,10 +42,17 @@ public class RegisterActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
+                // Checks that all fields are valid
                 boolean valid = validEntry();
                 if(valid){
-                    // Adding new user in background thread
-                    new AddNewUser().execute();
+                    //Check for internet connection then attempt to register new user
+                    ConnectivityChecker checker = ConnectivityChecker.getInstance(RegisterActivity.this);
+                    if (checker.isConnected()){
+                        // Adding new user in background thread
+                        new AddNewUser().execute();
+                    } else {
+                        checker.displayNoConnectionDialog();
+                    }
                 }
             }
         });
