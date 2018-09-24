@@ -4,9 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -24,6 +27,10 @@ public class LoadingScreen extends InputAdapter implements Screen {
     ShapeRenderer renderer;
     SpriteBatch batch;
     FitViewport viewport;
+
+    //Texture background;
+    //TextureRegion textureRegion;
+    //Sprite resizedBg;
 
     BitmapFont font;
     float elapsed;
@@ -46,6 +53,7 @@ public class LoadingScreen extends InputAdapter implements Screen {
     }
 
     public LoadingScreen(SpatialMemoryGame game) {
+        //background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
         isSpGame = true;
         this.SpMemGame = game;
     }
@@ -54,6 +62,9 @@ public class LoadingScreen extends InputAdapter implements Screen {
     public void show() {
         renderer = new ShapeRenderer();
         batch = new SpriteBatch();
+        /*textureRegion= new TextureRegion(background, 0, 0, background.getWidth(), background.getHeight());
+        resizedBg = new Sprite(textureRegion);
+        resizedBg.setSize(1f,  resizedBg.getHeight() / resizedBg.getWidth());*/
 
         viewport = new FitViewport(GameTwoConstants.MODE_WORLD_SIZE, GameTwoConstants.MODE_WORLD_SIZE);
 
@@ -73,6 +84,9 @@ public class LoadingScreen extends InputAdapter implements Screen {
         } else if(isObjGame){
             Gdx.gl.glClearColor(GameThreeConstants.LOADING_COLOR.r, GameThreeConstants.LOADING_COLOR.g, GameThreeConstants.LOADING_COLOR.b, 1);
         } else if(isSpGame){
+            /*batch.begin();
+            batch.draw(resizedBg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            batch.end();*/
             Gdx.gl.glClearColor(GameFourConstants.LOADING_COLOR.r, GameFourConstants.LOADING_COLOR.g, GameFourConstants.LOADING_COLOR.b, 1);
         }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

@@ -6,9 +6,12 @@ import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.net.HttpParametersUtils;
@@ -39,6 +42,9 @@ public class SpatialScreen extends InputAdapter implements Screen {
     ShapeRenderer renderer;
 
     SpriteBatch batch;
+    Texture background;
+    TextureRegion textureRegion;
+    Sprite resizedBg;
     BitmapFont font;
 
     Rectangle end, back;
@@ -82,6 +88,10 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
         batch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
+        background = new Texture(Gdx.files.internal("data/Bg-Space.jpg"));
+        textureRegion= new TextureRegion(background, 0, 0, background.getWidth(), background.getHeight());
+        resizedBg = new Sprite(textureRegion);
+        resizedBg.setSize(1f,  resizedBg.getHeight() / resizedBg.getWidth());
 
         end = new Rectangle();
         back = new Rectangle();
@@ -136,8 +146,11 @@ public class SpatialScreen extends InputAdapter implements Screen {
     @Override
     public void render(float delta) {
         viewport.apply(true);
-        Gdx.gl.glClearColor(GameFourConstants.BACKGROUND_COLOR.r, GameFourConstants.BACKGROUND_COLOR.g, GameFourConstants.BACKGROUND_COLOR.b, 1);
+        //Gdx.gl.glClearColor(GameFourConstants.BACKGROUND_COLOR.r, GameFourConstants.BACKGROUND_COLOR.g, GameFourConstants.BACKGROUND_COLOR.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.begin();
+        batch.draw(resizedBg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.end();
         elapsed += delta;
 
         if(elapsed < 1.5f) {

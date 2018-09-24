@@ -155,27 +155,8 @@ public class MainActivity extends AppCompatActivity{
                                 // DO THE METHOD HERE WHEN PROCEED IS CLICKED
                                 String user_text = (userInput.getText()).toString();
 
-                                if (user_text.trim().length() == 0)
-                                {
+                                if (user_text.trim().length() == 0) {
                                     userInput.setError("Password is incorrect");
-                                }
-                                else{
-                                    /*Log.d(user_text,"string is empty");
-                                    String message = "The password you have entered is incorrect." + " \n \n" + "Please try again!";
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-                                    builder.setTitle("Error");
-                                    builder.setMessage(message);
-                                    builder.setPositiveButton("Cancel", null);
-                                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            showDialog();
-                                        }
-                                    });
-                                    builder.create().show();*/
-
-                                    //VerifyCaregiver verifyTask = new VerifyCaregiver(user_text, userInput);
-                                    //verifyTask.execute();
                                 }
                             }
                         })

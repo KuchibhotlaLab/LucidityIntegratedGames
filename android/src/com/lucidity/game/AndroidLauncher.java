@@ -1,7 +1,10 @@
 package com.lucidity.game;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -11,6 +14,7 @@ import android.os.Bundle;
 import android.location.LocationListener;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.View;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -145,8 +149,24 @@ public class AndroidLauncher extends AndroidApplication {
 
             if(picturesForGame.size() < 4){
                 //TODO: call dialogue
-                //TODO: end activity
-                this.finish();
+                final Context mContext = this;
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder
+                        .setMessage("No pictures. Please provide at least \n " +
+                                "two pictures of each sex.")
+                        .setCancelable(false)
+                        .setPositiveButton("ok",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                dialog.dismiss();
+                                ((Activity) mContext).finish();
+                            }
+                        });
+
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                // show it
+                alertDialog.show();
             }
             initialize(new FacialMemoryGame(a, picturesForGame, tagsForGame, gendersForGame,
                     currentDateTimeString, coordinates), config);
@@ -204,6 +224,7 @@ public class AndroidLauncher extends AndroidApplication {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            System.out.println("completed");
             return "complete";
         }
     }
@@ -238,7 +259,24 @@ public class AndroidLauncher extends AndroidApplication {
             }
         }*/
         if (network_enabled) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+            //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+            locationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
+                    }
+                    @Override
+                    public void onProviderEnabled(String provider) {
+                    }
+                    @Override
+                    public void onProviderDisabled(String provider) {
+                    }
+                    @Override
+                    public void onLocationChanged(final Location location) {
+                    }
+                });
+
+
             Location lastLocation=locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             if(" ".equals(coordinates)){
                 coordinates = lastLocation.getLongitude() + " " + lastLocation.getLatitude();
