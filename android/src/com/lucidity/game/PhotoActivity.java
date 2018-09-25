@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
@@ -46,8 +47,8 @@ import java.util.List;
 
 public class PhotoActivity extends AppCompatActivity {
 
-    //Stores the username of the user
-    private String username;
+    //used to prevent a task from executing multiple times when a button is tapped multiple times
+    private long prevClickTime = 0;
 
     private static int RESULT_LOAD_IMAGE = 1;
     private Bitmap bmp = null;
@@ -59,12 +60,6 @@ public class PhotoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
-
-        //Gets the username passed from previous activity
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            username = extras.getString("username");
-        }
 
         targetImage = (ImageView)findViewById(R.id.targetimage);
 
@@ -123,6 +118,12 @@ public class PhotoActivity extends AppCompatActivity {
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Do nothing if button was recently pressed
+                if (SystemClock.elapsedRealtime() - prevClickTime < 5000){
+                    return;
+                }
+                prevClickTime = SystemClock.elapsedRealtime();
+
                 EditText imName = (EditText)findViewById(R.id.image_name_input);
                 EditText imRelation = (EditText)findViewById(R.id.image_relation_input);
 
@@ -151,17 +152,22 @@ public class PhotoActivity extends AppCompatActivity {
                         gender = "O";
                     }
 
-                    Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
-                    intent.putExtra("image", image);
-                    intent.putExtra("username", username);
-                    intent.putExtra("mode", 1);
-                    intent.putExtra("image-name", imName.getText().toString());
-                    intent.putExtra("image-relation", imRelation.getText().toString());
-                    intent.putExtra("gender", gender);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    //Close Page
-                    finish();
+                    //Check for internet connection before uploading
+                    ConnectivityChecker checker = ConnectivityChecker.getInstance(PhotoActivity.this);
+                    if (checker.isConnected()){
+                        Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
+                        intent.putExtra("image", image);
+                        intent.putExtra("mode", 1);
+                        intent.putExtra("image-name", imName.getText().toString());
+                        intent.putExtra("image-relation", imRelation.getText().toString());
+                        intent.putExtra("gender", gender);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        //Close Page
+                        finish();
+                    } else {
+                        checker.displayNoConnectionDialog();
+                    }
                 } else {
                     Toast.makeText(PhotoActivity.this,
                             "Please Select a Gender", Toast.LENGTH_SHORT).show();

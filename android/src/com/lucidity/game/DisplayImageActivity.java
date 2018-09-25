@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +34,9 @@ public class DisplayImageActivity extends AppCompatActivity {
 
     private int mode;
 
+    //used to prevent a task from executing multiple times when a button is tapped multiple times
+    private long prevClickTime = 0;
+
     //For communicating with AWS S3 storage
     private TransferHelper transferHelper;
     private AmazonS3Client s3;
@@ -52,17 +56,16 @@ public class DisplayImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_image);
 
-        //Gets the username passed from previous activity
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            username = extras.getString("username");
-        }
-        mode = extras.getInt("mode");
+        //gets username from shared preferences
+        Login login = new Login(getApplicationContext());
+        username = login.getUsername();
+
+        //Gets the mode from the previous activity
+        mode = getIntent().getExtras().getInt("mode");
 
         //Used to delete file from AWS S3 storage
         transferHelper = new TransferHelper();
         s3 = transferHelper.getS3Client(this);
-
 
         ImageView targetImage = findViewById(R.id.targetimage);
         Bitmap bmp = null;
@@ -94,20 +97,31 @@ public class DisplayImageActivity extends AppCompatActivity {
             btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    f.delete();
-                    //Delete the file in AWS S3 storage
-                    DeleteS3 deleteS3 = new DeleteS3(f.getName());
-                    deleteS3.execute();
-                    //Delete the file in MySQL database
-                    DeleteMySQL deleteMySQL = new DeleteMySQL(username, f.getName());
-                    deleteMySQL.execute();
-                    Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
-                    intent.putExtra("username", username);
-                    intent.putExtra("mode", mode);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
+                    //Do nothing if button was recently pressed
+                    if (SystemClock.elapsedRealtime() - prevClickTime < 5000){
+                        return;
+                    }
+                    prevClickTime = SystemClock.elapsedRealtime();
 
+                    //Check for internet connection before deleting
+                    ConnectivityChecker checker = ConnectivityChecker.getInstance(DisplayImageActivity.this);
+                    if (checker.isConnected()){
+                        f.delete();
+                        //Delete the file in AWS S3 storage
+                        DeleteS3 deleteS3 = new DeleteS3(f.getName());
+                        deleteS3.execute();
+                        //Delete the file in MySQL database
+                        DeleteMySQL deleteMySQL = new DeleteMySQL(username, f.getName());
+                        deleteMySQL.execute();
+                        Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
+                        intent.putExtra("username", username);
+                        intent.putExtra("mode", mode);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        checker.displayNoConnectionDialog();
+                    }
                 }
             });
         }

@@ -1,6 +1,7 @@
 package com.lucidity.game;
 
 import android.content.Intent;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,23 +10,24 @@ import android.widget.Button;
 
 public class CaregiverHomePage extends AppCompatActivity {
 
-    //Stores the username of the user
-    private String username;
+    //used to prevent a task from executing multiple times when a button is tapped multiple times
+    private long prevClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_caregiver_home_page);
 
-        //gets username and name from shared preferences
-        Login login = new Login(getApplicationContext());
-        username = login.getUsername();
-
         Button settings = findViewById(R.id.settings);
         settings.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                //Do nothing if button was recently pressed
+                if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                    return;
+                }
+                prevClickTime = SystemClock.elapsedRealtime();
+
                 Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
-                intent.putExtra("username", username);
                 startActivity(intent);
             }
         });
@@ -33,23 +35,33 @@ public class CaregiverHomePage extends AppCompatActivity {
         Button btnGame = findViewById(R.id.administer_games);
         btnGame.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                /*Intent i = new Intent(getApplicationContext(), GameMenuActivity.class);
-                i.putExtra("username", username);
-                i.putExtra("isLucid", false);
-                i.putExtra("isCare", true);
-                i.putExtra("isPatient", false);
-                startActivity(i);*/
-                Intent i = new Intent(getApplicationContext(), FaceDetectActivity.class);
-                i.putExtra("username", username);
-                startActivity(i);
+                //Do nothing if button was recently pressed
+                if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                    return;
+                }
+                prevClickTime = SystemClock.elapsedRealtime();
+
+                //Check for internet connection before uploading
+                ConnectivityChecker checker = ConnectivityChecker.getInstance(CaregiverHomePage.this);
+                if (checker.isConnected()){
+                    Intent i = new Intent(getApplicationContext(), FaceDetectActivity.class);
+                    startActivity(i);
+                } else {
+                    checker.displayNoConnectionDialog();
+                }
             }
         });
 
         Button btnTracking = findViewById(R.id.tracking);
         btnTracking.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
+                //Do nothing if button was recently pressed
+                if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                    return;
+                }
+                prevClickTime = SystemClock.elapsedRealtime();
+
                 Intent i = new Intent(getApplicationContext(), TrackingActivity.class);
-                i.putExtra("username", username);
                 startActivity(i);
             }
         });

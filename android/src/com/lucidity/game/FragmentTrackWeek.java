@@ -117,17 +117,23 @@ public class FragmentTrackWeek extends Fragment {
         timesRaw = new ArrayList<>();
         allScores = new ArrayList<>();
 
-        GetScores task = new GetScores(d);
-        task.execute();
-        //wait for task to finish
-        try {
-            task.get(1000, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
+        //Check for internet connection first
+        ConnectivityChecker checker = ConnectivityChecker.getInstance(getActivity());
+        if (checker.isConnected()){
+            GetScores task = new GetScores(d);
+            task.execute();
+            //wait for task to finish
+            try {
+                task.get(1000, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            }
+        } else {
+            checker.displayNoConnectionDialog();
         }
 
         ArrayList<BarEntry> entries = new ArrayList<>();

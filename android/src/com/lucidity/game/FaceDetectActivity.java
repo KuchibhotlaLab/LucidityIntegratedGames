@@ -50,20 +50,12 @@ public class FaceDetectActivity extends AppCompatActivity{
     private static final int RC_HANDLE_CAMERA_PERM = 2;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    private String username;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_detect);
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            username = extras.getString("username");
-        }
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
@@ -293,7 +285,6 @@ public class FaceDetectActivity extends AppCompatActivity{
                 takeScreenshot();
                 FullTestGenerator gen = new FullTestGenerator();
                 Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
-                i.putExtra("username", username);
                 i.putExtra("isLucid", false);
                 i.putExtra("isCare", true);
                 i.putExtra("isPatient", false);

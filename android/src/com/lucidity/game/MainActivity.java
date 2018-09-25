@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,9 @@ public class MainActivity extends AppCompatActivity{
 
     //Stores the name of the user
     private String name;
+
+    //used to prevent a task from executing multiple times when a button is tapped multiple times
+    private long prevClickTime = 0;
 
     TextView nameDisplay;
 
@@ -99,8 +103,13 @@ public class MainActivity extends AppCompatActivity{
         Button btnCaregiver = findViewById(R.id.caregiver);
         btnCaregiver.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                showDialog();
+                //Do nothing if button was recently pressed
+                if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                    return;
+                }
+                prevClickTime = SystemClock.elapsedRealtime();
 
+                showDialog();
             }
         });
 
@@ -108,6 +117,12 @@ public class MainActivity extends AppCompatActivity{
         Button main = findViewById(R.id.main);
         main.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                //Do nothing if button was recently pressed
+                if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                    return;
+                }
+                prevClickTime = SystemClock.elapsedRealtime();
+
                 // Goes to home page activity for patient
                 Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
                 startActivity(intent);
@@ -117,19 +132,30 @@ public class MainActivity extends AppCompatActivity{
         Button btnGame = findViewById(R.id.lucid);
         btnGame.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
+                //Do nothing if button was recently pressed
+                if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                    return;
+                }
+                prevClickTime = SystemClock.elapsedRealtime();
+
                 FullTestGenerator gen = new FullTestGenerator();
 
-                Intent i = new Intent(getApplicationContext(), AndroidLauncher.class);
-                i.putExtra("username", username);
-                i.putExtra("isLucid", true);
-                i.putExtra("isCare", false);
-                i.putExtra("isPatient", false);
-                i.putExtra("gametype", "check order");
-                i.putExtra("order", gen.toString());
-                i.putExtra("counter", 0);
-                i.putExtra("difficulty", -1);
+                //Check for internet connection first
+                ConnectivityChecker checker = ConnectivityChecker.getInstance(MainActivity.this);
+                if (checker.isConnected()){
+                    Intent i = new Intent(getApplicationContext(), AndroidLauncher.class);
+                    i.putExtra("isLucid", true);
+                    i.putExtra("isCare", false);
+                    i.putExtra("isPatient", false);
+                    i.putExtra("gametype", "check order");
+                    i.putExtra("order", gen.toString());
+                    i.putExtra("counter", 0);
+                    i.putExtra("difficulty", -1);
 
-                startActivity(i);
+                    startActivity(i);
+                } else {
+                    checker.displayNoConnectionDialog();
+                }
             }
         });
 
@@ -181,6 +207,12 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v)
             {
+                //Do nothing if button was recently pressed
+                if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                    return;
+                }
+                prevClickTime = SystemClock.elapsedRealtime();
+
                 String user_text = (userInput.getText()).toString();
                 final int[] succeed = new int[1];
                 if (user_text.trim().length() == 0)
@@ -194,16 +226,20 @@ public class MainActivity extends AppCompatActivity{
                             succeed[0] = output;
                         }
                     });
-                    verifyTask.execute();
+                    //Check for internet connection first
+                    ConnectivityChecker checker = ConnectivityChecker.getInstance(MainActivity.this);
+                    if (checker.isConnected()){
+                        verifyTask.execute();
+                    } else {
+                        checker.displayNoConnectionDialog();
+                    }
                 }
-
 
                 if(succeed[0] == 1)
                     alertDialog.dismiss();
                 //else dialog stays open. Make sure you have an obvious way to close the dialog especially if you set cancellable to false.
             }
         });
-
     }
 
     /**

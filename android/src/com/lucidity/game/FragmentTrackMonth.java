@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -50,6 +51,9 @@ public class FragmentTrackMonth extends Fragment {
     private String username;
     private String date;
 
+    //used to prevent a task from executing multiple times when a button is tapped multiple times
+    private long prevClickTime = 0;
+
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
 
@@ -87,6 +91,12 @@ public class FragmentTrackMonth extends Fragment {
         Button btnChangeMonth = rootView.findViewById(R.id.change_month);
         btnChangeMonth.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                //Do nothing if button was recently pressed
+                if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                    return;
+                }
+                prevClickTime = SystemClock.elapsedRealtime();
+
                 pickMonth(date);
             }
         });
@@ -160,17 +170,23 @@ public class FragmentTrackMonth extends Fragment {
         timesRaw = new ArrayList<>();
         allScores = new ArrayList<>();
 
-        GetScores task = new GetScores(date);
-        task.execute();
-        //wait for task to finish
-        try {
-            task.get(1000, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
+        //Check for internet connection first
+        ConnectivityChecker checker = ConnectivityChecker.getInstance(getActivity());
+        if (checker.isConnected()){
+            GetScores task = new GetScores(date);
+            task.execute();
+            //wait for task to finish
+            try {
+                task.get(1000, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            }
+        } else {
+            checker.displayNoConnectionDialog();
         }
 
         Calendar calendar = new GregorianCalendar(yearVal, monthVal, 1);

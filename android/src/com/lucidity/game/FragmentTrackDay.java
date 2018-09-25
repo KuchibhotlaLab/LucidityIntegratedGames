@@ -3,6 +3,7 @@ package com.lucidity.game;
 import android.app.DatePickerDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,6 +52,9 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
     private String username;
     private String date;
 
+    //used to prevent a task from executing multiple times when a button is tapped multiple times
+    private long prevClickTime = 0;
+
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
 
@@ -88,6 +92,12 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
         Button btnChangeDay = rootView.findViewById(R.id.change_day);
         btnChangeDay.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                //Do nothing if button was recently pressed
+                if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                    return;
+                }
+                prevClickTime = SystemClock.elapsedRealtime();
+
                 int yearNum = Integer.valueOf(date.substring(0,4));
                 int monthNum = Integer.valueOf(date.substring(5,7));
                 int dayNum = Integer.valueOf(date.substring(8,10));
@@ -219,17 +229,23 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
         timesRaw = new ArrayList<>();
         allScores = new ArrayList<>();
 
-        GetScores task = new GetScores(date);
-        task.execute();
-        //wait for task to finish
-        try {
-            task.get(1000, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
+        //Check for internet connection first
+        ConnectivityChecker checker = ConnectivityChecker.getInstance(getActivity());
+        if (checker.isConnected()){
+            GetScores task = new GetScores(date);
+            task.execute();
+            //wait for task to finish
+            try {
+                task.get(1000, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            }
+        } else {
+            checker.displayNoConnectionDialog();
         }
 
         ArrayList<Entry> entries = new ArrayList<>();

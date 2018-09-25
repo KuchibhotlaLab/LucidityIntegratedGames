@@ -1,6 +1,7 @@
 package com.lucidity.game;
 
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,9 @@ public class HomePageActivity extends AppCompatActivity {
     //Stores the username and name of the user
     private String username;
     private String name;
+
+    //used to prevent a task from executing multiple times when a button is tapped multiple times
+    private long prevClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +34,13 @@ public class HomePageActivity extends AppCompatActivity {
         Button btnGame = findViewById(R.id.game_button);
         btnGame.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
+                //Do nothing if button was recently pressed
+                if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                    return;
+                }
+                prevClickTime = SystemClock.elapsedRealtime();
+
                 Intent i = new Intent(getApplicationContext(), GameMenuActivity.class);
-                i.putExtra("username", username);
                 i.putExtra("isLucid", false);
                 i.putExtra("isCare", false);
                 i.putExtra("isPatient", true);
@@ -43,8 +52,13 @@ public class HomePageActivity extends AppCompatActivity {
         Button btnPhotos = findViewById(R.id.photos_button);
         btnPhotos.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
+                //Do nothing if button was recently pressed
+                if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                    return;
+                }
+                prevClickTime = SystemClock.elapsedRealtime();
+
                 Intent i = new Intent(getApplicationContext(), GalleryActivity.class);
-                i.putExtra("username", username);
                 i.putExtra("mode", 0);
                 startActivity(i);
 

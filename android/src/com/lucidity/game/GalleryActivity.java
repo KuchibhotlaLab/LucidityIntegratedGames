@@ -2,6 +2,7 @@ package com.lucidity.game;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -49,6 +51,9 @@ public class GalleryActivity extends AppCompatActivity {
     private String username;
     private int mode;
 
+    //used to prevent a task from executing multiple times when a button is tapped multiple times
+    private long prevClickTime = 0;
+
     ArrayList<Bitmap> images = new ArrayList<>();
     BitmapAdapter gridAdapter = null;
 
@@ -58,6 +63,9 @@ public class GalleryActivity extends AppCompatActivity {
 
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
+
+    // Progress Dialog
+    private ProgressDialog pDialog;
 
     // url to add image data
     private static String url_add_image = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_image.php";
@@ -71,12 +79,12 @@ public class GalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
-        //Gets the username passed from previous activity
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            username = extras.getString("username");
-        }
-        mode = extras.getInt("mode");
+        //gets username from shared preferences
+        Login login = new Login(getApplicationContext());
+        username = login.getUsername();
+
+        //Gets the mode from the previous activity
+        mode = getIntent().getExtras().getInt("mode");
 
         GridView gallery = findViewById(R.id.photoGalary);
         Bitmap bmp = null;
@@ -210,9 +218,13 @@ public class GalleryActivity extends AppCompatActivity {
                     btnGallery.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            //Do nothing if button was recently pressed
+                            if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                                return;
+                            }
+                            prevClickTime = SystemClock.elapsedRealtime();
 
                             Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
-                            intent.putExtra("username", username);
                             startActivity(intent);
                         }
                     });
@@ -220,9 +232,13 @@ public class GalleryActivity extends AppCompatActivity {
                     btnCamera.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            //Do nothing if button was recently pressed
+                            if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                                return;
+                            }
+                            prevClickTime = SystemClock.elapsedRealtime();
 
                             Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
-                            intent.putExtra("username", username);
                             startActivity(intent);
                         }
                     });
@@ -245,10 +261,15 @@ public class GalleryActivity extends AppCompatActivity {
 
     private AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+            //Do nothing if button was recently pressed
+            if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                return;
+            }
+            prevClickTime = SystemClock.elapsedRealtime();
+
             ImageObject l = (ImageObject)gridAdapter.getItem(position);
             Intent intent = new Intent(getApplicationContext(), DisplayImageActivity.class);
             intent.putExtra("image", l.getUrl());
-            intent.putExtra("username", username);
             intent.putExtra("mode", mode);
             startActivity(intent);
         }
@@ -394,6 +415,19 @@ public class GalleryActivity extends AppCompatActivity {
         }
 
         /**
+         * Before starting background thread Show Progress Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(GalleryActivity.this);
+            pDialog.setMessage("Uploading Picture...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        /**
          * Save information
          * */
         protected String doInBackground(String... args) {
@@ -426,8 +460,12 @@ public class GalleryActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String file_url) {
+            pDialog.dismiss();
         }
     }
 }

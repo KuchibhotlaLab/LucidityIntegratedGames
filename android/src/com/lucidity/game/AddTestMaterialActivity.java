@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,6 +38,9 @@ public class AddTestMaterialActivity extends AppCompatActivity {
     //Stores the username of the user
     private String username;
 
+    //used to prevent a task from executing multiple times when a button is tapped multiple times
+    private long prevClickTime = 0;
+
     //For uploading to AWS S3 storage
     private TransferHelper transferHelper;
     private TransferUtility transferUtility;
@@ -61,11 +65,8 @@ public class AddTestMaterialActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_test_material);
 
-        //Gets the username passed from previous activity
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            username = extras.getString("username");
-        }
+        Login login = new Login(getApplicationContext());
+        username = login.getUsername();
 
         //Used to upload to AWS S3 storage
         transferHelper = new TransferHelper();
@@ -101,9 +102,13 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                 btnGallery.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //Do nothing if button was recently pressed
+                        if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                            return;
+                        }
+                        prevClickTime = SystemClock.elapsedRealtime();
 
                         Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
-                        intent.putExtra("username", username);
                         startActivity(intent);
                     }
                 });
@@ -111,9 +116,13 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                 btnCamera.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //Do nothing if button was recently pressed
+                        if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                            return;
+                        }
+                        prevClickTime = SystemClock.elapsedRealtime();
 
                         Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
-                        intent.putExtra("username", username);
                         startActivity(intent);
                     }
                 });
@@ -121,9 +130,13 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                 btnStored.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //Do nothing if button was recently pressed
+                        if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                            return;
+                        }
+                        prevClickTime = SystemClock.elapsedRealtime();
 
                         Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
-                        intent.putExtra("username", username);
                         intent.putExtra("mode", 1);
                         startActivity(intent);
                     }
@@ -132,9 +145,20 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                 btnSync.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //Do nothing if button was recently pressed
+                        if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                            return;
+                        }
+                        prevClickTime = SystemClock.elapsedRealtime();
 
-                        Sync syncTask = new Sync();
-                        syncTask.execute();
+                        //Check for internet connection before uploading
+                        ConnectivityChecker checker = ConnectivityChecker.getInstance(AddTestMaterialActivity.this);
+                        if (checker.isConnected()){
+                            Sync syncTask = new Sync();
+                            syncTask.execute();
+                        } else {
+                            checker.displayNoConnectionDialog();
+                        }
                     }
                 });
 

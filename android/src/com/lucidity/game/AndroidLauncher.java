@@ -77,10 +77,13 @@ public class AndroidLauncher extends AndroidApplication {
     @Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        //Gets the username passed from previous activity
+
+        //gets username from shared preferences
+        Login login = new Login(getApplicationContext());
+        username = login.getUsername();
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            username = extras.getString("username");
             isLucid = extras.getBoolean("isLucid");
             isCare = extras.getBoolean("isCare");
             isPatient = extras.getBoolean("isPatient");

@@ -132,10 +132,13 @@ FaceToNameScreen extends InputAdapter implements Screen {
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
 
         //Initializes ordering of five pics for trials with no repeats
+        int numValidFiles = validFiles.size();
         for (int i = 0; i < 5; i++) {
-            int temp = (int) (Math.random() * validFiles.size());
-            while (picOrder.contains(temp)) {
-                temp = (int) (Math.random() * validFiles.size());
+            int temp = (int) (Math.random() * numValidFiles);
+            if (i < numValidFiles) {
+                while (picOrder.contains(temp)) {
+                    temp = ((int) Math.random() * numValidFiles);
+                }
             }
             picOrder.add(temp);
         }

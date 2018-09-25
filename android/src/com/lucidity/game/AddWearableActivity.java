@@ -2,6 +2,7 @@ package com.lucidity.game;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,9 @@ import java.util.ArrayList;
 
 public class AddWearableActivity extends AppCompatActivity {
 
+    //used to prevent a task from executing multiple times when a button is tapped multiple times
+    private long prevClickTime = 0;
+
     private int buttonPosition = 0;
 
     @Override
@@ -36,6 +40,12 @@ public class AddWearableActivity extends AppCompatActivity {
 
         btn_add.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                //Do nothing if button was recently pressed
+                if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                    return;
+                }
+                prevClickTime = SystemClock.elapsedRealtime();
+
 
                 LayoutInflater layoutInflater
                         = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
