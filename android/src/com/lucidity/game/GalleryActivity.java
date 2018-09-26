@@ -3,6 +3,7 @@ package com.lucidity.game;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.badlogic.gdx.physics.box2d.Contact;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -454,6 +456,20 @@ public class GalleryActivity extends AppCompatActivity {
 
                 if (success == 1) {
                     Log.d("Check Image Added", "Success");
+
+                    //Save image name and tags locally
+                    LucidityDatabase database = Room.databaseBuilder(getApplicationContext(), LucidityDatabase.class, "db-Images")
+                            .build();
+                    ImageDAO imageDAO = database.getImageDAO();
+
+                    Image image = new Image();
+                    image.setUsername(uname);
+                    image.setFileName(fname);
+                    image.setImageName(iname);
+                    image.setImageRelation(irelation);
+                    image.setGender(g.charAt(0));
+
+                    imageDAO.insert(image);
                 } else {
                     Log.d("Check Image Added", msg);
                 }

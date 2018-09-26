@@ -1,5 +1,6 @@
 package com.lucidity.game;
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -196,6 +197,14 @@ public class DisplayImageActivity extends AppCompatActivity {
 
                 if (success == 1) {
                     Log.d("Image Deleted", "Success");
+
+                    //Delete image and tags locally
+                    LucidityDatabase database = Room.databaseBuilder(getApplicationContext(), LucidityDatabase.class, "db-Images")
+                            .build();
+                    ImageDAO imageDAO = database.getImageDAO();
+
+                    Image image = imageDAO.getImage(uname, filename);
+                    imageDAO.delete(image);
                 } else {
                     Log.d("Image Deleted", msg);
                 }
