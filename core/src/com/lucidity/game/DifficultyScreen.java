@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
@@ -26,6 +28,10 @@ public class DifficultyScreen extends InputAdapter implements Screen {
     SpriteBatch batch;
     FitViewport viewport;
 
+    Texture background;
+    TextureRegion textureRegion;
+    Sprite resizedBg;
+
     BitmapFont font;
     private float elapsed;
 
@@ -36,6 +42,13 @@ public class DifficultyScreen extends InputAdapter implements Screen {
     public DifficultyScreen(SpatialMemoryGame game) {
         isSpa = true;
         this.spaGame = game;
+
+        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
+        textureRegion= new TextureRegion(background, 0, 0, background.getWidth(), background.getHeight());
+        resizedBg = new Sprite(textureRegion);
+        resizedBg.setSize(1f,  resizedBg.getHeight() / resizedBg.getWidth());
+
+
     }
     public DifficultyScreen(ObjectRecognitionGame game) {
         isOb = true;
@@ -59,9 +72,10 @@ public class DifficultyScreen extends InputAdapter implements Screen {
     @Override
     public void render(float delta) {
         elapsed += delta;
-        viewport.apply();
+
 
         if(isMem){
+            viewport.apply();
             Gdx.gl.glClearColor(GameOneConstants.BACKGROUND_COLOR.r, GameOneConstants.BACKGROUND_COLOR.g, GameOneConstants.BACKGROUND_COLOR.b, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -97,6 +111,7 @@ public class DifficultyScreen extends InputAdapter implements Screen {
 
             batch.end();
         } else if(isOb) {
+            viewport.apply();
             Gdx.gl.glClearColor(GameThreeConstants.BACKGROUND_COLOR.r, GameThreeConstants.BACKGROUND_COLOR.g, GameThreeConstants.BACKGROUND_COLOR.b, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -134,6 +149,12 @@ public class DifficultyScreen extends InputAdapter implements Screen {
         } else if(isSpa) {
             Gdx.gl.glClearColor(GameFourConstants.BACKGROUND_COLOR.r, GameFourConstants.BACKGROUND_COLOR.g, GameFourConstants.BACKGROUND_COLOR.b, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+            //TODO: This is butchered, fixed background image
+            batch.begin();
+            batch.draw(resizedBg, 0, 0, GameOneConstants.DIFFICULTY_WORLD_SIZE, 2*GameOneConstants.DIFFICULTY_WORLD_SIZE);
+            //batch.draw(resizedBg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            batch.end();
 
             renderer.setProjectionMatrix(viewport.getCamera().combined);
 

@@ -6,8 +6,138 @@
     android:layout_height="match_parent"
     android:background="@color/BackgroundMain"
     tools:context="com.lucidity.game.GameMenuActivity">
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/button_menu">
 
-    <LinearLayout
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/game_menu_display"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/ostrich_sans_rounded_medium"
+                    android:text="@string/game_menu"
+                    android:textAlignment="center"
+                    android:textColor="#4b4b4b"
+                    android:textSize="48sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/scrollView2" />
+            </FrameLayout>
+
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    app:layout_constraintTop_toBottomOf="@+id/game_menu_display">
+
+                    <Button
+                        android:id="@+id/game1_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        app:layout_constraintDimensionRatio="H, 9:4"
+                        android:layout_gravity="center"
+                        android:background="@drawable/blockbtn"
+                        android:fontFamily="@font/kayak_sans_regular"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="28sp" />
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center"
+                        android:scaleType="fitXY" />
+                </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/game4_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="H, 9:4"
+                    android:layout_gravity="center"
+                    android:background="@drawable/spacebtn"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="28sp" />
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitXY" />
+
+            </android.support.constraint.ConstraintLayout>
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/game2_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        app:layout_constraintDimensionRatio="H, 9:4"
+                        android:layout_gravity="center"
+                        android:background="@drawable/facebtn"
+                        android:fontFamily="@font/kayak_sans_regular"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="28sp" />
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center"
+                        android:scaleType="fitXY" />
+                </android.support.constraint.ConstraintLayout>
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/game3_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        app:layout_constraintDimensionRatio="H, 9:4"
+                        android:layout_gravity="center"
+                        android:background="@drawable/objbtn"
+                        android:fontFamily="@font/kayak_sans_regular"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="28sp" />
+                    <ImageView
+                        android:id="@+id/imageView3"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center"
+                        android:scaleType="fitXY" />
+                </android.support.constraint.ConstraintLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+   <!-- <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -55,8 +185,6 @@
                     android:text="Block           Memory        Test"
                     android:textColor="@color/colorWhite"
                     android:textSize="28sp" />
-                <!--android:text="@string/games"
-                android:textColor="#fff" />-->
 
                 <ImageView
                     android:id="@+id/imageView"
@@ -83,8 +211,6 @@
                     android:text="Face Recognition        Test"
                     android:textColor="@color/colorWhite"
                     android:textSize="28sp" />
-                <!--android:text="@string/photos"
-                android:textColor="#fff" />-->
 
                 <ImageView
                     android:id="@+id/imageView2"
@@ -118,9 +244,6 @@
                     android:text="Object Recognition Test"
                     android:textColor="@color/colorWhite"
                     android:textSize="28sp" />
-                <!--android:text="@string/reminders"
-                android:textColor="#fff" />-->
-
                 <ImageView
                     android:id="@+id/imageView3"
                     android:layout_width="150dp"
@@ -146,8 +269,6 @@
                     android:text="Spatial Memory     Test"
                     android:textColor="@color/colorWhite"
                     android:textSize="28sp" />
-                <!--android:text="@string/reminders"
-                android:textColor="#fff" />-->
 
                 <ImageView
                     android:id="@+id/imageView4"
@@ -160,6 +281,6 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+    </LinearLayout>-->
 
 </android.support.constraint.ConstraintLayout>

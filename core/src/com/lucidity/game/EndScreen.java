@@ -3,10 +3,15 @@ package com.lucidity.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -24,6 +29,11 @@ public class EndScreen extends InputAdapter implements Screen {
 
     ExtendViewport memoryViewport;
     ScreenViewport hudViewport;
+    ShapeRenderer renderer;
+
+    Texture background;
+    TextureRegion textureRegion;
+    Sprite resizedBg;
 
     boolean isGameOne, isGameTwo, isGameThree, isGameFour = false;
 
@@ -37,13 +47,14 @@ public class EndScreen extends InputAdapter implements Screen {
     private SpriteBatch batch;
     public BitmapFont font;
 
-    private boolean exit = false;
+    //private boolean exit = false;
 
     public EndScreen(WorkingMemoryGame game, int points, int trials) {
         this.gameIndep = game;
         this.score = points;
         this.trial = trials;
         isGameOne = true;
+        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
 
         memoryViewport = new ExtendViewport(GameOneConstants.WORLD_SIZE, GameOneConstants.WORLD_SIZE);
     }
@@ -54,6 +65,7 @@ public class EndScreen extends InputAdapter implements Screen {
         this.score = points;
         this.trial = trials;
         isGameTwo = true;
+        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
 
         memoryViewport = new ExtendViewport(GameTwoConstants.WORLD_SIZE, GameTwoConstants.WORLD_SIZE);
     }
@@ -63,6 +75,7 @@ public class EndScreen extends InputAdapter implements Screen {
         this.score = points;
         this.trial = trials;
         isGameThree = true;
+        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
 
         memoryViewport = new ExtendViewport(GameThreeConstants.WORLD_SIZE, GameThreeConstants.WORLD_SIZE);
     }
@@ -72,6 +85,7 @@ public class EndScreen extends InputAdapter implements Screen {
         this.score = points;
         this.trial = trials;
         isGameFour = true;
+        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
 
         memoryViewport = new ExtendViewport(GameFourConstants.WORLD_SIZE, GameFourConstants.WORLD_SIZE);
 
@@ -86,6 +100,12 @@ public class EndScreen extends InputAdapter implements Screen {
         screenHeight = Gdx.graphics.getHeight();
 
         hudViewport = new ScreenViewport();
+
+        textureRegion= new TextureRegion(background, 0, 0, background.getWidth(), background.getHeight());
+        resizedBg = new Sprite(textureRegion);
+        resizedBg.setSize(1f,  resizedBg.getHeight() / resizedBg.getWidth());
+
+        renderer = new ShapeRenderer();
 
         batch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
@@ -105,7 +125,7 @@ public class EndScreen extends InputAdapter implements Screen {
     @Override
     public void render(float delta) {
         memoryViewport.apply(true);
-
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         if(isGameOne){
             Gdx.gl.glClearColor(1.0f,0.98f,0.78f, 1);
         } else if(isGameTwo) {
@@ -114,8 +134,20 @@ public class EndScreen extends InputAdapter implements Screen {
             Gdx.gl.glClearColor(GameThreeConstants.BACKGROUND_COLOR.r, GameThreeConstants.BACKGROUND_COLOR.g, GameThreeConstants.BACKGROUND_COLOR.b, 1);
         } else if(isGameFour){
             Gdx.gl.glClearColor(GameFourConstants.BACKGROUND_COLOR.r, GameFourConstants.BACKGROUND_COLOR.g, GameFourConstants.BACKGROUND_COLOR.b, 1);
+            batch.begin();
+            batch.draw(resizedBg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            batch.end();
         }
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        if(isGameFour) {
+            renderer.setColor(GameFourConstants.SQUARE_COLOR);
+            renderer.rect(0, screenHeight / 3, screenWidth, screenHeight/3);
+            renderer.setColor(GameFourConstants.SELECTED_COLOR);
+        }
+
+        renderer.rect(screenHeight/36, screenHeight / 3 + screenHeight/36, screenWidth - screenHeight/18, screenHeight/3 -  screenHeight/18);
+        renderer.end();
 
         batch.begin();
         font.getData().setScale(.7f);
@@ -126,25 +158,27 @@ public class EndScreen extends InputAdapter implements Screen {
         } else if(isGameThree) {
             font.setColor(GameThreeConstants.TITLE_COLOR);
         } else if(isGameFour){
-            font.setColor(GameFourConstants.TITLE_COLOR);
+            //font.setColor(GameFourConstants.TITLE_COLOR);
+            font.setColor(Color.WHITE);
         }
+
         final GlyphLayout scoreLayout = new GlyphLayout(font, "Your score is " + Integer.toString(score) + "/" + Integer.toString(trial));
         font.draw(batch, scoreLayout, (screenWidth - scoreLayout.width)/2,
-                screenHeight * 2 / 3);
+                screenHeight * 7 / 12);
 
         final GlyphLayout promptLayout_two = new GlyphLayout(font, GameOneConstants.END_INSTRUCTIONS_TWO);
         font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width)/2,
-                screenHeight / 3);
+                screenHeight * 5 / 12);
 
         final GlyphLayout promptLayout_one = new GlyphLayout(font, GameOneConstants.END_INSTRUCTIONS_ONE);
         font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width)/2,
-                screenHeight / 3 + 1.5f * promptLayout_two.height);
+                screenHeight * 5/ 12 + 1.5f * promptLayout_two.height);
 
         batch.end();
 
-        if(exit){
+        /*if(exit){
             Gdx.app.exit();
-        }
+        }*/
 
     }
 

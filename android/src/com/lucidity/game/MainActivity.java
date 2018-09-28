@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity{
         // set dialog message
         alertDialogBuilder
                 .setCancelable(false)
-                .setPositiveButton("Go",
+                .setPositiveButton("Verify",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
                                 // DO THE METHOD HERE WHEN PROCEED IS CLICKED
@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity{
                                 }
                             }
                         })
-                .setNegativeButton("cancel",
+                .setNegativeButton("Cancel",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
                                 dialog.dismiss();

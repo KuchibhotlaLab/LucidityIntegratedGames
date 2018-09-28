@@ -6,6 +6,7 @@ import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -26,6 +27,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.Math.sqrt;
+
 /**
  * Created by lixiaoyan on 7/20/18.
  */
@@ -42,10 +45,13 @@ public class SpatialScreen extends InputAdapter implements Screen {
     ShapeRenderer renderer;
 
     SpriteBatch batch;
-    Texture background;
+    Texture background, homeBut, returnBut;
     TextureRegion textureRegion;
     Sprite resizedBg;
     BitmapFont font;
+
+    Pixmap pm;
+    Texture tx;
 
     Rectangle end, back;
     boolean onEnd, onBack = false;
@@ -60,10 +66,8 @@ public class SpatialScreen extends InputAdapter implements Screen {
     int gameMode;
 
     Rectangle[][] grid;
-    boolean[][] selected;
-    boolean[][] toRemember;
-    int blocksHorizontal;
-    int blocksVertical;
+    boolean[][] selected, toRemember;
+    int blocksHorizontal, blocksVertical;
 
     int roadBlockNum;
     int prevX, prevY;
@@ -88,16 +92,20 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
         batch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
-        background = new Texture(Gdx.files.internal("data/Bg-Space.jpg"));
+        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
         textureRegion= new TextureRegion(background, 0, 0, background.getWidth(), background.getHeight());
         resizedBg = new Sprite(textureRegion);
         resizedBg.setSize(1f,  resizedBg.getHeight() / resizedBg.getWidth());
 
+        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
+        homeBut = new Texture(Gdx.files.internal("data/homeBtn.png"));
+        returnBut = new Texture(Gdx.files.internal("data/returnBtn.png"));
+
         end = new Rectangle();
         back = new Rectangle();
         end.height = back.height = screenHeight / 16;
-        end.width = back.width = screenWidth / 5;
-        end.y = back.y = screenHeight - end.height - 25;
+        end.width = back.width = end.height;
+        end.y = back.y = screenHeight - end.height - 30;
         end.x = screenWidth / 2;
         back.x = screenWidth * 3 / 4;
 
@@ -116,19 +124,39 @@ public class SpatialScreen extends InputAdapter implements Screen {
         btnSubmit.width = screenWidth / 2;
         btnSubmit.height = screenHeight / 12;
         btnSubmit.x = screenWidth  / 4;
-        btnSubmit.y = screenHeight / 8;
+        btnSubmit.y = screenHeight / 12;
+
+        int offset = screenWidth / 40;
+        int width = (screenWidth * 5 / 6) / blocksHorizontal;
+        int startX = (screenWidth - offset * (blocksHorizontal - 1) - width * (blocksHorizontal - 1)) * 2 / 13;
 
         for (int i = 0; i < blocksHorizontal; i++) {
             for (int j = 0; j < blocksVertical; j++) {
                 Rectangle block = new Rectangle();
-                block.width = (screenWidth * 5 / 6) / blocksHorizontal;
+                block.width = width;
                 block.height = block.width;
-                block.x = i * block.width + screenWidth / 12;
-                block.y = j * block.height + screenHeight  / 4;
+                if((i == 0 && j == 0) || (i == blocksHorizontal - 1 && j == blocksVertical - 1)){
+                    block.x = i * block.width + screenWidth / 12;
+                    block.y = j * block.height + screenHeight  / 4;
+                }
+                //block.x = i * block.width + screenWidth / 12 + offset * i;
+                //block.y = j * block.height + screenHeight  / 4 + offset * j;
+                block.x = i * block.width + startX + offset * i;
+                block.y = j * block.height + screenHeight  / 4 + offset * j;
                 grid[i][j] = block;
                 selected[i][j] = false;
             }
         }
+
+        pm = new Pixmap(2, 2, Pixmap.Format.RGBA4444);
+        pm.drawPixel(0, 0, Color.rgba8888(0.12f, 0.19f, 0.29f, 1));
+        pm.drawPixel(0, 1, Color.rgba8888(0.12f, 0.19f, 0.29f, 1));
+        pm.drawPixel(1, 0, Color.rgba8888(0.22f, 0.44f, 0.52f, 1));
+        pm.drawPixel(1, 1, Color.rgba8888(0.22f, 0.44f, 0.52f, 1));
+        tx = new Texture(pm);
+        tx.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+
 
         generateTrial();
 
@@ -146,14 +174,16 @@ public class SpatialScreen extends InputAdapter implements Screen {
     @Override
     public void render(float delta) {
         viewport.apply(true);
-        //Gdx.gl.glClearColor(GameFourConstants.BACKGROUND_COLOR.r, GameFourConstants.BACKGROUND_COLOR.g, GameFourConstants.BACKGROUND_COLOR.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.draw(resizedBg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        float width = (float)(sqrt(2) * (grid[blocksVertical-1][blocksHorizontal-1].x + grid[blocksVertical-1][blocksHorizontal-1].width - grid[0][0].x));
+        batch.draw(new TextureRegion(tx), grid[blocksHorizontal-1][0].x + grid[blocksHorizontal-1][0].width, grid[0][blocksVertical-1].y+grid[0][blocksVertical-1].height, 0, 0,  width, screenHeight, 1f, 1f, 225, false);
+
         batch.end();
         elapsed += delta;
 
-        if(elapsed < 1.5f) {
+        if(elapsed < 2f) {
             disableTouchDown = true;
             batch.begin();
             font.getData().setScale(GameFourConstants.INSTRUCTION_SIZE);
@@ -181,9 +211,9 @@ public class SpatialScreen extends InputAdapter implements Screen {
             renderer.end();
 
 
-        } else if(elapsed == 1.5f) {
+        } else if(elapsed == 2f) {
             selected = new boolean[blocksHorizontal][blocksVertical];
-        } else if (elapsed < 3f) {
+        } else if (elapsed < 3.5f) {
 
             batch.begin();
 
@@ -199,7 +229,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
             for (int i = 0; i < blocksHorizontal; i++) {
                 for (int j = 0; j < blocksVertical; j++) {
                     if(!selected[i][j]){
-                        renderer.setColor(GameFourConstants.TITLE_COLOR);
+                        renderer.setColor(GameFourConstants.SQUARE_COLOR);
                     } else {
                         renderer.setColor(GameFourConstants.START_END_COLOR);
                     }
@@ -251,9 +281,9 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
 
             if(!onSubmit){
-                renderer.setColor(GameFourConstants.TITLE_COLOR);
+                renderer.setColor(GameFourConstants.SQUARE_COLOR);
             } else {
-                renderer.setColor(GameFourConstants.EASY_COLOR);
+                renderer.setColor(GameFourConstants.SELECTED_COLOR);
                 onSubmit = false;
                 delayed = elapsed;
                 delayOn = true;
@@ -263,20 +293,26 @@ public class SpatialScreen extends InputAdapter implements Screen {
                 }
             }
             if(delayOn){
-                renderer.setColor(GameFourConstants.EASY_COLOR);
+                renderer.setColor(GameFourConstants.SQUARE_COLOR);
             }
 
             renderer.begin(ShapeRenderer.ShapeType.Filled);
 
             selectState(onSubmit);
             renderer.rect(btnSubmit.x, btnSubmit.y, btnSubmit.width, btnSubmit.height);
+            renderer.end();
 
+            batch.begin();
+            triggerEnd();
+            triggerBack();
+            batch.end();
 
+            /*renderer.begin();
             if(!onEnd){
-                renderer.setColor(GameFourConstants.TITLE_COLOR);
+                renderer.setColor(GameFourConstants.SQUARE_COLOR);
             } else {
                 disableTouchDown = true;
-                renderer.setColor(GameFourConstants.EASY_COLOR);
+                renderer.setColor(GameFourConstants.SELECTED_COLOR);
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {
@@ -290,10 +326,10 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
 
             if(!onBack){
-                renderer.setColor(GameFourConstants.TITLE_COLOR);
+                renderer.setColor(GameFourConstants.SQUARE_COLOR);
             } else {
                 disableTouchDown = true;
-                renderer.setColor(GameFourConstants.EASY_COLOR);
+                renderer.setColor(GameFourConstants.SELECTED_COLOR);
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {game.setScreen(new DifficultyScreen(game));
@@ -302,11 +338,11 @@ public class SpatialScreen extends InputAdapter implements Screen {
                         1);
             }
             renderer.rect(back.x, back.y, back.width, back.height);
-            renderer.end();
+            renderer.end();*/
 
             batch.begin();
             font.getData().setScale(GameThreeConstants.ANSWER_SCALE);
-            font.setColor(Color.WHITE);
+            /*font.setColor(Color.WHITE);
             //prints text on back button
             font.draw(batch, GameTwoConstants.BACK_TEXT,
                     (int) (back.x + 0.2 * back.getWidth()),
@@ -314,7 +350,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
             //prints text on end button
             font.draw(batch, GameTwoConstants.END_TEXT,
                     (int) (end.x + 0.25 * end.getWidth()),
-                    (int) (end.y + 0.6 * end.getHeight()));
+                    (int) (end.y + 0.6 * end.getHeight()));*/
 
             font.setColor(Color.WHITE);
             font.draw(batch, GameTwoConstants.SCORE_LABEL + Integer.toString(score),
@@ -331,27 +367,12 @@ public class SpatialScreen extends InputAdapter implements Screen {
             final float fontX_one = (screenWidth - layout_one.width) / 2;
             final float fontY_one = (btnSubmit.height * 0.6f + btnSubmit.y);
             font.draw(batch, layout_one, fontX_one, fontY_one);
-
+            batch.end();
 
             if (delayOn) {
-                if (correctPath()) {
-                    font.setColor(GameOneConstants.CORRECT_COLOR);
-                    final GlyphLayout promptLayout = new GlyphLayout(font, GameThreeConstants.CORRECT_MESSAGE);
-                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight  / 10);
-                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
-                    font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight / 10 - 1.5f * promptLayout.height);
-
-                } else {
-                    font.setColor(GameOneConstants.INCORRECT_COLOR);
-                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
-                    font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight  / 10);
-                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
-                    font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight / 10 - 1.5f * promptLayout.height);
-                }
+                resultMessage(correctPath());
             }
 
-
-            batch.end();
 
             if(elapsed - delayed >= 1f && delayOn) {
                 if(correctPath()){
@@ -451,19 +472,89 @@ public class SpatialScreen extends InputAdapter implements Screen {
         return false;
     }
 
+    private void triggerEnd(){
+        if(onEnd){
+            disableTouchDown = true;
+            homeBut = new Texture(Gdx.files.internal("data/homeBtnPressed.png"));
+            Timer.schedule(new Timer.Task() {
+                               @Override
+                               public void run() {
+                                   game.setScreen(new EndScreen(game, score, trial));
+                               }
+                           },
+                    1);
+        }
+        batch.draw(homeBut, back.x, back.y, back.width, back.height);
+
+    }
+
+    private void triggerBack(){
+        if(onBack){
+            disableTouchDown = true;
+            returnBut = new Texture(Gdx.files.internal("data/returnBtnPressed.png"));
+            Timer.schedule(new Timer.Task() {
+                               @Override
+                               public void run() {game.setScreen(new DifficultyScreen(game));
+                               }
+                           },
+                    1);
+        }
+        batch.draw(returnBut, end.x, end.y, end.width, end.height);
+
+    }
+
     private void selectState(boolean blockSelected){
         if(!blockSelected){
-            renderer.setColor(GameFourConstants.TITLE_COLOR);
+            renderer.setColor(GameFourConstants.SQUARE_COLOR);
         } else {
-            renderer.setColor(GameFourConstants.EASY_COLOR);
+            renderer.setColor(GameFourConstants.SELECTED_COLOR);
         }
     }
 
     private void drawRoadBlock(boolean blockSelected){
         if(!blockSelected){
-            renderer.setColor(GameFourConstants.TITLE_COLOR);
+            renderer.setColor(GameFourConstants.SQUARE_COLOR);
         } else {
             renderer.setColor(GameFourConstants.ROADBLOCK_COLOR);
+        }
+    }
+
+    private void resultMessage(boolean isCorrect){
+        if(isCorrect){
+            renderer.begin(ShapeRenderer.ShapeType.Filled);
+            renderer.setColor(GameOneConstants.CORRECT_COLOR);
+            renderer.rect(0, screenHeight / 3, screenWidth, screenHeight/4);
+
+            renderer.setColor(Color.valueOf("d8d8d8"));
+            renderer.rect(screenHeight/36, screenHeight / 3 + screenHeight/36, screenWidth - screenHeight/18, screenHeight/4 -  screenHeight/18);
+            renderer.end();
+
+            batch.begin();
+            font.getData().setScale(GameFourConstants.RESULT_SIZE);
+            font.setColor(GameFourConstants.ROADBLOCK_COLOR);
+            final GlyphLayout promptLayout = new GlyphLayout(font, GameThreeConstants.CORRECT_MESSAGE);
+            font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight / 3  + screenHeight/6);
+            final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+            font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2,  screenHeight / 3  + screenHeight/6- 1.5f * promptLayout.height);
+            batch.end();
+        } else {
+            renderer.begin(ShapeRenderer.ShapeType.Filled);
+            renderer.setColor(GameOneConstants.INCORRECT_COLOR);
+            renderer.rect(0, screenHeight / 3, screenWidth, screenHeight/4);
+
+            renderer.setColor(Color.valueOf("d8d8d8"));
+            renderer.rect(screenHeight/36, screenHeight / 3 + screenHeight/36, screenWidth - screenHeight/18, screenHeight/4 -  screenHeight/18);
+            renderer.end();
+
+            batch.begin();
+            font.setColor(GameFourConstants.ROADBLOCK_COLOR);
+            font.getData().setScale(GameFourConstants.RESULT_SIZE);
+            final GlyphLayout promptLayout = new GlyphLayout(font, GameThreeConstants.INCORRECT_MESSAGE);
+            font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight / 3  + screenHeight/6);
+            final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+            font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight / 3  + screenHeight/6 +  - 1.5f * promptLayout.height);
+            batch.end();
+
         }
     }
 
@@ -512,19 +603,15 @@ public class SpatialScreen extends InputAdapter implements Screen {
     private boolean isCorner(int row, int col){
         if(row == blocksHorizontal && col == blocksVertical - 1){
             return toRemember[blocksHorizontal - 1][blocksVertical];
-        }
-        if(row == blocksHorizontal - 1 && col == blocksVertical ){
+        } else if(row == blocksHorizontal - 1 && col == blocksVertical ){
             return toRemember[blocksHorizontal][blocksVertical - 1];
-        }
-
-        if(row == 0 && col == 1){
+        } else if(row == 0 && col == 1){
             return toRemember[1][0];
-        }
-
-        if(row == 1 && col == 0){
+        } else if(row == 1 && col == 0){
             return toRemember[0][1];
+        } else {
+            return false;
         }
-        return false;
     }
 
     private boolean correctPath(){

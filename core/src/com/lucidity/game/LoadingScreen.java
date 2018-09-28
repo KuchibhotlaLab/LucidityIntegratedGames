@@ -3,6 +3,7 @@ package com.lucidity.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -11,6 +12,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /**
@@ -28,9 +32,10 @@ public class LoadingScreen extends InputAdapter implements Screen {
     SpriteBatch batch;
     FitViewport viewport;
 
-    //Texture background;
-    //TextureRegion textureRegion;
-    //Sprite resizedBg;
+
+    Texture background;
+    TextureRegion textureRegion;
+    Sprite resizedBg;
 
     BitmapFont font;
     float elapsed;
@@ -39,21 +44,24 @@ public class LoadingScreen extends InputAdapter implements Screen {
     int screenHeight = Gdx.graphics.getHeight();
 
     public LoadingScreen(WorkingMemoryGame game) {
+        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
         isMemGame = true;
         this.memGame = game;
     }
 
     public LoadingScreen(FacialMemoryGame game) {
+        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
         isFacGame = true;
         this.FacMemGame = game;
     }
     public LoadingScreen(ObjectRecognitionGame game) {
+        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
         isObjGame = true;
         this.ObjRecGame = game;
     }
 
     public LoadingScreen(SpatialMemoryGame game) {
-        //background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
+        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
         isSpGame = true;
         this.SpMemGame = game;
     }
@@ -62,11 +70,12 @@ public class LoadingScreen extends InputAdapter implements Screen {
     public void show() {
         renderer = new ShapeRenderer();
         batch = new SpriteBatch();
-        /*textureRegion= new TextureRegion(background, 0, 0, background.getWidth(), background.getHeight());
-        resizedBg = new Sprite(textureRegion);
-        resizedBg.setSize(1f,  resizedBg.getHeight() / resizedBg.getWidth());*/
 
         viewport = new FitViewport(GameTwoConstants.MODE_WORLD_SIZE, GameTwoConstants.MODE_WORLD_SIZE);
+
+        textureRegion= new TextureRegion(background, 0, 0, background.getWidth(), background.getHeight());
+        resizedBg = new Sprite(textureRegion);
+        resizedBg.setSize(1f,  resizedBg.getHeight() / resizedBg.getWidth());
 
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
         font.getData().setScale(GameTwoConstants.MODE_LABEL_SCALE);
@@ -76,20 +85,24 @@ public class LoadingScreen extends InputAdapter implements Screen {
     @Override
     public void render(float delta) {
         elapsed += delta;
-        viewport.apply();
+        //viewport.apply();
         if(isMemGame) {
             Gdx.gl.glClearColor(GameOneConstants.LOADING_COLOR.r, GameOneConstants.LOADING_COLOR.g, GameOneConstants.LOADING_COLOR.b, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         } else if(isFacGame) {
             Gdx.gl.glClearColor(GameTwoConstants.BACKGROUND_COLOR.r, GameTwoConstants.BACKGROUND_COLOR.g, GameTwoConstants.BACKGROUND_COLOR.b, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         } else if(isObjGame){
             Gdx.gl.glClearColor(GameThreeConstants.LOADING_COLOR.r, GameThreeConstants.LOADING_COLOR.g, GameThreeConstants.LOADING_COLOR.b, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         } else if(isSpGame){
-            /*batch.begin();
+            //Gdx.gl.glClearColor(GameFourConstants.LOADING_COLOR.r, GameFourConstants.LOADING_COLOR.g, GameFourConstants.LOADING_COLOR.b, 1);
+            //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            batch.begin();
             batch.draw(resizedBg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            batch.end();*/
-            Gdx.gl.glClearColor(GameFourConstants.LOADING_COLOR.r, GameFourConstants.LOADING_COLOR.g, GameFourConstants.LOADING_COLOR.b, 1);
+            batch.end();
         }
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 
         if (elapsed < 2) {
             Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -137,14 +150,14 @@ public class LoadingScreen extends InputAdapter implements Screen {
                 font.draw(batch, promptLayout_one, (GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_one.width) * 5 / 4,
                         GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_two.height + 1.5f * promptLayout_three.height);
             } else if (isSpGame){
-                font.setColor(GameFourConstants.TITLE_COLOR);
-                final GlyphLayout promptLayout_three = new GlyphLayout(font, GameFourConstants.TITLE_TWO);
-                font.draw(batch, promptLayout_three, -(GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_three.width) * 3 / 2,
-                        GameOneConstants.DIFFICULTY_WORLD_SIZE * 2);
+                font.setColor(Color.WHITE);
+                final GlyphLayout promptLayout_three = new GlyphLayout(font, GameFourConstants.TITLE_ONE);
+                font.draw(batch, promptLayout_three, (screenWidth - promptLayout_three.width) / 2,
+                        screenHeight * 0.75f);
 
-                final GlyphLayout promptLayout_two = new GlyphLayout(font, GameFourConstants.TITLE_ONE);
-                font.draw(batch, promptLayout_two, (GameOneConstants.DIFFICULTY_WORLD_SIZE - promptLayout_two.width) * 3 / 2,
-                        GameOneConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_three.height);
+                final GlyphLayout promptLayout_two = new GlyphLayout(font, GameFourConstants.TITLE_TWO);
+                font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2,
+                        screenHeight * 0.75f - 2f * promptLayout_three.height);
             }
 
             batch.end();
@@ -257,7 +270,6 @@ public class LoadingScreen extends InputAdapter implements Screen {
 
     @Override
     public void dispose() {
-
     }
 
     @Override
