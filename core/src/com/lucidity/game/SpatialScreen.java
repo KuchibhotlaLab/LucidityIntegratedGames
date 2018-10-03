@@ -758,14 +758,20 @@ public class SpatialScreen extends InputAdapter implements Screen {
         //Send JSON and Look for response
         Gdx.net.sendHttpRequest(httpPost, new Net.HttpResponseListener() {
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                String status = httpResponse.getResultAsString().trim();
-                HashMap<String, String> map = new Gson().fromJson(status, new TypeToken<HashMap<String, String>>() {
-                }.getType());
-                System.out.println(map);
+                if (httpResponse.getStatus().getStatusCode() == 200) {
+                    //success
+                    String status = httpResponse.getResultAsString().trim();
+                    HashMap<String, String> map = new Gson().fromJson(status, new TypeToken<HashMap<String, String>>() {
+                    }.getType());
+                    System.out.println(map);
+                } else {
+                    // save scores locally
+                }
             }
 
             public void failed(Throwable t) {
                 String status = "failed";
+                // save scores locally
             }
 
             @Override

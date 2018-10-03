@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.net.HttpParametersUtils;
+import com.badlogic.gdx.net.HttpStatus;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -818,14 +819,21 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
         //Send JSON and Look for response
         Gdx.net.sendHttpRequest(httpPost, new Net.HttpResponseListener() {
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                String status = httpResponse.getResultAsString().trim();
-                HashMap<String, String> map = new Gson().fromJson(status, new TypeToken<HashMap<String, String>>() {
-                }.getType());
-                System.out.println(map);
+                if (httpResponse.getStatus().getStatusCode() == 200) {
+                    //success
+                    String status = httpResponse.getResultAsString().trim();
+                    HashMap<String, String> map = new Gson().fromJson(status, new TypeToken<HashMap<String, String>>() {
+                    }.getType());
+                    System.out.println(map);
+                } else {
+                    // save scores locally
+                }
             }
 
+            @Override
             public void failed(Throwable t) {
                 String status = "failed";
+                // save scores locally
             }
 
             @Override
