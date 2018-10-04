@@ -2,13 +2,19 @@ package com.lucidity.game;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,7 +40,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
     private static final String TAG_MESSAGE = "message";
 
     private ArrayList<String> mListLocations;
-    private ArrayAdapter<String> adapter;
+    //private ArrayAdapter<String> adapter;
+    private ListItemAdapter adapter;
 
 
     @Override
@@ -47,31 +54,86 @@ public class QuestionnaireActivity extends AppCompatActivity {
         TextView locationPrompt = findViewById(R.id.location_prompt);
         locationPrompt.setText("Please list some of the locations that " + username + " have lived");
 
-        mListLocations = new ArrayList<>();
-        mListLocations.add("");
+        //mListLocations = new ArrayList<>();
+        //mListLocations.add("");
 
 
-        adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, mListLocations);
+        //adapter = new ArrayAdapter<String>(this,
+        //        android.R.layout.simple_list_item_1, mListLocations);
 
+        adapter = new ListItemAdapter(this);
         ListView listView = findViewById(R.id.list_location);
         listView.setAdapter(adapter);
 
 
         final EditText editText = findViewById(R.id.addLoc);
-        Button addLocBtn = (Button) findViewById(R.id.addLocBtn);
+        Button addLocBtn = findViewById(R.id.addLocBtn);
         addLocBtn.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                mListLocations.remove("");
-                mListLocations.add(editText.getText().toString());
-                adapter.notifyDataSetChanged();
+                //mListLocations.remove("");
+                //mListLocations.add(editText.getText().toString());
+                adapter.addItem(editText.getText().toString());
+                editText.getText().clear();
+                //adapter.notifyDataSetChanged();
             }
         });
-        //https://stackoverflow.com/questions/22144891/how-to-add-listview-items-on-button-click-using-adapter
-        //https://stackoverflow.com/questions/34328235/how-to-extends-listactivity-where-appcompatactivity-in-android-activity
-        //https://stackoverflow.com/questions/4540754/dynamically-add-elements-to-a-listview-android
+        //stackoverflow.com/questions/22144891/
+    }
+    public class ListItemAdapter extends BaseAdapter implements ListAdapter {
+        private ArrayList<String> mListLocations = new ArrayList<>();
+        private Context context;
 
+        ListItemAdapter(Context context){
+            this.mListLocations = new ArrayList<>();
+            this.context = context;
+        }
+
+        @Override
+        public int getCount() {
+            return mListLocations.size();
+        }
+
+        @Override
+        public Object getItem(int pos) {
+            return mListLocations.get(pos);
+        }
+
+        @Override
+        public long getItemId(int pos) {
+            return mListLocations.indexOf(mListLocations.get(pos));
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            View view = convertView;
+            if (view == null) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = inflater.inflate(R.layout.locations_listitem, null);
+            }
+
+            //Handle TextView and display string from your list
+            TextView listItemText = (TextView)view.findViewById(R.id.location_names);
+            listItemText.setText(mListLocations.get(position));
+
+            //Handle buttons and add onClickListeners
+            ImageButton deleteBtn = view.findViewById(R.id.delete_loc);
+            deleteBtn.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    //TODO: call dialoge
+                    mListLocations.remove(position); //or some other task
+                    notifyDataSetChanged();
+                }
+            });
+
+            return view;
+        }
+
+        public void addItem(String item){
+            mListLocations.add(item);
+            notifyDataSetChanged();
+        }
 
     }
 }
