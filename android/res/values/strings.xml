@@ -22,6 +22,7 @@
     <string name="games">Memory \n Tests</string>
     <string name="photos">Photos</string>
     <string name="reminders">Reminders</string>
+    <string name="histories">Personal Histories</string>
     <string name="action_settings">Settings</string>
     <string name="hint_education">Please select your education</string>
     <string name="title_activity_med_history_demo">MedHistoryDemo</string>

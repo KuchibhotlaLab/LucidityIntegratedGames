@@ -176,6 +176,23 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
+
+
+        //if chooses to add other non-photo information
+        Button btnOtherInfo = findViewById(R.id.add_history);
+        btnOtherInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Do nothing if button was recently pressed
+                if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                    return;
+                }
+                prevClickTime = SystemClock.elapsedRealtime();
+
+                Intent intent = new Intent(getApplicationContext(), QuestionnaireActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     /**

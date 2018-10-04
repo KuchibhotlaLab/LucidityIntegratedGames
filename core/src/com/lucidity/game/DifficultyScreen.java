@@ -148,18 +148,18 @@ public class DifficultyScreen extends InputAdapter implements Screen {
             batch.end();
         } else if(isSpa) {
             Gdx.gl.glClearColor(GameFourConstants.BACKGROUND_COLOR.r, GameFourConstants.BACKGROUND_COLOR.g, GameFourConstants.BACKGROUND_COLOR.b, 1);
+            //Gdx.gl.glClearColor(0.65f, 0.81f, 0.91f, 1);
+
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
             //TODO: This is butchered, fixed background image
-            batch.begin();
-            batch.draw(resizedBg, 0, 0, GameOneConstants.DIFFICULTY_WORLD_SIZE, 2*GameOneConstants.DIFFICULTY_WORLD_SIZE);
-            //batch.draw(resizedBg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            batch.end();
-
+            /*batch.begin();
+            batch.draw(background, 0, 0, viewport.getCamera().viewportWidth, viewport.getCamera().viewportHeight);
+            batch.end();*/
             renderer.setProjectionMatrix(viewport.getCamera().combined);
 
-            renderer.begin(ShapeRenderer.ShapeType.Filled);
 
+            renderer.begin(ShapeRenderer.ShapeType.Filled);
             renderer.setColor(GameFourConstants.EASY_COLOR);
             renderer.circle(GameOneConstants.EASY_CENTER.x, GameOneConstants.EASY_CENTER.y, GameOneConstants.DIFFICULTY_BUBBLE_RADIUS);
 
@@ -192,6 +192,7 @@ public class DifficultyScreen extends InputAdapter implements Screen {
 
     @Override
     public void resize(int width, int height) {
+
         viewport.update(width, height, true);
     }
 
