@@ -4,12 +4,6 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import java.util.Date;
-
-/**
- * Created by gurleensethi on 02/02/18.
- */
-
 @Entity(tableName = "Images")
 public class Image {
     @NonNull
@@ -30,6 +24,7 @@ public class Image {
         this.username = uname;
     }
 
+    @NonNull
     public String getFileName() {
         return fileName;
     }

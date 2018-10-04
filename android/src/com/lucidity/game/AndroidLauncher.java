@@ -107,6 +107,8 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 
         ActionResolverAndroid a = new ActionResolverAndroid(getApplicationContext(), username, isLucid, isCare, isPatient, order, gameCounter, difficulty);
+        ScorePoster s = new ScorePosterAndroid(getApplicationContext());
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -126,7 +128,7 @@ public class AndroidLauncher extends AndroidApplication {
         getLocation();
 
         if(gameType.equals("memory")){
-            initialize(new WorkingMemoryGame(a, currentDateTimeString, coordinates), config);
+            initialize(new WorkingMemoryGame(a, s, currentDateTimeString, coordinates), config);
         } else if(gameType.equals("dep")){
             picturesForGame = new ArrayList<>();
             tagsForGame = new ArrayList<>();
@@ -166,12 +168,12 @@ public class AndroidLauncher extends AndroidApplication {
                 // show it
                 alertDialog.show();
             }
-            initialize(new FacialMemoryGame(a, picturesForGame, tagsForGame, gendersForGame,
+            initialize(new FacialMemoryGame(a, s, picturesForGame, tagsForGame, gendersForGame,
                     currentDateTimeString, coordinates), config);
         } else if(gameType.equals("object")) {
-            initialize(new ObjectRecognitionGame(a, currentDateTimeString, coordinates), config);
+            initialize(new ObjectRecognitionGame(a, s, currentDateTimeString, coordinates), config);
         } else if(gameType.equals("space")){
-            initialize(new SpatialMemoryGame(a, currentDateTimeString, coordinates), config);
+            initialize(new SpatialMemoryGame(a, s, currentDateTimeString, coordinates), config);
         }
     }
 

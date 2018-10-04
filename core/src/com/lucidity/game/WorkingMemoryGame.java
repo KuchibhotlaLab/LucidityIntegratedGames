@@ -8,9 +8,10 @@ public class WorkingMemoryGame extends Game {
     private String currentDateTime;
     private String coordinates;
     public ActionResolver actionResolver;
+    public ScorePoster scorePoster;
 
 
-    public WorkingMemoryGame(ActionResolver a, String date, String location){
+    public WorkingMemoryGame(ActionResolver a, ScorePoster s, String date, String location){
         isLucid = a.getLucidity();
         isPatient = a.getPatient();
         isCare = a.getCare();
@@ -19,6 +20,7 @@ public class WorkingMemoryGame extends Game {
     	currentDateTime = date;
         coordinates = location;
         actionResolver = a;
+        scorePoster = s;
     }
 
 	@Override

@@ -486,20 +486,24 @@ public class MemoryScreen extends InputAdapter implements Screen {
         json.put("username", game.getUsername());
         json.put("time", game.getDateTime());
         json.put("location", game.getLocation());
-        if(game.getLucid()){
-            json.put("menu", "Lucid");
+        String menu = "";
+        if (game.getLucid()) {
+            menu = "Lucid";
         } else if (game.getPatient()) {
-            json.put("menu", "Patient");
+            menu = "Patient";
         } else if (game.getCare()) {
-            json.put("menu", "CareGiver");
+            menu = "CareGiver";
         }
+        json.put("menu", menu);
+        String difficult;
         if (difficulty == 2) {
-            json.put("difficulty", "Hard");
+            difficult = "Hard";
         } else if(difficulty == 1) {
-            json.put("difficulty", "Medium");
+            difficult = "Medium";
         } else{
-            json.put("difficulty", "Easy");
+            difficult = "Easy";
         }
+        json.put("difficulty", difficult);
         json.put("score", String.valueOf(score));
         for (int i = 0; i < trial; i++) {
             String trialNum = "trial" + (i+1);
