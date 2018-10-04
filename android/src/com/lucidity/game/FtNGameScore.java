@@ -4,8 +4,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-@Entity(tableName = "ObjGameScores")
-public class ObjGameScore {
+@Entity(tableName = "FtNGameScores")
+public class FtNGameScore {
     @NonNull
     private String username;
     @PrimaryKey
@@ -13,7 +13,6 @@ public class ObjGameScore {
     private String time;
     private String location;
     private String menu;
-    private String difficulty;
     private String score;
     private int trial1;
     private double trialtime1;
@@ -43,9 +42,6 @@ public class ObjGameScore {
 
     public String getMenu() {return menu;}
     public void setMenu(String m) {this.menu = m;}
-
-    public String getDifficulty() {return difficulty;}
-    public void setDifficulty(String d) {this.difficulty = d;}
 
     public String getScore() {return score;}
     public void setScore(String s) {score = s;}

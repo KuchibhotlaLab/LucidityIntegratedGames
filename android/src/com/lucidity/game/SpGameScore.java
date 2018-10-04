@@ -4,8 +4,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-@Entity(tableName = "ObjGameScores")
-public class ObjGameScore {
+@Entity(tableName = "SpGameScores")
+public class SpGameScore {
     @NonNull
     private String username;
     @PrimaryKey
