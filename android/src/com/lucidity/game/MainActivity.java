@@ -153,6 +153,8 @@ public class MainActivity extends AppCompatActivity{
                     i.putExtra("difficulty", -1);
 
                     startActivity(i);
+                    //LoadGameTask loadGameTask = new LoadGameTask(i);
+                    //loadGameTask.execute();
                 } else {
                     checker.displayNoConnectionDialog();
                 }
@@ -337,6 +339,39 @@ public class MainActivity extends AppCompatActivity{
                 System.out.println("reached");
             }
         });
+    }
+
+     class LoadGameTask extends AsyncTask<String, String, String> {
+        private ProgressDialog progressDialog;
+        private Intent intent;
+
+        public LoadGameTask(Intent i) {
+            this.intent = i;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            //super.onPreExecute();
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.show();
+            progressDialog.setMessage("Loading Game");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(true);
+            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            startActivity(intent);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            progressDialog.dismiss();
+
+
+        }
     }
 
 

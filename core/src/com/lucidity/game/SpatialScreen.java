@@ -472,8 +472,8 @@ public class SpatialScreen extends InputAdapter implements Screen {
         return false;
     }
 
-    private void triggerEnd(){
-        if(onEnd){
+    private void triggerBack(){
+        if(onBack){
             disableTouchDown = true;
             homeBut = new Texture(Gdx.files.internal("data/homeBtnPressed.png"));
             Timer.schedule(new Timer.Task() {
@@ -488,8 +488,8 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
     }
 
-    private void triggerBack(){
-        if(onBack){
+    private void triggerEnd(){
+        if(onEnd){
             disableTouchDown = true;
             returnBut = new Texture(Gdx.files.internal("data/returnBtnPressed.png"));
             Timer.schedule(new Timer.Task() {
