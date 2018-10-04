@@ -3,6 +3,7 @@ package com.lucidity.game;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -67,12 +68,6 @@ public class AndroidLauncher extends AndroidApplication {
     //JSONArray of results
     JSONArray picturesJSON = null;
 
-    // JSON Node names
-    private static final String TAG_SUCCESS = "success";
-
-    // url to get pictures and tags
-    private static String url_get_pictures_and_tags = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/get_pictures_and_tags.php";
-
     //TODO: getlastlocation returns null if idling for too long- to fix
     @Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -112,6 +107,8 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 
         ActionResolverAndroid a = new ActionResolverAndroid(getApplicationContext(), username, isLucid, isCare, isPatient, order, gameCounter, difficulty);
+        ScorePoster s = new ScorePosterAndroid(getApplicationContext());
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -131,7 +128,7 @@ public class AndroidLauncher extends AndroidApplication {
         getLocation();
 
         if(gameType.equals("memory")){
-            initialize(new WorkingMemoryGame(a, currentDateTimeString, coordinates), config);
+            initialize(new WorkingMemoryGame(a, s, currentDateTimeString, coordinates), config);
         } else if(gameType.equals("dep")){
             picturesForGame = new ArrayList<>();
             tagsForGame = new ArrayList<>();
@@ -171,12 +168,12 @@ public class AndroidLauncher extends AndroidApplication {
                 // show it
                 alertDialog.show();
             }
-            initialize(new FacialMemoryGame(a, picturesForGame, tagsForGame, gendersForGame,
+            initialize(new FacialMemoryGame(a, s, picturesForGame, tagsForGame, gendersForGame,
                     currentDateTimeString, coordinates), config);
         } else if(gameType.equals("object")) {
-            initialize(new ObjectRecognitionGame(a, currentDateTimeString, coordinates), config);
+            initialize(new ObjectRecognitionGame(a, s, currentDateTimeString, coordinates), config);
         } else if(gameType.equals("space")){
-            initialize(new SpatialMemoryGame(a, currentDateTimeString, coordinates), config);
+            initialize(new SpatialMemoryGame(a, s, currentDateTimeString, coordinates), config);
         }
     }
 
@@ -186,48 +183,24 @@ public class AndroidLauncher extends AndroidApplication {
     class GetPicturesAndTags extends AsyncTask<String, String, String> {
 
         /**
-         * Getting everything from MySQL
+         * Getting everything from local SQLite database
          * */
         protected String doInBackground(String... args) {
+            LucidityDatabase database = Room.databaseBuilder(getApplicationContext(), LucidityDatabase.class, "db-Images")
+                    .build();
+            ImageDAO imageDAO = database.getImageDAO();
 
-            // Check for success tag
-            int success;
-            try {
-                // Building Parameters
-                List<NameValuePair> params = new ArrayList<NameValuePair>();
-                params.add(new BasicNameValuePair("username", username));
+            List<Image> images = imageDAO.getUserImages(username);
 
-                // getting pictures and tags from web
-                JSONObject json = jsonParser.makeHttpRequest(
-                        url_get_pictures_and_tags, "GET", params);
-
-                // check your log for json response
-                Log.d("get pictures and tags", json.toString());
-
-                // json success tag
-                success = json.getInt(TAG_SUCCESS);
-                if (success == 1) {
-
-                    // Get array of pictures and tags
-                    picturesJSON = json.getJSONArray("pictures");
-
-                    // loop through pictures found
-                    for (int i = 0; i < picturesJSON.length(); i++) {
-                        JSONObject picObject = picturesJSON.getJSONObject(i);
-
-                        // add pictures and tags to Arraylists in order
-                        picturesForGame.add(picObject.getString("picname"));
-                        ArrayList<String> picTags = new ArrayList<>();
-                        picTags.add(picObject.getString("tagname"));
-                        picTags.add(picObject.getString("tagrelation"));
-                        tagsForGame.add(picTags);
-                        gendersForGame.add(picObject.getString("gender"));
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            for (Image image : images) {
+                picturesForGame.add(image.getFileName());
+                ArrayList<String> picTags = new ArrayList<>();
+                picTags.add(image.getImageName());
+                picTags.add(image.getImageRelation());
+                tagsForGame.add(picTags);
+                gendersForGame.add(String.valueOf(image.getGender()));
             }
-            System.out.println("completed");
+
             return "complete";
         }
     }

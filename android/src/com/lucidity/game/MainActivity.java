@@ -140,24 +140,16 @@ public class MainActivity extends AppCompatActivity{
 
                 FullTestGenerator gen = new FullTestGenerator();
 
-                //Check for internet connection first
-                ConnectivityChecker checker = ConnectivityChecker.getInstance(MainActivity.this);
-                if (checker.isConnected()){
-                    Intent i = new Intent(getApplicationContext(), AndroidLauncher.class);
-                    i.putExtra("isLucid", true);
-                    i.putExtra("isCare", false);
-                    i.putExtra("isPatient", false);
-                    i.putExtra("gametype", "check order");
-                    i.putExtra("order", gen.toString());
-                    i.putExtra("counter", 0);
-                    i.putExtra("difficulty", -1);
+                Intent i = new Intent(getApplicationContext(), AndroidLauncher.class);
+                i.putExtra("isLucid", true);
+                i.putExtra("isCare", false);
+                i.putExtra("isPatient", false);
+                i.putExtra("gametype", "check order");
+                i.putExtra("order", gen.toString());
+                i.putExtra("counter", 0);
+                i.putExtra("difficulty", -1);
 
                     startActivity(i);
-                    //LoadGameTask loadGameTask = new LoadGameTask(i);
-                    //loadGameTask.execute();
-                } else {
-                    checker.displayNoConnectionDialog();
-                }
             }
         });
 

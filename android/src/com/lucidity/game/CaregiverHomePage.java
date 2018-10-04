@@ -41,14 +41,8 @@ public class CaregiverHomePage extends AppCompatActivity {
                 }
                 prevClickTime = SystemClock.elapsedRealtime();
 
-                //Check for internet connection before uploading
-                ConnectivityChecker checker = ConnectivityChecker.getInstance(CaregiverHomePage.this);
-                if (checker.isConnected()){
-                    Intent i = new Intent(getApplicationContext(), FaceDetectActivity.class);
-                    startActivity(i);
-                } else {
-                    checker.displayNoConnectionDialog();
-                }
+                Intent i = new Intent(getApplicationContext(), FaceDetectActivity.class);
+                startActivity(i);
             }
         });
 

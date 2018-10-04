@@ -486,28 +486,30 @@ public class MemoryScreen extends InputAdapter implements Screen {
         json.put("username", game.getUsername());
         json.put("time", game.getDateTime());
         json.put("location", game.getLocation());
-        if(game.getLucid()){
-            json.put("menu", "Lucid");
+        String menu = "";
+        if (game.getLucid()) {
+            menu = "Lucid";
         } else if (game.getPatient()) {
-            json.put("menu", "Patient");
+            menu = "Patient";
         } else if (game.getCare()) {
-            json.put("menu", "CareGiver");
+            menu = "CareGiver";
         }
+        json.put("menu", menu);
+        String difficult;
         if (difficulty == 2) {
-            json.put("difficulty", "Hard");
+            difficult = "Hard";
         } else if(difficulty == 1) {
-            json.put("difficulty", "Medium");
+            difficult = "Medium";
         } else{
-            json.put("difficulty", "Easy");
+            difficult = "Easy";
         }
+        json.put("difficulty", difficult);
         json.put("score", String.valueOf(score));
         for (int i = 0; i < trial; i++) {
             String trialNum = "trial" + (i+1);
             json.put(trialNum, String.valueOf(trialSuccess[i]));
             for (int j = 0; j < 3; j++) {
                 json.put(trialNum + "-" + (j + 1) + "time", String.valueOf(attemptTime[i][j]));
-                System.out.println(trialNum + "-" + (j + 1) + "time");
-                System.out.println(String.valueOf(attemptTime[i][j]));
             }
         }
 
@@ -516,13 +518,20 @@ public class MemoryScreen extends InputAdapter implements Screen {
         //Send JSON and Look for response
         Gdx.net.sendHttpRequest (httpPost, new Net.HttpResponseListener() {
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                String status = httpResponse.getResultAsString().trim();
-                HashMap<String,String> map = new Gson().fromJson(status, new TypeToken<HashMap<String, String>>(){}.getType());
-                System.out.println(map);
+                if (httpResponse.getStatus().getStatusCode() == 200) {
+                    //success
+                    String status = httpResponse.getResultAsString().trim();
+                    HashMap<String, String> map = new Gson().fromJson(status, new TypeToken<HashMap<String, String>>() {
+                    }.getType());
+                    System.out.println(map);
+                } else {
+                    // save scores locally
+                }
             }
 
             public void failed(Throwable t) {
                 String status = "failed";
+                // save scores locally
             }
 
             @Override

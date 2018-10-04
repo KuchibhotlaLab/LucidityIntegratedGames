@@ -17,10 +17,11 @@ public class FacialMemoryGame extends Game {
     private String dateTime;
     private String coordinates;
     public ActionResolver actionResolver;
+    public ScorePoster scorePoster;
 
 
     //TODO: reduce repetition in code/think location getter
-    public FacialMemoryGame(ActionResolver a, ArrayList<String> pnames, ArrayList<ArrayList<String>> ptags,
+    public FacialMemoryGame(ActionResolver a, ScorePoster s, ArrayList<String> pnames, ArrayList<ArrayList<String>> ptags,
                             ArrayList<String> pgenders, String date, String location){
         username = a.getUsername();
         picturenames = pnames;
@@ -32,6 +33,7 @@ public class FacialMemoryGame extends Game {
         dateTime = date;
         coordinates = location;
         actionResolver = a;
+        scorePoster = s;
     }
 
     @Override

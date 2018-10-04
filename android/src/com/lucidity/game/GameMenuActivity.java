@@ -42,19 +42,13 @@ public class GameMenuActivity extends AppCompatActivity {
                 }
                 prevClickTime = SystemClock.elapsedRealtime();
 
-                //Check for internet connection first
-                ConnectivityChecker checker = ConnectivityChecker.getInstance(GameMenuActivity.this);
-                if (checker.isConnected()){
-                    Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
-                    i.putExtra("isLucid", isLucid);
-                    i.putExtra("isCare", isCare);
-                    i.putExtra("isPatient", isPatient);
-                    i.putExtra("gametype", "memory");
-                    i.putExtra("difficulty", -1);
-                    startActivity(i);
-                } else {
-                    checker.displayNoConnectionDialog();
-                }
+                Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
+                i.putExtra("isLucid", isLucid);
+                i.putExtra("isCare", isCare);
+                i.putExtra("isPatient", isPatient);
+                i.putExtra("gametype", "memory");
+                i.putExtra("difficulty", -1);
+                startActivity(i);
             }
         });
 
@@ -67,19 +61,13 @@ public class GameMenuActivity extends AppCompatActivity {
                 }
                 prevClickTime = SystemClock.elapsedRealtime();
 
-                //Check for internet connection first
-                ConnectivityChecker checker = ConnectivityChecker.getInstance(GameMenuActivity.this);
-                if (checker.isConnected()){
-                    Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
-                    i.putExtra("isLucid", isLucid);
-                    i.putExtra("isCare", isCare);
-                    i.putExtra("isPatient", isPatient);
-                    i.putExtra("gametype", "dep");
-                    i.putExtra("difficulty", -1);
-                    startActivity(i);
-                } else {
-                    checker.displayNoConnectionDialog();
-                }
+                Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
+                i.putExtra("isLucid", isLucid);
+                i.putExtra("isCare", isCare);
+                i.putExtra("isPatient", isPatient);
+                i.putExtra("gametype", "dep");
+                i.putExtra("difficulty", -1);
+                startActivity(i);
             }
         });
 
@@ -92,19 +80,13 @@ public class GameMenuActivity extends AppCompatActivity {
                 }
                 prevClickTime = SystemClock.elapsedRealtime();
 
-                //Check for internet connection first
-                ConnectivityChecker checker = ConnectivityChecker.getInstance(GameMenuActivity.this);
-                if (checker.isConnected()){
-                    Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
-                    i.putExtra("isLucid", isLucid);
-                    i.putExtra("isCare", isCare);
-                    i.putExtra("isPatient", isPatient);
-                    i.putExtra("gametype", "object");
-                    i.putExtra("difficulty", -1);
-                    startActivity(i);
-                } else {
-                    checker.displayNoConnectionDialog();
-                }
+                Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
+                i.putExtra("isLucid", isLucid);
+                i.putExtra("isCare", isCare);
+                i.putExtra("isPatient", isPatient);
+                i.putExtra("gametype", "object");
+                i.putExtra("difficulty", -1);
+                startActivity(i);
             }
         });
 
@@ -117,19 +99,13 @@ public class GameMenuActivity extends AppCompatActivity {
                 }
                 prevClickTime = SystemClock.elapsedRealtime();
 
-                //Check for internet connection first
-                ConnectivityChecker checker = ConnectivityChecker.getInstance(GameMenuActivity.this);
-                if (checker.isConnected()){
-                    Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
-                    i.putExtra("isLucid", isLucid);
-                    i.putExtra("isCare", isCare);
-                    i.putExtra("isPatient", isPatient);
-                    i.putExtra("gametype", "space");
-                    i.putExtra("difficulty", -1);
-                    startActivity(i);
-                } else {
-                    checker.displayNoConnectionDialog();
-                }
+                Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
+                i.putExtra("isLucid", isLucid);
+                i.putExtra("isCare", isCare);
+                i.putExtra("isPatient", isPatient);
+                i.putExtra("gametype", "space");
+                i.putExtra("difficulty", -1);
+                startActivity(i);
             }
         });
     }

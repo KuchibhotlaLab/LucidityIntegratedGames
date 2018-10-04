@@ -491,13 +491,15 @@ FaceToNameScreen extends InputAdapter implements Screen {
         json.put("username", game.getUsername());
         json.put("time", game.getDateTime());
         json.put("location", game.getLocation());
-        if(game.getLucid()){
-            json.put("menu", "Lucid");
+        String menu = "";
+        if (game.getLucid()) {
+            menu = "Lucid";
         } else if (game.getPatient()) {
-            json.put("menu", "Patient");
+            menu = "Patient";
         } else if (game.getCare()) {
-            json.put("menu", "CareGiver");
+            menu = "CareGiver";
         }
+        json.put("menu", menu);
         json.put("score", String.valueOf(score));
         for (int i = 0; i < trial; i++) {
             String trialNum = "trial" + (i+1);
@@ -510,13 +512,20 @@ FaceToNameScreen extends InputAdapter implements Screen {
         //Send JSON and Look for response
         Gdx.net.sendHttpRequest (httpPost, new Net.HttpResponseListener() {
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                String status = httpResponse.getResultAsString().trim();
-                HashMap<String,String> map = new Gson().fromJson(status, new TypeToken<HashMap<String, String>>(){}.getType());
-                System.out.println(map);
+                if (httpResponse.getStatus().getStatusCode() == 200) {
+                    //success
+                    String status = httpResponse.getResultAsString().trim();
+                    HashMap<String, String> map = new Gson().fromJson(status, new TypeToken<HashMap<String, String>>() {
+                    }.getType());
+                    System.out.println(map);
+                } else {
+                    // save scores locally
+                }
             }
 
             public void failed(Throwable t) {
                 String status = "failed";
+                // save scores locally
             }
 
             @Override

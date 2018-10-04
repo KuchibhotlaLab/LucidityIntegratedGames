@@ -3,6 +3,7 @@ package com.lucidity.game;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -55,7 +56,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
     JSONArray picturesJSON = null;
 
     // url to get pictures and tags
-    private static String url_get_pictures = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/get_pictures.php";
+    private static String url_get_pictures_and_tags = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/get_pictures_and_tags.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
@@ -217,7 +218,12 @@ public class AddTestMaterialActivity extends AppCompatActivity {
          */
         protected String doInBackground(String... args) {
 
-            ArrayList<String> picNames = new ArrayList<>();
+            final ArrayList<String> picNames = new ArrayList<>();
+            //gives an arraylist of tags for each picture in the picture list
+            //tags are ordered so that the name of the person/object is first, then the relation, then other tags
+            ArrayList<ArrayList<String>> picTags = new ArrayList<>();
+            //gives an arraylist of genders for each picture in the picture list, ordered the same way
+            ArrayList<String> picGenders = new ArrayList<>();
 
             // Check for success tag
             int success;
@@ -228,7 +234,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
 
                 // getting pictures from web
                 JSONObject json = jsonParser.makeHttpRequest(
-                        url_get_pictures, "GET", params);
+                        url_get_pictures_and_tags, "GET", params);
 
                 // check your log for json response
                 Log.d("get pictures", json.toString());
@@ -246,12 +252,37 @@ public class AddTestMaterialActivity extends AppCompatActivity {
 
                         // add pictures and tags to Arraylists in order
                         picNames.add(picObject.getString("picname"));
+                        ArrayList<String> onePicTags = new ArrayList<>();
+                        onePicTags.add(picObject.getString("tagname"));
+                        onePicTags.add(picObject.getString("tagrelation"));
+                        picTags.add(onePicTags);
+                        picGenders.add(picObject.getString("gender"));
                     }
 
-                    for (String pic : picNames) {
-                        File file = new File("data/user/0/com.lucidity.game/app_imageDir/" + username + "/" + pic);
+                    File folder = new File("data/user/0/com.lucidity.game/app_imageDir/" + username);
+
+                    if (folder.exists()) {
+                        File[] files = folder.listFiles();
+                        for (int i = 0; i < files.length; i++) {
+                            File file = files[i];
+                            if (!picNames.contains(file.getName())) {
+                                //Delete image and tags locally
+                                LucidityDatabase database = Room.databaseBuilder(getApplicationContext(), LucidityDatabase.class, "db-Images")
+                                        .build();
+                                ImageDAO imageDAO = database.getImageDAO();
+
+                                Image image = imageDAO.getImage(username, file.getName());
+                                imageDAO.delete(image);
+
+                                file.delete();
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < picNames.size(); i++) {
+                        File file = new File(folder, picNames.get(i));
                         if (!file.exists()){
-                            downloadS3(pic);
+                            downloadS3(picNames.get(i), picTags.get(i), picGenders.get(i).charAt(0));
                         }
                     }
                 }
@@ -275,14 +306,19 @@ public class AddTestMaterialActivity extends AppCompatActivity {
     /**
      * download pictures from web server onto phone
      * */
-    public void downloadS3(String pic){
+    public void downloadS3(String pic, ArrayList<String> tags, char gender){
+        final String filename = pic;
+        final String picturename = tags.get(0);
+        final String picturerelation = tags.get(1);
+        final char g = gender;
+
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         File subfolder = new File(directory, username);
-        File mypath=new File(subfolder, pic);
+        File mypath=new File(subfolder, filename);
 
         TransferObserver observer =
-                transferUtility.download(TransferHelper.BUCKETNAME,"public/user-images/"+username+"/" + pic,
+                transferUtility.download(TransferHelper.BUCKETNAME,"public/user-images/"+username+"/" + filename,
                         mypath);
 
         // Attach a listener to the observer to get notified of the
@@ -292,6 +328,17 @@ public class AddTestMaterialActivity extends AppCompatActivity {
             @Override
             public void onStateChanged(int id, TransferState state) {
                 if (TransferState.COMPLETED == state) {
+
+                    //Save image name and tags locally
+                    Image image = new Image();
+                    image.setUsername(username);
+                    image.setFileName(filename);
+                    image.setImageName(picturename);
+                    image.setImageRelation(picturerelation);
+                    image.setGender(g);
+
+                    AddImage addTask = new AddImage(image);
+                    addTask.execute();
                 }
             }
 
@@ -309,6 +356,31 @@ public class AddTestMaterialActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    /**
+     * Background Async Task to add an image that needs to be synced
+     * */
+    class AddImage extends AsyncTask<String, String, String> {
+
+        private Image image;
+
+        public AddImage(Image syncedImage)
+        {
+            image = syncedImage;
+        }
+
+        protected String doInBackground(String... args) {
+
+            //Save image name and tags locally
+            LucidityDatabase database = Room.databaseBuilder(getApplicationContext(), LucidityDatabase.class, "db-Images")
+                    .build();
+            ImageDAO imageDAO = database.getImageDAO();
+
+            imageDAO.insert(image);
+
+            return null;
+        }
     }
 
 }

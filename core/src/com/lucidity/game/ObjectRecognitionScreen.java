@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.net.HttpParametersUtils;
+import com.badlogic.gdx.net.HttpStatus;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -786,20 +787,24 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
         json.put("username", game.getUsername());
         json.put("time", game.getDateTime());
         json.put("location", game.getLocation());
+        final String menu;
         if (game.getLucid()) {
-            json.put("menu", "Lucid");
+            menu = "Lucid";
         } else if (game.getPatient()) {
-            json.put("menu", "Patient");
-        } else if (game.getCare()) {
-            json.put("menu", "CareGiver");
+            menu = "Patient";
+        } else {
+            menu = "CareGiver";
         }
+        json.put("menu", menu);
+        final String difficulty;
         if (difficult == 2) {
-            json.put("difficulty", "Hard");
+            difficulty = "Hard";
         } else if(difficult == 1) {
-            json.put("difficulty", "Medium");
+            difficulty = "Medium";
         } else{
-            json.put("difficulty", "Easy");
+            difficulty = "Easy";
         }
+        json.put("difficulty", difficulty);
         json.put("score", String.valueOf(score));
         for (int i = 0; i < trial; i++) {
             String trialNum = "trial" + (i + 1);
@@ -818,14 +823,25 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
         //Send JSON and Look for response
         Gdx.net.sendHttpRequest(httpPost, new Net.HttpResponseListener() {
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                String status = httpResponse.getResultAsString().trim();
-                HashMap<String, String> map = new Gson().fromJson(status, new TypeToken<HashMap<String, String>>() {
-                }.getType());
-                System.out.println(map);
+                if (httpResponse.getStatus().getStatusCode() == 200) {
+                    //success
+                    String status = httpResponse.getResultAsString().trim();
+                    HashMap<String, String> map = new Gson().fromJson(status, new TypeToken<HashMap<String, String>>() {
+                    }.getType());
+                    System.out.println(map);
+                } else {
+                    //save scores locally
+                    game.scorePoster.postScoreObj(game.getUsername(), game.getDateTime(), game.getLocation(),
+                            menu, difficulty, score, trialSuccess, trialTime);
+                }
             }
 
+            @Override
             public void failed(Throwable t) {
                 String status = "failed";
+                // save scores locally
+                game.scorePoster.postScoreObj(game.getUsername(), game.getDateTime(), game.getLocation(),
+                        menu, difficulty, score, trialSuccess, trialTime);
             }
 
             @Override

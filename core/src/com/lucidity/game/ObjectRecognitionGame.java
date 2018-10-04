@@ -14,8 +14,9 @@ public class ObjectRecognitionGame extends Game {
     private String dateTime;
     private String coordinates;
     public ActionResolver actionResolver;
+    public ScorePoster scorePoster;
 
-    public ObjectRecognitionGame(ActionResolver a, String date, String location){
+    public ObjectRecognitionGame(ActionResolver a, ScorePoster s, String date, String location){
         username = a.getUsername();
         isLucid = a.getLucidity();
         isPatient = a.getPatient();
@@ -23,6 +24,7 @@ public class ObjectRecognitionGame extends Game {
         dateTime = date;
         coordinates = location;
         actionResolver = a;
+        scorePoster = s;
     }
 
 

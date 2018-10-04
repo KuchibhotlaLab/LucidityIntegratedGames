@@ -4,17 +4,12 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import java.util.Date;
-
-/**
- * Created by gurleensethi on 02/02/18.
- */
-
 @Entity(tableName = "Images")
 public class Image {
-    @PrimaryKey
     @NonNull
     private String username;
+    @PrimaryKey
+    @NonNull
     private String fileName;
     private String imageName;
     private String imageRelation;
@@ -29,11 +24,12 @@ public class Image {
         this.username = uname;
     }
 
+    @NonNull
     public String getFileName() {
         return fileName;
     }
 
-    public void setFileName(String fname) {
+    public void setFileName(@NonNull String fname) {
         this.fileName = fname;
     }
 

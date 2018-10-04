@@ -14,9 +14,10 @@ public class SpatialMemoryGame extends Game {
     private String dateTime;
     private String coordinates;
     public ActionResolver actionResolver;
+    public  ScorePoster scorePoster;
 
 
-    public SpatialMemoryGame(ActionResolver a, String date, String location){
+    public SpatialMemoryGame(ActionResolver a, ScorePoster s, String date, String location){
         username = a.getUsername();
 
         isLucid = a.getLucidity();
@@ -25,6 +26,7 @@ public class SpatialMemoryGame extends Game {
         dateTime = date;
         coordinates = location;
         actionResolver = a;
+        scorePoster = s;
     }
 
     @Override
