@@ -1,43 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.lucidity.game.QuestionnaireActivity">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    tools:context="com.lucidity.game.QuestionnaireActivity"
+    android:fillViewport="true">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="vertical"
-            android:gravity="center">
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp">
+
             <TextView
+                android:id="@+id/location_prompt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:id="@+id/location_prompt"/>
-            <Button
-                android:id="@+id/addLocBtn"
-                android:text="Add New Item"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_gravity="center" />
+
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/addLoc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
                 android:layout_toLeftOf="@+id/addItem"
                 android:hint="Add a new item to List View" />
-            <ListView
-                android:layout_width="match_parent"
+
+            <Button
+                android:id="@+id/addLocBtn"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/list_location">
+                android:text="Add New Item" />
+
+            <ListView
+                android:id="@+id/list_location"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
             </ListView>
         </LinearLayout>
 
-    </ScrollView>
-
-</android.support.constraint.ConstraintLayout>
+</ScrollView>

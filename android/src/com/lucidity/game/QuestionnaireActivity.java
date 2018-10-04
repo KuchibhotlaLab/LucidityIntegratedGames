@@ -47,18 +47,23 @@ public class QuestionnaireActivity extends AppCompatActivity {
         TextView locationPrompt = findViewById(R.id.location_prompt);
         locationPrompt.setText("Please list some of the locations that " + username + " have lived");
 
+        mListLocations = new ArrayList<>();
+        mListLocations.add("");
+
+
         adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, mListLocations);
 
         ListView listView = findViewById(R.id.list_location);
         listView.setAdapter(adapter);
 
-        final EditText editText = findViewById(R.id.addItem);
 
+        final EditText editText = findViewById(R.id.addLoc);
         Button addLocBtn = (Button) findViewById(R.id.addLocBtn);
         addLocBtn.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
+                mListLocations.remove("");
                 mListLocations.add(editText.getText().toString());
                 adapter.notifyDataSetChanged();
             }
