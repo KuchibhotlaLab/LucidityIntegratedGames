@@ -7,61 +7,78 @@
     android:background="@color/BackgroundMain"
     tools:context="com.lucidity.game.AddTestMaterialActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <Button
-            android:id="@+id/add_photo"
-            android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="64dp"
-            android:background="@drawable/longbutton"
-            android:fontFamily="@font/kayak_sans_regular"
-            android:text="@string/photos"
-            android:textColor="@color/colorWhite"
-            android:textSize="36sp"
-            tools:layout_editor_absoluteX="101dp"
-            tools:layout_editor_absoluteY="50dp" />
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/add_reminder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="64dp"
-            android:layout_marginBottom="64dp"
-            android:background="@drawable/longbutton"
-            android:fontFamily="@font/kayak_sans_regular"
-            android:text="@string/reminders"
-            android:textColor="@color/colorWhite"
-            android:textSize="36sp"
-            tools:layout_editor_absoluteX="101dp"
-            tools:layout_editor_absoluteY="50dp" />
+            <Button
+                android:id="@+id/add_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="64dp"
+                android:layout_marginBottom="64dp"
+                android:background="@drawable/longbutton"
+                android:fontFamily="@font/kayak_sans_regular"
+                android:text="@string/photos"
+                android:textColor="@color/colorWhite"
+                android:textSize="36sp"
+                tools:layout_editor_absoluteX="101dp"
+                tools:layout_editor_absoluteY="50dp" />
 
-        <Button
-            android:id="@+id/add_history"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="64dp"
-            android:background="@drawable/longbutton"
-            android:fontFamily="@font/kayak_sans_regular"
-            android:text="@string/histories"
-            android:textColor="@color/colorWhite"
-            android:textSize="36sp"
-            tools:layout_editor_absoluteX="101dp"
-            tools:layout_editor_absoluteY="50dp" />
+            <Button
+                android:id="@+id/add_reminder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="64dp"
+                android:background="@drawable/longbutton"
+                android:fontFamily="@font/kayak_sans_regular"
+                android:text="@string/reminders"
+                android:textColor="@color/colorWhite"
+                android:textSize="36sp"
+                tools:layout_editor_absoluteX="101dp"
+                tools:layout_editor_absoluteY="50dp" />
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/add_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="64dp"
+                android:background="@drawable/longbutton"
+                android:fontFamily="@font/kayak_sans_regular"
+                android:text="@string/histories"
+                android:textColor="@color/colorWhite"
+                android:textSize="36sp"
+                tools:layout_editor_absoluteX="101dp"
+                tools:layout_editor_absoluteY="50dp" />
+            <Button
+                android:id="@+id/add_sound"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="64dp"
+                android:background="@drawable/longbutton"
+                android:fontFamily="@font/kayak_sans_regular"
+                android:text="@string/sounds"
+                android:textColor="@color/colorWhite"
+                android:textSize="36sp"
+                tools:layout_editor_absoluteX="101dp"
+                tools:layout_editor_absoluteY="50dp" />
+
+        </LinearLayout>
+    </ScrollView>
 
 
 </android.support.constraint.ConstraintLayout>

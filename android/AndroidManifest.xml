@@ -75,7 +75,8 @@
         <activity android:name=".GameMenuActivity" />
         <activity android:name=".TrackingActivity" />
         <activity android:name=".FaceDetectActivity" />
-        <activity android:name=".QuestionnaireActivity"></activity>
+        <activity android:name=".QuestionnaireActivity" />
+        <activity android:name=".AddSounds"></activity>
     </application>
 
 </manifest>
