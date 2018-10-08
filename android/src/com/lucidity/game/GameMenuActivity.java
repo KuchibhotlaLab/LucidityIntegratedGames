@@ -108,5 +108,25 @@ public class GameMenuActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+
+        Button btnGame5 = findViewById(R.id.game5_button);
+        btnGame5.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                //Do nothing if button was recently pressed
+                if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                    return;
+                }
+                prevClickTime = SystemClock.elapsedRealtime();
+
+                Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
+                i.putExtra("isLucid", isLucid);
+                i.putExtra("isCare", isCare);
+                i.putExtra("isPatient", isPatient);
+                i.putExtra("gametype", "recall");
+                i.putExtra("difficulty", -1);
+                startActivity(i);
+            }
+        });
     }
 }

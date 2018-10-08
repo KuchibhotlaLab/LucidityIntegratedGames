@@ -3,7 +3,7 @@ package com.lucidity.game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
-public class GameOneConstants {
+public class BlockGameConstants {
     public static final float WORLD_SIZE = 10.0f;
     public static final Color LOADING_COLOR = new Color(1.0f,0.98f,0.78f, 1);
     public static final Color BACKGROUND_COLOR = new Color(0.93f,0.92f,0.9f, 1);

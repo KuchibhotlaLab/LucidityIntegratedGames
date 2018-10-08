@@ -101,6 +101,8 @@ public class AndroidLauncher extends AndroidApplication {
                     case 3:
                         gameType = "space";
                         break;
+                    case 4:
+                        gameType = "recall";
                 }
             }
         }
@@ -129,7 +131,7 @@ public class AndroidLauncher extends AndroidApplication {
 
         if(gameType.equals("memory")){
             initialize(new WorkingMemoryGame(a, s, currentDateTimeString, coordinates), config);
-        } else if(gameType.equals("dep")){
+        } else if(gameType.equals("dep") || gameType.equals("recall")){
             picturesForGame = new ArrayList<>();
             tagsForGame = new ArrayList<>();
             gendersForGame = new ArrayList<>();
@@ -168,8 +170,14 @@ public class AndroidLauncher extends AndroidApplication {
                 // show it
                 alertDialog.show();
             }
-            initialize(new FacialMemoryGame(a, s, picturesForGame, tagsForGame, gendersForGame,
+            if(gameType.equals("dep")) {
+                initialize(new FacialMemoryGame(a, s, picturesForGame, tagsForGame, gendersForGame,
                     currentDateTimeString, coordinates), config);
+            } else if(gameType.equals("recall")){
+                initialize(new RecallGame(a, s, picturesForGame, tagsForGame, gendersForGame,
+                        currentDateTimeString, coordinates), config);
+            }
+
         } else if(gameType.equals("object")) {
             initialize(new ObjectRecognitionGame(a, s, currentDateTimeString, coordinates), config);
         } else if(gameType.equals("space")){

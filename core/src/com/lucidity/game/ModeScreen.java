@@ -3,6 +3,7 @@ package com.lucidity.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -19,7 +20,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class ModeScreen extends InputAdapter implements Screen {
 
-    private FacialMemoryGame game;
+    private FacialMemoryGame facialMemoryGame;
+    private RecallGame recallGame;
+
+    private boolean isFacialGame, isRecallGame = false;
 
     ShapeRenderer renderer;
     SpriteBatch batch;
@@ -29,18 +33,24 @@ public class ModeScreen extends InputAdapter implements Screen {
     float elapsed;
 
     public ModeScreen(FacialMemoryGame game) {
-        this.game = game;
+        this.facialMemoryGame = game;
+        isFacialGame = true;
+    }
+
+    public ModeScreen(RecallGame game) {
+        this.recallGame = game;
+        isRecallGame = true;
     }
     @Override
     public void show() {
         renderer = new ShapeRenderer();
         batch = new SpriteBatch();
 
-        viewport = new FitViewport(GameTwoConstants.MODE_WORLD_SIZE, GameTwoConstants.MODE_WORLD_SIZE);
+        viewport = new FitViewport(FacialGameConstants.MODE_WORLD_SIZE, FacialGameConstants.MODE_WORLD_SIZE);
         Gdx.input.setInputProcessor(this);
 
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
-        font.getData().setScale(GameTwoConstants.MODE_LABEL_SCALE);
+        font.getData().setScale(FacialGameConstants.MODE_LABEL_SCALE);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
 
@@ -48,73 +58,107 @@ public class ModeScreen extends InputAdapter implements Screen {
     public void render(float delta) {
         elapsed += delta;
         viewport.apply();
-        Gdx.gl.glClearColor(GameTwoConstants.BACKGROUND_COLOR.r, GameTwoConstants.BACKGROUND_COLOR.g, GameTwoConstants.BACKGROUND_COLOR.b, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        if(isFacialGame) {
+            Gdx.gl.glClearColor(FacialGameConstants.BACKGROUND_COLOR.r, FacialGameConstants.BACKGROUND_COLOR.g, FacialGameConstants.BACKGROUND_COLOR.b, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        renderer.setProjectionMatrix(viewport.getCamera().combined);
+            renderer.setProjectionMatrix(viewport.getCamera().combined);
 
-        renderer.begin(ShapeRenderer.ShapeType.Filled);
+            renderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        renderer.setColor(GameTwoConstants.F2W_COLOR);
-        renderer.circle(GameTwoConstants.F2W_CENTER_NAME.x, GameTwoConstants.F2W_CENTER_NAME.y, GameTwoConstants.MODE_BUBBLE_RADIUS);
+            renderer.setColor(FacialGameConstants.F2W_COLOR);
+            renderer.circle(FacialGameConstants.F2W_CENTER_NAME.x, FacialGameConstants.F2W_CENTER_NAME.y, FacialGameConstants.MODE_BUBBLE_RADIUS);
 
-        renderer.setColor(GameTwoConstants.W2F_COLOR);
-        renderer.circle(GameTwoConstants.W2F_CENTER_NAME.x, GameTwoConstants.W2F_CENTER_NAME.y, GameTwoConstants.MODE_BUBBLE_RADIUS);
+            renderer.setColor(FacialGameConstants.W2F_COLOR);
+            renderer.circle(FacialGameConstants.W2F_CENTER_NAME.x, FacialGameConstants.W2F_CENTER_NAME.y, FacialGameConstants.MODE_BUBBLE_RADIUS);
 
-        renderer.setColor(GameTwoConstants.F2W_COLOR);
-        renderer.circle(GameTwoConstants.F2W_CENTER_ATTR.x, GameTwoConstants.F2W_CENTER_ATTR.y, GameTwoConstants.MODE_BUBBLE_RADIUS);
+            renderer.setColor(FacialGameConstants.F2W_COLOR);
+            renderer.circle(FacialGameConstants.F2W_CENTER_ATTR.x, FacialGameConstants.F2W_CENTER_ATTR.y, FacialGameConstants.MODE_BUBBLE_RADIUS);
 
-        renderer.setColor(GameTwoConstants.W2F_COLOR);
-        renderer.circle(GameTwoConstants.W2F_CENTER_ATTR.x, GameTwoConstants.W2F_CENTER_ATTR.y, GameTwoConstants.MODE_BUBBLE_RADIUS);
-
-
-        renderer.end();
-
-        batch.setProjectionMatrix(viewport.getCamera().combined);
-
-        batch.begin();
-        font.getData().setScale(.2f);
-        font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-        final GlyphLayout mode_one_second = new GlyphLayout(font, GameTwoConstants.MODE_ONE_SECOND);
-        font.draw(batch, GameTwoConstants.MODE_ONE_SECOND, GameTwoConstants.F2W_CENTER_NAME.x, GameTwoConstants.F2W_CENTER_NAME.y + mode_one_second.height / 3, 0, Align.center, false);
-
-        final GlyphLayout mode_one_first = new GlyphLayout(font, GameTwoConstants.MODE_ONE_FIRST);
-        font.draw(batch, GameTwoConstants.MODE_ONE_FIRST, GameTwoConstants.F2W_CENTER_NAME.x,
-                GameTwoConstants.F2W_CENTER_NAME.y + mode_one_first.height / 3 + mode_one_second.height, 0, Align.center, false);
+            renderer.setColor(FacialGameConstants.W2F_COLOR);
+            renderer.circle(FacialGameConstants.W2F_CENTER_ATTR.x, FacialGameConstants.W2F_CENTER_ATTR.y, FacialGameConstants.MODE_BUBBLE_RADIUS);
 
 
-        final GlyphLayout mode_one_third = new GlyphLayout(font, GameTwoConstants.MODE_ONE_THIRD);
-        font.draw(batch, GameTwoConstants.MODE_ONE_THIRD, GameTwoConstants.F2W_CENTER_ATTR.x, GameTwoConstants.F2W_CENTER_ATTR.y + mode_one_third.height / 3, 0, Align.center, false);
+            renderer.end();
 
-        final GlyphLayout mode_one_first_two = new GlyphLayout(font, GameTwoConstants.MODE_ONE_FIRST);
-        font.draw(batch, GameTwoConstants.MODE_ONE_FIRST, GameTwoConstants.F2W_CENTER_ATTR.x,
-                GameTwoConstants.F2W_CENTER_ATTR.y + mode_one_first_two.height / 3 + mode_one_third.height, 0, Align.center, false);
+            batch.setProjectionMatrix(viewport.getCamera().combined);
 
+            batch.begin();
+            font.getData().setScale(.2f);
+            font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+            final GlyphLayout mode_one_second = new GlyphLayout(font, FacialGameConstants.MODE_ONE_SECOND);
+            font.draw(batch, FacialGameConstants.MODE_ONE_SECOND, FacialGameConstants.F2W_CENTER_NAME.x, FacialGameConstants.F2W_CENTER_NAME.y + mode_one_second.height / 3, 0, Align.center, false);
 
-
-        final GlyphLayout mode_two_second = new GlyphLayout(font, GameTwoConstants.MODE_TWO_SECOND);
-        font.draw(batch, GameTwoConstants.MODE_TWO_SECOND, GameTwoConstants.W2F_CENTER_NAME.x, GameTwoConstants.W2F_CENTER_NAME.y + mode_two_second.height / 3, 0, Align.center, false);
-
-
-        final GlyphLayout mode_two_first = new GlyphLayout(font, GameTwoConstants.MODE_TWO_FIRST);
-        font.draw(batch, GameTwoConstants.MODE_TWO_FIRST, GameTwoConstants.W2F_CENTER_NAME.x,
-                GameTwoConstants.W2F_CENTER_NAME.y + mode_two_first.height / 3 + mode_two_second.height, 0, Align.center, false);
+            final GlyphLayout mode_one_first = new GlyphLayout(font, FacialGameConstants.MODE_ONE_FIRST);
+            font.draw(batch, FacialGameConstants.MODE_ONE_FIRST, FacialGameConstants.F2W_CENTER_NAME.x,
+                    FacialGameConstants.F2W_CENTER_NAME.y + mode_one_first.height / 3 + mode_one_second.height, 0, Align.center, false);
 
 
+            final GlyphLayout mode_one_third = new GlyphLayout(font, FacialGameConstants.MODE_ONE_THIRD);
+            font.draw(batch, FacialGameConstants.MODE_ONE_THIRD, FacialGameConstants.F2W_CENTER_ATTR.x, FacialGameConstants.F2W_CENTER_ATTR.y + mode_one_third.height / 3, 0, Align.center, false);
 
-        final GlyphLayout mode_two_second_two = new GlyphLayout(font, GameTwoConstants.MODE_TWO_SECOND);
-        font.draw(batch, GameTwoConstants.MODE_TWO_SECOND, GameTwoConstants.W2F_CENTER_ATTR.x, GameTwoConstants.W2F_CENTER_ATTR.y + mode_two_second_two.height / 3, 0, Align.center, false);
-
-
-        final GlyphLayout mode_two_third = new GlyphLayout(font, GameTwoConstants.MODE_TWO_THIRD);
-        font.draw(batch, GameTwoConstants.MODE_TWO_THIRD, GameTwoConstants.W2F_CENTER_ATTR.x,
-                GameTwoConstants.W2F_CENTER_ATTR.y + mode_two_third.height / 3 + mode_two_second_two.height, 0, Align.center, false);
+            final GlyphLayout mode_one_first_two = new GlyphLayout(font, FacialGameConstants.MODE_ONE_FIRST);
+            font.draw(batch, FacialGameConstants.MODE_ONE_FIRST, FacialGameConstants.F2W_CENTER_ATTR.x,
+                    FacialGameConstants.F2W_CENTER_ATTR.y + mode_one_first_two.height / 3 + mode_one_third.height, 0, Align.center, false);
 
 
+            final GlyphLayout mode_two_second = new GlyphLayout(font, FacialGameConstants.MODE_TWO_SECOND);
+            font.draw(batch, FacialGameConstants.MODE_TWO_SECOND, FacialGameConstants.W2F_CENTER_NAME.x, FacialGameConstants.W2F_CENTER_NAME.y + mode_two_second.height / 3, 0, Align.center, false);
 
-        batch.end();
+
+            final GlyphLayout mode_two_first = new GlyphLayout(font, FacialGameConstants.MODE_TWO_FIRST);
+            font.draw(batch, FacialGameConstants.MODE_TWO_FIRST, FacialGameConstants.W2F_CENTER_NAME.x,
+                    FacialGameConstants.W2F_CENTER_NAME.y + mode_two_first.height / 3 + mode_two_second.height, 0, Align.center, false);
+
+
+            final GlyphLayout mode_two_second_two = new GlyphLayout(font, FacialGameConstants.MODE_TWO_SECOND);
+            font.draw(batch, FacialGameConstants.MODE_TWO_SECOND, FacialGameConstants.W2F_CENTER_ATTR.x, FacialGameConstants.W2F_CENTER_ATTR.y + mode_two_second_two.height / 3, 0, Align.center, false);
+
+
+            final GlyphLayout mode_two_third = new GlyphLayout(font, FacialGameConstants.MODE_TWO_THIRD);
+            font.draw(batch, FacialGameConstants.MODE_TWO_THIRD, FacialGameConstants.W2F_CENTER_ATTR.x,
+                    FacialGameConstants.W2F_CENTER_ATTR.y + mode_two_third.height / 3 + mode_two_second_two.height, 0, Align.center, false);
+            batch.end();
+        } else if(isRecallGame){
+            Gdx.gl.glClearColor(RecallGameConstants.BACKGROUND_COLOR.r, RecallGameConstants.BACKGROUND_COLOR.g, RecallGameConstants.BACKGROUND_COLOR.b, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+            renderer.setProjectionMatrix(viewport.getCamera().combined);
+
+            renderer.begin(ShapeRenderer.ShapeType.Filled);
+
+            renderer.setColor(RecallGameConstants.LOCATION_COLOR);
+            renderer.circle(RecallGameConstants.LOCATION_CENTER_NAME.x, RecallGameConstants.LOCATION_CENTER_NAME.y, RecallGameConstants.MODE_BUBBLE_RADIUS);
+
+            renderer.setColor(RecallGameConstants.RELATION_COLOR);
+            renderer.circle(RecallGameConstants.RELATION_CENTER_NAME.x, RecallGameConstants.RELATION_CENTER_NAME.y, RecallGameConstants.MODE_BUBBLE_RADIUS);
+
+            renderer.end();
+
+            batch.setProjectionMatrix(viewport.getCamera().combined);
+
+            batch.begin();
+            font.getData().setScale(.2f);
+            font.setColor(Color.WHITE);
+
+            final GlyphLayout mode_one_second = new GlyphLayout(font, RecallGameConstants.MODE_ONE_SECOND);
+            font.draw(batch, RecallGameConstants.MODE_ONE_SECOND, RecallGameConstants.LOCATION_CENTER_NAME.x, RecallGameConstants.LOCATION_CENTER_NAME.y + mode_one_second.height / 3, 0, Align.center, false);
+
+            final GlyphLayout mode_one_first = new GlyphLayout(font, RecallGameConstants.MODE_ONE);
+            font.draw(batch, RecallGameConstants.MODE_ONE, RecallGameConstants.LOCATION_CENTER_NAME.x,
+                    RecallGameConstants.LOCATION_CENTER_NAME.y + mode_one_first.height / 3 + mode_one_second.height, 0, Align.center, false);
+
+
+            final GlyphLayout mode_one_third = new GlyphLayout(font, RecallGameConstants.MODE_ONE_THIRD);
+            font.draw(batch, RecallGameConstants.MODE_ONE_THIRD, RecallGameConstants.RELATION_CENTER_NAME.x, RecallGameConstants.RELATION_CENTER_NAME.y + mode_one_third.height / 3, 0, Align.center, false);
+
+            final GlyphLayout mode_one_first_two = new GlyphLayout(font, RecallGameConstants.MODE_ONE);
+            font.draw(batch, RecallGameConstants.MODE_ONE, RecallGameConstants.RELATION_CENTER_NAME.x,
+                    RecallGameConstants.RELATION_CENTER_NAME.y + mode_one_first_two.height / 3 + mode_one_third.height, 0, Align.center, false);
+
+            batch.end();
+        }
     }
 
     @Override
@@ -147,20 +191,24 @@ public class ModeScreen extends InputAdapter implements Screen {
 
         Vector2 worldTouch = viewport.unproject(new Vector2(screenX, screenY));
 
-        if (worldTouch.dst(GameTwoConstants.F2W_CENTER_NAME) < GameTwoConstants.MODE_BUBBLE_RADIUS) {
-            game.setScreen(new FaceToNameScreen(game, 0, 1, GameTwoConstants.MODE_NAME));
-        }
+        if(isFacialGame) {
+            if (worldTouch.dst(FacialGameConstants.F2W_CENTER_NAME) < FacialGameConstants.MODE_BUBBLE_RADIUS) {
+                facialMemoryGame.setScreen(new FaceToNameScreen(facialMemoryGame, 0, 1, FacialGameConstants.MODE_NAME));
+            }
 
-        if (worldTouch.dst(GameTwoConstants.F2W_CENTER_ATTR) < GameTwoConstants.MODE_BUBBLE_RADIUS) {
-            game.setScreen(new FaceToNameScreen(game, 0, 1, GameTwoConstants.MODE_ATTR));
-        }
+            if (worldTouch.dst(FacialGameConstants.F2W_CENTER_ATTR) < FacialGameConstants.MODE_BUBBLE_RADIUS) {
+                facialMemoryGame.setScreen(new FaceToNameScreen(facialMemoryGame, 0, 1, FacialGameConstants.MODE_ATTR));
+            }
 
-        if (worldTouch.dst(GameTwoConstants.W2F_CENTER_NAME) < GameTwoConstants.MODE_BUBBLE_RADIUS) {
-            game.setScreen(new NameToFaceScreen(game, 0, 1, GameTwoConstants.MODE_NAME));
-        }
+            if (worldTouch.dst(FacialGameConstants.W2F_CENTER_NAME) < FacialGameConstants.MODE_BUBBLE_RADIUS) {
+                facialMemoryGame.setScreen(new NameToFaceScreen(facialMemoryGame, 0, 1, FacialGameConstants.MODE_NAME));
+            }
 
-        if (worldTouch.dst(GameTwoConstants.W2F_CENTER_ATTR) < GameTwoConstants.MODE_BUBBLE_RADIUS) {
-            game.setScreen(new NameToFaceScreen(game, 0, 1, GameTwoConstants.MODE_ATTR));
+            if (worldTouch.dst(FacialGameConstants.W2F_CENTER_ATTR) < FacialGameConstants.MODE_BUBBLE_RADIUS) {
+                facialMemoryGame.setScreen(new NameToFaceScreen(facialMemoryGame, 0, 1, FacialGameConstants.MODE_ATTR));
+            }
+        } else if(isRecallGame){
+            recallGame.setScreen(new RecallScreen(recallGame));
         }
 
 

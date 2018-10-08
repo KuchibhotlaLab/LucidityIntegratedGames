@@ -1,11 +1,9 @@
 package com.lucidity.game;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -27,7 +25,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.FileHandler;
 
 /**
  * Created by lixiaoyan on 7/3/18.
@@ -146,7 +143,7 @@ FaceToNameScreen extends InputAdapter implements Screen {
     }
     @Override
     public void show() {
-        viewport = new ExtendViewport(GameTwoConstants.WORLD_SIZE, GameTwoConstants.WORLD_SIZE);
+        viewport = new ExtendViewport(FacialGameConstants.WORLD_SIZE, FacialGameConstants.WORLD_SIZE);
         hudViewport = new ScreenViewport();
 
         renderer = new ShapeRenderer();
@@ -158,23 +155,23 @@ FaceToNameScreen extends InputAdapter implements Screen {
     @Override
     public void render(float delta) {
         viewport.apply(true);
-        Gdx.gl.glClearColor(GameTwoConstants.BACKGROUND_COLOR.r, GameTwoConstants.BACKGROUND_COLOR.g, GameTwoConstants.BACKGROUND_COLOR.b, 1);
+        Gdx.gl.glClearColor(FacialGameConstants.BACKGROUND_COLOR.r, FacialGameConstants.BACKGROUND_COLOR.g, FacialGameConstants.BACKGROUND_COLOR.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         elapsed += delta;
 
         if(elapsed < 2) {
             batch.begin();
-            font.getData().setScale(GameTwoConstants.PROMPT_SCALE);
+            font.getData().setScale(FacialGameConstants.PROMPT_SCALE);
 
             if (trial == 1) {
-                final GlyphLayout promptLayout_two = new GlyphLayout(font, GameTwoConstants.PROMPT_TWO);
+                final GlyphLayout promptLayout_two = new GlyphLayout(font, FacialGameConstants.PROMPT_TWO);
                 font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2, screenHeight / 2);
 
-                final GlyphLayout promptLayout_one = new GlyphLayout(font, GameTwoConstants.PROMPT_ONE);
+                final GlyphLayout promptLayout_one = new GlyphLayout(font, FacialGameConstants.PROMPT_ONE);
                 font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
                         screenHeight / 2 + 1.5f * promptLayout_two.height);
             } else {
-                final GlyphLayout promptLayout_next = new GlyphLayout(font, GameOneConstants.PROMPT_NEXT);
+                final GlyphLayout promptLayout_next = new GlyphLayout(font, BlockGameConstants.PROMPT_NEXT);
                 font.draw(batch, promptLayout_next, (screenWidth - promptLayout_next.width) / 2,
                         screenHeight / 2);
             }
@@ -192,27 +189,27 @@ FaceToNameScreen extends InputAdapter implements Screen {
             renderer.begin(ShapeRenderer.ShapeType.Filled);
 
             if(!onSelect1){
-                renderer.setColor(GameTwoConstants.W2F_COLOR);
+                renderer.setColor(FacialGameConstants.W2F_COLOR);
             } else {
-                renderer.setColor(GameTwoConstants.CHOICE_COLOR);
+                renderer.setColor(FacialGameConstants.CHOICE_COLOR);
             }
             renderer.rect(answer1.x, answer1.y, answer1.getWidth(), answer1.getHeight());
 
 
             if(!onSelect2){
-                renderer.setColor(GameTwoConstants.W2F_COLOR);
+                renderer.setColor(FacialGameConstants.W2F_COLOR);
                 //System.out.println("you should be in this loop 2 ");
             } else {
                 //System.out.println("are you even here 1 ");
-                renderer.setColor(GameTwoConstants.CHOICE_COLOR);
+                renderer.setColor(FacialGameConstants.CHOICE_COLOR);
             }
             renderer.rect(answer2.x, answer2.y, answer2.getWidth(), answer2.getHeight());
 
 
             if(!onEnd){
-                renderer.setColor(GameTwoConstants.W2F_COLOR);
+                renderer.setColor(FacialGameConstants.W2F_COLOR);
             } else {
-                renderer.setColor(GameTwoConstants.CHOICE_COLOR);
+                renderer.setColor(FacialGameConstants.CHOICE_COLOR);
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {
@@ -226,9 +223,9 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
 
             if(!onBack){
-                renderer.setColor(GameTwoConstants.W2F_COLOR);
+                renderer.setColor(FacialGameConstants.W2F_COLOR);
             } else {
-                renderer.setColor(GameTwoConstants.CHOICE_COLOR);
+                renderer.setColor(FacialGameConstants.CHOICE_COLOR);
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {game.setScreen(new ModeScreen(game));
@@ -244,7 +241,7 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
             renderer.begin(ShapeRenderer.ShapeType.Line);
 
-            renderer.setColor(GameTwoConstants.OUTLINE_COLOR);
+            renderer.setColor(FacialGameConstants.OUTLINE_COLOR);
             renderer.rect(answer1.x, answer1.y, answer1.getWidth(), answer1.getHeight());
             renderer.rect(answer2.x, answer2.y, answer2.getWidth(), answer2.getHeight());
 
@@ -264,40 +261,40 @@ FaceToNameScreen extends InputAdapter implements Screen {
             }
 
             batch.begin();
-            font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
+            font.getData().setScale(FacialGameConstants.ANSWER_SCALE);
 
             if(onSelect1){
                 disableTouchDown = true;
                 if(correct.equals(attr1)){
-                    font.setColor(GameOneConstants.CORRECT_COLOR);
-                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                    font.setColor(BlockGameConstants.CORRECT_COLOR);
+                    final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
                     font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight* 3 / 4);
 
-                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
+                    final GlyphLayout promptLayout = new GlyphLayout(font, FacialGameConstants.CORRECT_MESSAGE);
                     font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight* 3 / 4 + 1.5f * reactionLayout.height);
                 } else {
-                    font.setColor(GameOneConstants.INCORRECT_COLOR);
-                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                    font.setColor(BlockGameConstants.INCORRECT_COLOR);
+                    final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
                     font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight* 3 / 4);
 
-                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
+                    final GlyphLayout promptLayout = new GlyphLayout(font, FacialGameConstants.INCORRECT_MESSAGE);
                     font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight * 3 / 4 + 1.5f * reactionLayout.height);
                 }
             } else if (onSelect2) {
                 disableTouchDown = true;
                 if(correct.equals(attr2)){
-                    font.setColor(GameOneConstants.CORRECT_COLOR);
-                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                    font.setColor(BlockGameConstants.CORRECT_COLOR);
+                    final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
                     font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight * 3 / 4);
 
-                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.CORRECT_MESSAGE);
+                    final GlyphLayout promptLayout = new GlyphLayout(font, FacialGameConstants.CORRECT_MESSAGE);
                     font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight * 3 / 4+ 1.5f * reactionLayout.height);
                 } else {
-                    font.setColor(GameOneConstants.INCORRECT_COLOR);
-                    final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                    font.setColor(BlockGameConstants.INCORRECT_COLOR);
+                    final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
                     font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight* 3 / 4);
 
-                    final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
+                    final GlyphLayout promptLayout = new GlyphLayout(font, FacialGameConstants.INCORRECT_MESSAGE);
                     font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight* 3 / 4 + 1.5f * reactionLayout.height);
                 }
             }
@@ -306,12 +303,12 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
             batch.begin();
             font.setColor(Color.WHITE);
-            font.getData().setScale(GameTwoConstants.PROMPT_SCALE);
-            final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.PROMPT + "this?");
+            font.getData().setScale(FacialGameConstants.PROMPT_SCALE);
+            final GlyphLayout promptLayout = new GlyphLayout(font, FacialGameConstants.PROMPT + "this?");
             font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight * 7 / 8);
 
 
-            font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
+            font.getData().setScale(FacialGameConstants.ANSWER_SCALE);
             final GlyphLayout layout_two = new GlyphLayout(font, attr2);
             final float fontX_two = (screenWidth - layout_two.width) / 2;
             final float fontY_two = (answer2.height * 0.6f + answer2.y);
@@ -324,7 +321,7 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
 
             //prints text on back button
-            font.draw(batch, GameTwoConstants.BACK_TEXT,
+            font.draw(batch, FacialGameConstants.BACK_TEXT,
                     (int) (back.x + 0.2 * back.getWidth()),
                     (int) (back.y + 0.6 * back.getHeight()));
 
@@ -332,19 +329,19 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
 
             //prints text on end button
-            font.draw(batch, GameTwoConstants.END_TEXT,
+            font.draw(batch, FacialGameConstants.END_TEXT,
                     (int) (end.x + 0.25 * end.getWidth()),
                     (int) (end.y + 0.6 * end.getHeight()));
 
 
-            font.draw(batch, GameTwoConstants.SCORE_LABEL + Integer.toString(score),
-                    GameTwoConstants.SCORE_CENTER, screenHeight - GameTwoConstants.SCORE_CENTER);
+            font.draw(batch, FacialGameConstants.SCORE_LABEL + Integer.toString(score),
+                    FacialGameConstants.SCORE_CENTER, screenHeight - FacialGameConstants.SCORE_CENTER);
 
-            final GlyphLayout layout_scores = new GlyphLayout(font, GameTwoConstants.SCORE_LABEL);
+            final GlyphLayout layout_scores = new GlyphLayout(font, FacialGameConstants.SCORE_LABEL);
 
-            font.draw(batch, GameTwoConstants.TRIAL_LABEL + Integer.toString(trial),
-                    GameTwoConstants.SCORE_CENTER,
-                    screenHeight - GameTwoConstants.SCORE_CENTER - layout_scores.height * 1.5f);
+            font.draw(batch, FacialGameConstants.TRIAL_LABEL + Integer.toString(trial),
+                    FacialGameConstants.SCORE_CENTER,
+                    screenHeight - FacialGameConstants.SCORE_CENTER - layout_scores.height * 1.5f);
 
 
             //batch.draw(face, (screenWidth - face.getWidth())/2, (screenHeight - face.getHeight())/2);
@@ -458,7 +455,7 @@ FaceToNameScreen extends InputAdapter implements Screen {
         }
 
 
-        if(gameMode == GameTwoConstants.MODE_NAME){
+        if(gameMode == FacialGameConstants.MODE_NAME){
             int position = (int) (Math.random() * 2);
             correct = imgTags.get(imgNames.indexOf(validFiles.get(picture).getName())).get(0);
             if(position == 0) {
@@ -468,7 +465,7 @@ FaceToNameScreen extends InputAdapter implements Screen {
                 attr1 = imgTags.get(imgNames.indexOf(validFiles.get(incorrect).getName())).get(0);;
                 attr2 = correct;
             }
-        } else if(gameMode == GameTwoConstants.MODE_ATTR){
+        } else if(gameMode == FacialGameConstants.MODE_ATTR){
             int position = (int) (Math.random() * 2);
             correct = imgTags.get(imgNames.indexOf(validFiles.get(picture).getName())).get(1);
             if(position == 0) {

@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
  * Created by lixiaoyan on 7/3/18.
  */
 
-public class GameTwoConstants {
+public class FacialGameConstants {
     //theme: digitalsynopsis.com/design/minimal-web-color-palettes-combination-hex-code/
     public static final float WORLD_SIZE = 10.0f;
 

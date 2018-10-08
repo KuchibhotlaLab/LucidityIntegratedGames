@@ -163,7 +163,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
     }
     @Override
     public void show() {
-        viewport = new ExtendViewport(GameFourConstants.WORLD_SIZE, GameFourConstants.WORLD_SIZE);
+        viewport = new ExtendViewport(SpacialGameConstants.WORLD_SIZE, SpacialGameConstants.WORLD_SIZE);
         hudViewport = new ScreenViewport();
 
         renderer = new ShapeRenderer();
@@ -186,9 +186,9 @@ public class SpatialScreen extends InputAdapter implements Screen {
         if(elapsed < 2f) {
             disableTouchDown = true;
             batch.begin();
-            font.getData().setScale(GameFourConstants.INSTRUCTION_SIZE);
+            font.getData().setScale(SpacialGameConstants.INSTRUCTION_SIZE);
             font.setColor(Color.WHITE);
-            final GlyphLayout hardLayout = new GlyphLayout(font, GameFourConstants.INSTRUCTIONS);
+            final GlyphLayout hardLayout = new GlyphLayout(font, SpacialGameConstants.INSTRUCTIONS);
             font.draw(batch, hardLayout, (screenWidth - hardLayout.width) / 2, screenHeight  / 7);
             batch.end();
 
@@ -204,7 +204,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
             renderer.begin(ShapeRenderer.ShapeType.Line);
             for (int i = 0; i < blocksHorizontal; i++) {
                 for (int j = 0; j < blocksVertical; j++) {
-                    renderer.setColor(GameFourConstants.HARD_COLOR);
+                    renderer.setColor(SpacialGameConstants.HARD_COLOR);
                     renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                 }
             }
@@ -217,7 +217,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
             batch.begin();
 
-            final GlyphLayout layout_two = new GlyphLayout(font, GameFourConstants.INSTRUCTIONS_TWO);
+            final GlyphLayout layout_two = new GlyphLayout(font, SpacialGameConstants.INSTRUCTIONS_TWO);
             font.draw(batch, layout_two, (screenWidth - layout_two.width) / 2, screenHeight  / 8);
 
             batch.end();
@@ -229,9 +229,9 @@ public class SpatialScreen extends InputAdapter implements Screen {
             for (int i = 0; i < blocksHorizontal; i++) {
                 for (int j = 0; j < blocksVertical; j++) {
                     if(!selected[i][j]){
-                        renderer.setColor(GameFourConstants.SQUARE_COLOR);
+                        renderer.setColor(SpacialGameConstants.SQUARE_COLOR);
                     } else {
-                        renderer.setColor(GameFourConstants.START_END_COLOR);
+                        renderer.setColor(SpacialGameConstants.START_END_COLOR);
                     }
                     renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                 }
@@ -241,7 +241,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
             renderer.begin(ShapeRenderer.ShapeType.Line);
             for (int i = 0; i < blocksHorizontal; i++) {
                 for (int j = 0; j < blocksVertical; j++) {
-                    renderer.setColor(GameFourConstants.HARD_COLOR);
+                    renderer.setColor(SpacialGameConstants.HARD_COLOR);
                     renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                 }
             }
@@ -262,7 +262,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
                         selectState(selected[i][j]);
                         renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                     } else {
-                        renderer.setColor(GameFourConstants.START_END_COLOR);
+                        renderer.setColor(SpacialGameConstants.START_END_COLOR);
                         renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                     }
                 }
@@ -273,7 +273,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
             renderer.begin(ShapeRenderer.ShapeType.Line);
             for (int i = 0; i < blocksHorizontal; i++) {
                 for (int j = 0; j < blocksVertical; j++) {
-                    renderer.setColor(GameFourConstants.HARD_COLOR);
+                    renderer.setColor(SpacialGameConstants.HARD_COLOR);
                     renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                 }
             }
@@ -281,9 +281,9 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
 
             if(!onSubmit){
-                renderer.setColor(GameFourConstants.SQUARE_COLOR);
+                renderer.setColor(SpacialGameConstants.SQUARE_COLOR);
             } else {
-                renderer.setColor(GameFourConstants.SELECTED_COLOR);
+                renderer.setColor(SpacialGameConstants.SELECTED_COLOR);
                 onSubmit = false;
                 delayed = elapsed;
                 delayOn = true;
@@ -293,7 +293,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
                 }
             }
             if(delayOn){
-                renderer.setColor(GameFourConstants.SQUARE_COLOR);
+                renderer.setColor(SpacialGameConstants.SQUARE_COLOR);
             }
 
             renderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -309,10 +309,10 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
             /*renderer.begin();
             if(!onEnd){
-                renderer.setColor(GameFourConstants.SQUARE_COLOR);
+                renderer.setColor(SpacialGameConstants.SQUARE_COLOR);
             } else {
                 disableTouchDown = true;
-                renderer.setColor(GameFourConstants.SELECTED_COLOR);
+                renderer.setColor(SpacialGameConstants.SELECTED_COLOR);
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {
@@ -326,10 +326,10 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
 
             if(!onBack){
-                renderer.setColor(GameFourConstants.SQUARE_COLOR);
+                renderer.setColor(SpacialGameConstants.SQUARE_COLOR);
             } else {
                 disableTouchDown = true;
-                renderer.setColor(GameFourConstants.SELECTED_COLOR);
+                renderer.setColor(SpacialGameConstants.SELECTED_COLOR);
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {game.setScreen(new DifficultyScreen(game));
@@ -341,29 +341,29 @@ public class SpatialScreen extends InputAdapter implements Screen {
             renderer.end();*/
 
             batch.begin();
-            font.getData().setScale(GameThreeConstants.ANSWER_SCALE);
+            font.getData().setScale(ObjectGameConstants.ANSWER_SCALE);
             /*font.setColor(Color.WHITE);
             //prints text on back button
-            font.draw(batch, GameTwoConstants.BACK_TEXT,
+            font.draw(batch, FacialGameConstants.BACK_TEXT,
                     (int) (back.x + 0.2 * back.getWidth()),
                     (int) (back.y + 0.6 * back.getHeight()));
             //prints text on end button
-            font.draw(batch, GameTwoConstants.END_TEXT,
+            font.draw(batch, FacialGameConstants.END_TEXT,
                     (int) (end.x + 0.25 * end.getWidth()),
                     (int) (end.y + 0.6 * end.getHeight()));*/
 
             font.setColor(Color.WHITE);
-            font.draw(batch, GameTwoConstants.SCORE_LABEL + Integer.toString(score),
-                    GameTwoConstants.SCORE_CENTER, screenHeight - GameTwoConstants.SCORE_CENTER);
+            font.draw(batch, FacialGameConstants.SCORE_LABEL + Integer.toString(score),
+                    FacialGameConstants.SCORE_CENTER, screenHeight - FacialGameConstants.SCORE_CENTER);
 
-            final GlyphLayout layout_scores = new GlyphLayout(font, GameTwoConstants.SCORE_LABEL);
+            final GlyphLayout layout_scores = new GlyphLayout(font, FacialGameConstants.SCORE_LABEL);
 
-            font.draw(batch, GameTwoConstants.TRIAL_LABEL + Integer.toString(trial),
-                    GameTwoConstants.SCORE_CENTER,
-                    screenHeight - GameTwoConstants.SCORE_CENTER - layout_scores.height * 1.5f);
+            font.draw(batch, FacialGameConstants.TRIAL_LABEL + Integer.toString(trial),
+                    FacialGameConstants.SCORE_CENTER,
+                    screenHeight - FacialGameConstants.SCORE_CENTER - layout_scores.height * 1.5f);
 
 
-            final GlyphLayout layout_one = new GlyphLayout(font, GameFourConstants.SUBMIT_TEXT);
+            final GlyphLayout layout_one = new GlyphLayout(font, SpacialGameConstants.SUBMIT_TEXT);
             final float fontX_one = (screenWidth - layout_one.width) / 2;
             final float fontY_one = (btnSubmit.height * 0.6f + btnSubmit.y);
             font.draw(batch, layout_one, fontX_one, fontY_one);
@@ -505,24 +505,24 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
     private void selectState(boolean blockSelected){
         if(!blockSelected){
-            renderer.setColor(GameFourConstants.SQUARE_COLOR);
+            renderer.setColor(SpacialGameConstants.SQUARE_COLOR);
         } else {
-            renderer.setColor(GameFourConstants.SELECTED_COLOR);
+            renderer.setColor(SpacialGameConstants.SELECTED_COLOR);
         }
     }
 
     private void drawRoadBlock(boolean blockSelected){
         if(!blockSelected){
-            renderer.setColor(GameFourConstants.SQUARE_COLOR);
+            renderer.setColor(SpacialGameConstants.SQUARE_COLOR);
         } else {
-            renderer.setColor(GameFourConstants.ROADBLOCK_COLOR);
+            renderer.setColor(SpacialGameConstants.ROADBLOCK_COLOR);
         }
     }
 
     private void resultMessage(boolean isCorrect){
         if(isCorrect){
             renderer.begin(ShapeRenderer.ShapeType.Filled);
-            renderer.setColor(GameOneConstants.CORRECT_COLOR);
+            renderer.setColor(BlockGameConstants.CORRECT_COLOR);
             renderer.rect(0, screenHeight / 3, screenWidth, screenHeight/4);
 
             renderer.setColor(Color.valueOf("d8d8d8"));
@@ -530,16 +530,16 @@ public class SpatialScreen extends InputAdapter implements Screen {
             renderer.end();
 
             batch.begin();
-            font.getData().setScale(GameFourConstants.RESULT_SIZE);
-            font.setColor(GameFourConstants.ROADBLOCK_COLOR);
-            final GlyphLayout promptLayout = new GlyphLayout(font, GameThreeConstants.CORRECT_MESSAGE);
+            font.getData().setScale(SpacialGameConstants.RESULT_SIZE);
+            font.setColor(SpacialGameConstants.ROADBLOCK_COLOR);
+            final GlyphLayout promptLayout = new GlyphLayout(font, ObjectGameConstants.CORRECT_MESSAGE);
             font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight / 3  + screenHeight/6);
-            final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+            final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
             font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2,  screenHeight / 3  + screenHeight/6- 1.5f * promptLayout.height);
             batch.end();
         } else {
             renderer.begin(ShapeRenderer.ShapeType.Filled);
-            renderer.setColor(GameOneConstants.INCORRECT_COLOR);
+            renderer.setColor(BlockGameConstants.INCORRECT_COLOR);
             renderer.rect(0, screenHeight / 3, screenWidth, screenHeight/4);
 
             renderer.setColor(Color.valueOf("d8d8d8"));
@@ -547,11 +547,11 @@ public class SpatialScreen extends InputAdapter implements Screen {
             renderer.end();
 
             batch.begin();
-            font.setColor(GameFourConstants.ROADBLOCK_COLOR);
-            font.getData().setScale(GameFourConstants.RESULT_SIZE);
-            final GlyphLayout promptLayout = new GlyphLayout(font, GameThreeConstants.INCORRECT_MESSAGE);
+            font.setColor(SpacialGameConstants.ROADBLOCK_COLOR);
+            font.getData().setScale(SpacialGameConstants.RESULT_SIZE);
+            final GlyphLayout promptLayout = new GlyphLayout(font, ObjectGameConstants.INCORRECT_MESSAGE);
             font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight / 3  + screenHeight/6);
-            final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+            final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
             font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight / 3  + screenHeight/6 +  - 1.5f * promptLayout.height);
             batch.end();
 

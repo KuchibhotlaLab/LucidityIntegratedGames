@@ -1,8 +1,5 @@
 package com.lucidity.game;
 
-/**
- * Created by lixiaoyan on 6/29/18.
- */
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Net;
@@ -15,43 +12,35 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.net.HttpParametersUtils;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.async.AsyncTask;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 //import com.sun.tools.internal.jxc.ap.Const;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 //import sun.rmi.runtime.Log;
 
-import static com.lucidity.game.GameOneConstants.BACKGROUND_COLOR;
-import static com.lucidity.game.GameOneConstants.DIFFICULTY_MEDIUM;
+import static com.lucidity.game.BlockGameConstants.BACKGROUND_COLOR;
 
 public class MemoryScreen extends InputAdapter implements Screen {
     public static final String TAG = MemoryScreen.class.getName();
-    WorkingMemoryGame game;
+    private WorkingMemoryGame game;
     int difficulty;
 
-    ExtendViewport memoryViewport;
-    ScreenViewport hudViewport;
+    private ExtendViewport memoryViewport;
+    private ScreenViewport hudViewport;
 
-    ShapeRenderer renderer;
+    private ShapeRenderer renderer;
 
-    int screenWidth;
-    int screenHeight;
+    private int screenWidth, screenHeight;
 
-    int score;
-    int trial;
-    int attemps;
+    private int score, trial, attemps;
 
     Rectangle[][] grid;
     int[][] selected;
@@ -88,10 +77,10 @@ public class MemoryScreen extends InputAdapter implements Screen {
         this.game = game;
 
         this.difficulty = diff;
-        if(this.difficulty == GameOneConstants.DIFFICULTY_EASY){
+        if(this.difficulty == BlockGameConstants.DIFFICULTY_EASY){
             blocksVertical = 1;
             blocksHorizontal = 2;
-        } else if(this.difficulty == GameOneConstants.DIFFICULTY_MEDIUM){
+        } else if(this.difficulty == BlockGameConstants.DIFFICULTY_MEDIUM){
             blocksHorizontal = 2;
             blocksVertical = 2;
         } else {
@@ -147,7 +136,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
     @Override
     public void show() {
-        memoryViewport = new ExtendViewport(GameOneConstants.WORLD_SIZE, GameOneConstants.WORLD_SIZE);
+        memoryViewport = new ExtendViewport(BlockGameConstants.WORLD_SIZE, BlockGameConstants.WORLD_SIZE);
         hudViewport = new ScreenViewport();
 
         renderer = new ShapeRenderer();
@@ -182,18 +171,18 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
             batch.begin();
             font.setColor(Color.valueOf("#026670"));
-            font.getData().setScale(GameOneConstants.NOTIFICATION_SCALE);
+            font.getData().setScale(BlockGameConstants.NOTIFICATION_SCALE);
 
             if(trial == 1) {
-                final GlyphLayout promptLayout_two = new GlyphLayout(font, GameOneConstants.PROMPT_TWO);
+                final GlyphLayout promptLayout_two = new GlyphLayout(font, BlockGameConstants.PROMPT_TWO);
                 font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2,
                         screenHeight / 2);
 
-                final GlyphLayout promptLayout_one = new GlyphLayout(font, GameOneConstants.PROMPT_ONE);
+                final GlyphLayout promptLayout_one = new GlyphLayout(font, BlockGameConstants.PROMPT_ONE);
                 font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
                         screenHeight / 2 + 1.5f * promptLayout_two.height);
             } else {
-                final GlyphLayout promptLayout_next = new GlyphLayout(font, GameOneConstants.PROMPT_NEXT);
+                final GlyphLayout promptLayout_next = new GlyphLayout(font, BlockGameConstants.PROMPT_NEXT);
                 font.draw(batch, promptLayout_next, (screenWidth - promptLayout_next.width) / 2,
                         screenHeight / 2);
             }
@@ -207,11 +196,11 @@ public class MemoryScreen extends InputAdapter implements Screen {
             font.getData().setScale(.6f);
             font.setColor(Color.valueOf("#026670"));
 
-            final GlyphLayout promptLayout_two = new GlyphLayout(font, GameOneConstants.WAIT_TWO);
+            final GlyphLayout promptLayout_two = new GlyphLayout(font, BlockGameConstants.WAIT_TWO);
             font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width)/2,
                     screenHeight / 2);
 
-            final GlyphLayout promptLayout_one = new GlyphLayout(font, GameOneConstants.WAIT_ONE);
+            final GlyphLayout promptLayout_one = new GlyphLayout(font, BlockGameConstants.WAIT_ONE);
             font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width)/2,
                     screenHeight / 2 + 1.5f * promptLayout_two.height);
             batch.end();
@@ -299,7 +288,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
             //draws all the texts (submit and correct/incorrect message)
             batch.begin();
-            font.getData().setScale(GameOneConstants.LABEL_SCALE);
+            font.getData().setScale(BlockGameConstants.LABEL_SCALE);
             //font.setColor(Color.valueOf("#9FEDD7"));
             font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -318,8 +307,8 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
             //prints the correct/incorrect message when the person clicks submit
             if(suppressed){
-                font.setColor(GameOneConstants.CORRECT_COLOR);
-                final GlyphLayout promptLayout = new GlyphLayout(font, GameOneConstants.CORRECT_MESSAGE);
+                font.setColor(BlockGameConstants.CORRECT_COLOR);
+                final GlyphLayout promptLayout = new GlyphLayout(font, BlockGameConstants.CORRECT_MESSAGE);
                 font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
             }
             if (correct && onSubmit) {
@@ -344,20 +333,20 @@ public class MemoryScreen extends InputAdapter implements Screen {
                         1);
             } else if (!correct && onSubmit && !suppressed) {
                 selected = new int[blocksHorizontal][blocksVertical];
-                font.setColor(GameOneConstants.INCORRECT_COLOR);
-                final GlyphLayout promptLayout = new GlyphLayout(font, GameOneConstants.INCORRECT_MESSAGE);
+                font.setColor(BlockGameConstants.INCORRECT_COLOR);
+                final GlyphLayout promptLayout = new GlyphLayout(font, BlockGameConstants.INCORRECT_MESSAGE);
                 font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
             }
 
-            font.getData().setScale(GameOneConstants.LABEL_SCALE);
+            font.getData().setScale(BlockGameConstants.LABEL_SCALE);
             font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 
             //prints the score on the screen of game
-            font.draw(batch, GameOneConstants.SCORE_LABEL + Integer.toString(score),
-                    GameOneConstants.SCORE_CENTER, screenHeight - GameOneConstants.SCORE_CENTER);
+            font.draw(batch, BlockGameConstants.SCORE_LABEL + Integer.toString(score),
+                    BlockGameConstants.SCORE_CENTER, screenHeight - BlockGameConstants.SCORE_CENTER);
 
-            font.draw(batch, GameOneConstants.TRIAL_LABEL + Integer.toString(trial),
-                    GameOneConstants.TRIAL_CENTER, screenHeight - GameOneConstants.SCORE_CENTER);
+            font.draw(batch, BlockGameConstants.TRIAL_LABEL + Integer.toString(trial),
+                    BlockGameConstants.TRIAL_CENTER, screenHeight - BlockGameConstants.SCORE_CENTER);
 
 
             batch.end();
@@ -446,9 +435,9 @@ public class MemoryScreen extends InputAdapter implements Screen {
         timerStart = true;
         toRemember = new int[blocksHorizontal][blocksVertical];
         attemps = 0;
-        if(this.difficulty == GameOneConstants.DIFFICULTY_EASY){
+        if(this.difficulty == BlockGameConstants.DIFFICULTY_EASY){
             blocks = 1;
-        } else if(this.difficulty == GameOneConstants.DIFFICULTY_MEDIUM){
+        } else if(this.difficulty == BlockGameConstants.DIFFICULTY_MEDIUM){
             blocks = 2;
         } else {
             blocks = 4;

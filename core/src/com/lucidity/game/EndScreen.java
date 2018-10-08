@@ -56,7 +56,7 @@ public class EndScreen extends InputAdapter implements Screen {
         isGameOne = true;
         background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
 
-        memoryViewport = new ExtendViewport(GameOneConstants.WORLD_SIZE, GameOneConstants.WORLD_SIZE);
+        memoryViewport = new ExtendViewport(BlockGameConstants.WORLD_SIZE, BlockGameConstants.WORLD_SIZE);
     }
 
 
@@ -67,7 +67,7 @@ public class EndScreen extends InputAdapter implements Screen {
         isGameTwo = true;
         background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
 
-        memoryViewport = new ExtendViewport(GameTwoConstants.WORLD_SIZE, GameTwoConstants.WORLD_SIZE);
+        memoryViewport = new ExtendViewport(FacialGameConstants.WORLD_SIZE, FacialGameConstants.WORLD_SIZE);
     }
 
     public EndScreen(ObjectRecognitionGame game, int points, int trials) {
@@ -77,7 +77,7 @@ public class EndScreen extends InputAdapter implements Screen {
         isGameThree = true;
         background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
 
-        memoryViewport = new ExtendViewport(GameThreeConstants.WORLD_SIZE, GameThreeConstants.WORLD_SIZE);
+        memoryViewport = new ExtendViewport(ObjectGameConstants.WORLD_SIZE, ObjectGameConstants.WORLD_SIZE);
     }
 
     public EndScreen(SpatialMemoryGame game, int points, int trials) {
@@ -87,7 +87,7 @@ public class EndScreen extends InputAdapter implements Screen {
         isGameFour = true;
         background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
 
-        memoryViewport = new ExtendViewport(GameFourConstants.WORLD_SIZE, GameFourConstants.WORLD_SIZE);
+        memoryViewport = new ExtendViewport(SpacialGameConstants.WORLD_SIZE, SpacialGameConstants.WORLD_SIZE);
 
     }
 
@@ -129,11 +129,11 @@ public class EndScreen extends InputAdapter implements Screen {
         if(isGameOne){
             Gdx.gl.glClearColor(1.0f,0.98f,0.78f, 1);
         } else if(isGameTwo) {
-            Gdx.gl.glClearColor(GameTwoConstants.BACKGROUND_COLOR.r, GameTwoConstants.BACKGROUND_COLOR.g, GameTwoConstants.BACKGROUND_COLOR.b, 1);
+            Gdx.gl.glClearColor(FacialGameConstants.BACKGROUND_COLOR.r, FacialGameConstants.BACKGROUND_COLOR.g, FacialGameConstants.BACKGROUND_COLOR.b, 1);
         } else if(isGameThree) {
-            Gdx.gl.glClearColor(GameThreeConstants.BACKGROUND_COLOR.r, GameThreeConstants.BACKGROUND_COLOR.g, GameThreeConstants.BACKGROUND_COLOR.b, 1);
+            Gdx.gl.glClearColor(ObjectGameConstants.BACKGROUND_COLOR.r, ObjectGameConstants.BACKGROUND_COLOR.g, ObjectGameConstants.BACKGROUND_COLOR.b, 1);
         } else if(isGameFour){
-            Gdx.gl.glClearColor(GameFourConstants.BACKGROUND_COLOR.r, GameFourConstants.BACKGROUND_COLOR.g, GameFourConstants.BACKGROUND_COLOR.b, 1);
+            Gdx.gl.glClearColor(SpacialGameConstants.BACKGROUND_COLOR.r, SpacialGameConstants.BACKGROUND_COLOR.g, SpacialGameConstants.BACKGROUND_COLOR.b, 1);
             batch.begin();
             batch.draw(resizedBg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             batch.end();
@@ -141,9 +141,9 @@ public class EndScreen extends InputAdapter implements Screen {
 
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         if(isGameFour) {
-            renderer.setColor(GameFourConstants.SQUARE_COLOR);
+            renderer.setColor(SpacialGameConstants.SQUARE_COLOR);
             renderer.rect(0, screenHeight / 3, screenWidth, screenHeight/3);
-            renderer.setColor(GameFourConstants.SELECTED_COLOR);
+            renderer.setColor(SpacialGameConstants.SELECTED_COLOR);
         }
 
         renderer.rect(screenHeight/36, screenHeight / 3 + screenHeight/36, screenWidth - screenHeight/18, screenHeight/3 -  screenHeight/18);
@@ -152,13 +152,13 @@ public class EndScreen extends InputAdapter implements Screen {
         batch.begin();
         font.getData().setScale(.7f);
         if(isGameOne){
-            font.setColor(GameOneConstants.TITLE_COLOR);
+            font.setColor(BlockGameConstants.TITLE_COLOR);
         } else if(isGameTwo) {
-            font.setColor(GameTwoConstants.OUTLINE_COLOR);
+            font.setColor(FacialGameConstants.OUTLINE_COLOR);
         } else if(isGameThree) {
-            font.setColor(GameThreeConstants.TITLE_COLOR);
+            font.setColor(ObjectGameConstants.TITLE_COLOR);
         } else if(isGameFour){
-            //font.setColor(GameFourConstants.TITLE_COLOR);
+            //font.setColor(SpacialGameConstants.TITLE_COLOR);
             font.setColor(Color.WHITE);
         }
 
@@ -166,11 +166,11 @@ public class EndScreen extends InputAdapter implements Screen {
         font.draw(batch, scoreLayout, (screenWidth - scoreLayout.width)/2,
                 screenHeight * 7 / 12);
 
-        final GlyphLayout promptLayout_two = new GlyphLayout(font, GameOneConstants.END_INSTRUCTIONS_TWO);
+        final GlyphLayout promptLayout_two = new GlyphLayout(font, BlockGameConstants.END_INSTRUCTIONS_TWO);
         font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width)/2,
                 screenHeight * 5 / 12);
 
-        final GlyphLayout promptLayout_one = new GlyphLayout(font, GameOneConstants.END_INSTRUCTIONS_ONE);
+        final GlyphLayout promptLayout_one = new GlyphLayout(font, BlockGameConstants.END_INSTRUCTIONS_ONE);
         font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width)/2,
                 screenHeight * 5/ 12 + 1.5f * promptLayout_two.height);
 

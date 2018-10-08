@@ -1,6 +1,5 @@
 package com.lucidity.game;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Net;
@@ -11,11 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.net.HttpParametersUtils;
-import com.badlogic.gdx.net.HttpStatus;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -104,7 +99,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
         batch = new SpriteBatch();
 
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
-        font.getData().setScale(GameThreeConstants.MODE_LABEL_SCALE);
+        font.getData().setScale(ObjectGameConstants.MODE_LABEL_SCALE);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         same = new Rectangle();
@@ -135,7 +130,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
     @Override
     public void show() {
-        viewport = new ExtendViewport(GameThreeConstants.WORLD_SIZE, GameThreeConstants.WORLD_SIZE);
+        viewport = new ExtendViewport(ObjectGameConstants.WORLD_SIZE, ObjectGameConstants.WORLD_SIZE);
         hudViewport = new ScreenViewport();
         Gdx.input.setInputProcessor(this);
     }
@@ -143,36 +138,36 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
     @Override
     public void render(float delta) {
         viewport.apply();
-        Gdx.gl.glClearColor(GameThreeConstants.LOADING_COLOR.r, GameThreeConstants.LOADING_COLOR.g, GameThreeConstants.LOADING_COLOR.b, 1);
+        Gdx.gl.glClearColor(ObjectGameConstants.LOADING_COLOR.r, ObjectGameConstants.LOADING_COLOR.g, ObjectGameConstants.LOADING_COLOR.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         elapsed += delta;
 
         if(elapsed <= 2){
 
             batch.begin();
-            font.getData().setScale(GameThreeConstants.PROMPT_SCALE);
-            font.setColor(GameThreeConstants.TITLE_COLOR);
+            font.getData().setScale(ObjectGameConstants.PROMPT_SCALE);
+            font.setColor(ObjectGameConstants.TITLE_COLOR);
 
             if (trial == 1) {
-                final GlyphLayout promptLayout_three = new GlyphLayout(font, GameThreeConstants.PROMPT_THREE);
+                final GlyphLayout promptLayout_three = new GlyphLayout(font, ObjectGameConstants.PROMPT_THREE);
                 font.draw(batch, promptLayout_three, (screenWidth - promptLayout_three.width) / 2, screenHeight * 2 / 3);
 
                 if (difficult == 1 || difficult == 2) {
-                    final GlyphLayout promptLayout_two = new GlyphLayout(font, GameThreeConstants.PROMPT_TWO);
+                    final GlyphLayout promptLayout_two = new GlyphLayout(font, ObjectGameConstants.PROMPT_TWO);
                     font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2,
                             screenHeight * 2 / 3 + 1.5f * promptLayout_three.height);
 
-                    final GlyphLayout promptLayout_one = new GlyphLayout(font, GameThreeConstants.PROMPT_ONE);
+                    final GlyphLayout promptLayout_one = new GlyphLayout(font, ObjectGameConstants.PROMPT_ONE);
                     font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
                             screenHeight * 2 / 3 + 1.5f * promptLayout_two.height + 1.5f * promptLayout_three.height);
 
                 } else {
-                    final GlyphLayout promptLayout_one = new GlyphLayout(font, GameThreeConstants.PROMPT_ONE);
+                    final GlyphLayout promptLayout_one = new GlyphLayout(font, ObjectGameConstants.PROMPT_ONE);
                     font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
                             screenHeight * 2 / 3 + 1.5f * promptLayout_three.height);
                 }
             } else {
-                final GlyphLayout promptLayout_next = new GlyphLayout(font, GameOneConstants.PROMPT_NEXT);
+                final GlyphLayout promptLayout_next = new GlyphLayout(font, BlockGameConstants.PROMPT_NEXT);
                 font.draw(batch, promptLayout_next, (screenWidth - promptLayout_next.width) / 2,
                         screenHeight / 2);
             }
@@ -199,37 +194,37 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
         } else if(elapsed > 4 && elapsed <= 6){
             batch.begin();
-            font.getData().setScale(GameThreeConstants.INSTRUCTION_SCALE);
+            font.getData().setScale(ObjectGameConstants.INSTRUCTION_SCALE);
 
             if(difficult == 2) {
-                final GlyphLayout promptLayout_three = new GlyphLayout(font, GameThreeConstants.INSTRUCTION_HARD_THREE);
+                final GlyphLayout promptLayout_three = new GlyphLayout(font, ObjectGameConstants.INSTRUCTION_HARD_THREE);
                 font.draw(batch, promptLayout_three, (screenWidth - promptLayout_three.width) / 2, screenHeight * 2 / 3);
 
-                final GlyphLayout promptLayout_two = new GlyphLayout(font, GameThreeConstants.INSTRUCTION_HARD_TWO);
+                final GlyphLayout promptLayout_two = new GlyphLayout(font, ObjectGameConstants.INSTRUCTION_HARD_TWO);
                 font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2,
                         screenHeight * 2 / 3 + 1.5f * promptLayout_three.height);
 
-                final GlyphLayout promptLayout_one = new GlyphLayout(font, GameThreeConstants.INSTRUCTION_HARD_ONE);
+                final GlyphLayout promptLayout_one = new GlyphLayout(font, ObjectGameConstants.INSTRUCTION_HARD_ONE);
                 font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
                         screenHeight * 2 / 3 + 1.5f * promptLayout_three.height + 1.5f * promptLayout_two.height);
             } else {
-                final GlyphLayout promptLayout_four = new GlyphLayout(font, GameThreeConstants.INSTRUCTION_FOUR);
+                final GlyphLayout promptLayout_four = new GlyphLayout(font, ObjectGameConstants.INSTRUCTION_FOUR);
                 font.draw(batch, promptLayout_four, (screenWidth - promptLayout_four.width) / 2, screenHeight * 2 / 3);
 
-                final GlyphLayout promptLayout_three = new GlyphLayout(font, GameThreeConstants.INSTRUCTION_THREE);
+                final GlyphLayout promptLayout_three = new GlyphLayout(font, ObjectGameConstants.INSTRUCTION_THREE);
                 font.draw(batch, promptLayout_three, (screenWidth - promptLayout_three.width) / 2,
                         screenHeight * 2 / 3 + 1.5f * promptLayout_four.height);
 
-                final GlyphLayout promptLayout_two = new GlyphLayout(font, GameThreeConstants.INSTRUCTION_TWO);
+                final GlyphLayout promptLayout_two = new GlyphLayout(font, ObjectGameConstants.INSTRUCTION_TWO);
                 font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2,
                         screenHeight * 2 / 3 + 1.5f * promptLayout_three.height + 1.5f * promptLayout_four.height);
 
                 if (difficult == 1) {
-                    final GlyphLayout promptLayout_one = new GlyphLayout(font, GameThreeConstants.INSTRUCTION_ONE_TWO);
+                    final GlyphLayout promptLayout_one = new GlyphLayout(font, ObjectGameConstants.INSTRUCTION_ONE_TWO);
                     font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
                             screenHeight * 2 / 3 + 1.5f * promptLayout_two.height + 1.5f * promptLayout_three.height + 1.5f * promptLayout_four.height);
                 } else {
-                    final GlyphLayout promptLayout_one = new GlyphLayout(font, GameThreeConstants.INSTRUCTION_ONE_ONE);
+                    final GlyphLayout promptLayout_one = new GlyphLayout(font, ObjectGameConstants.INSTRUCTION_ONE_ONE);
                     font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
                             screenHeight * 2 / 3 + 1.5f * promptLayout_two.height + 1.5f * promptLayout_three.height + 1.5f * promptLayout_four.height);
                 }
@@ -246,7 +241,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
             renderer.begin(ShapeRenderer.ShapeType.Filled);
 
-            if(difficult == GameThreeConstants.DIFFICULTY_EASY || difficult == GameThreeConstants.DIFFICULTY_MEDIUM){
+            if(difficult == ObjectGameConstants.DIFFICULTY_EASY || difficult == ObjectGameConstants.DIFFICULTY_MEDIUM){
                 renderer.setColor(cShown);
                 switch (sShown.size()) {
                     case 3:
@@ -272,7 +267,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
                 renderer.end();
 
                 renderer.begin(ShapeRenderer.ShapeType.Line);
-                renderer.setColor(GameThreeConstants.HARD_COLOR);
+                renderer.setColor(ObjectGameConstants.HARD_COLOR);
                 renderer.rect(same.x, same.y, same.getWidth(), same.getHeight());
                 renderer.rect(diff.x, diff.y, diff.getWidth(), diff.getHeight());
                 renderer.end();
@@ -290,34 +285,34 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
                 }
 
                 batch.begin();
-                font.getData().setScale(GameThreeConstants.ANSWER_SCALE);
+                font.getData().setScale(ObjectGameConstants.ANSWER_SCALE);
 
                 if(sameSelected || diffSelected) {
                     if (isCorrect()) {
-                        font.setColor(GameOneConstants.CORRECT_COLOR);
-                        final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                        font.setColor(BlockGameConstants.CORRECT_COLOR);
+                        final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
                         font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight * 4 / 5);
-                        final GlyphLayout promptLayout = new GlyphLayout(font, GameThreeConstants.CORRECT_MESSAGE);
+                        final GlyphLayout promptLayout = new GlyphLayout(font, ObjectGameConstants.CORRECT_MESSAGE);
                         font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight * 4 / 5 + 1.5f * reactionLayout.height);
 
                     } else {
-                        font.setColor(GameOneConstants.INCORRECT_COLOR);
-                        final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                        font.setColor(BlockGameConstants.INCORRECT_COLOR);
+                        final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
                         font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight * 4 / 5);
-                        final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
+                        final GlyphLayout promptLayout = new GlyphLayout(font, FacialGameConstants.INCORRECT_MESSAGE);
                         font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight * 4 / 5  + 1.5f * reactionLayout.height);
 
                     }
                 }
 
                 font.setColor(Color.WHITE);
-                font.getData().setScale(GameTwoConstants.ANSWER_SCALE);
-                final GlyphLayout layout_two = new GlyphLayout(font, GameThreeConstants.SAME_ANSWER_TEXT);
+                font.getData().setScale(FacialGameConstants.ANSWER_SCALE);
+                final GlyphLayout layout_two = new GlyphLayout(font, ObjectGameConstants.SAME_ANSWER_TEXT);
                 final float fontX_two = (screenWidth - layout_two.width) / 2;
                 final float fontY_two = (same.height * 0.6f + same.y);
                 font.draw(batch, layout_two, fontX_two, fontY_two);
 
-                final GlyphLayout layout_one = new GlyphLayout(font, GameThreeConstants.DIFFERENT_ANSWER_TEXT);
+                final GlyphLayout layout_one = new GlyphLayout(font, ObjectGameConstants.DIFFERENT_ANSWER_TEXT);
                 final float fontX_one = (screenWidth - layout_one.width) / 2;
                 final float fontY_one = (diff.height * 0.6f + diff.y);
                 font.draw(batch, layout_one, fontX_one, fontY_one);
@@ -344,7 +339,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
 
                 renderer.begin(ShapeRenderer.ShapeType.Line);
-                renderer.setColor(GameThreeConstants.HARD_COLOR);
+                renderer.setColor(ObjectGameConstants.HARD_COLOR);
                 renderer.rect(one.x, one.y, one.getWidth(), one.getHeight());
                 renderer.rect(two.x, two.y, two.getWidth(), two.getHeight());
                 renderer.rect(three.x, three.y, three.getWidth(), three.getHeight());
@@ -435,21 +430,21 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
                 }
 
                 batch.begin();
-                font.getData().setScale(GameThreeConstants.ANSWER_SCALE);
+                font.getData().setScale(ObjectGameConstants.ANSWER_SCALE);
 
                 if(selectOne || selectTwo || selectThree || selectFour) {
                     if (isCorrectHard()) {
-                        font.setColor(GameOneConstants.CORRECT_COLOR);
-                        final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                        font.setColor(BlockGameConstants.CORRECT_COLOR);
+                        final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
                         font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight * 4 / 5);
-                        final GlyphLayout promptLayout = new GlyphLayout(font, GameThreeConstants.CORRECT_MESSAGE);
+                        final GlyphLayout promptLayout = new GlyphLayout(font, ObjectGameConstants.CORRECT_MESSAGE);
                         font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight * 4 / 5 + 1.5f * reactionLayout.height);
 
                     } else {
-                        font.setColor(GameOneConstants.INCORRECT_COLOR);
-                        final GlyphLayout reactionLayout = new GlyphLayout(font, GameThreeConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+                        font.setColor(BlockGameConstants.INCORRECT_COLOR);
+                        final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
                         font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight * 4 / 5);
-                        final GlyphLayout promptLayout = new GlyphLayout(font, GameTwoConstants.INCORRECT_MESSAGE);
+                        final GlyphLayout promptLayout = new GlyphLayout(font, FacialGameConstants.INCORRECT_MESSAGE);
                         font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight * 4 / 5   + 1.5f * reactionLayout.height);
 
                     }
@@ -460,10 +455,10 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
             renderer.begin(ShapeRenderer.ShapeType.Filled);
             if(!onEnd){
-                renderer.setColor(GameThreeConstants.TITLE_COLOR);
+                renderer.setColor(ObjectGameConstants.TITLE_COLOR);
             } else {
                 disabled = true;
-                renderer.setColor(GameThreeConstants.EASY_COLOR);
+                renderer.setColor(ObjectGameConstants.EASY_COLOR);
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {
@@ -477,10 +472,10 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
 
             if(!onBack){
-                renderer.setColor(GameThreeConstants.TITLE_COLOR);
+                renderer.setColor(ObjectGameConstants.TITLE_COLOR);
             } else {
                 disabled = true;
-                renderer.setColor(GameThreeConstants.EASY_COLOR);
+                renderer.setColor(ObjectGameConstants.EASY_COLOR);
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {game.setScreen(new DifficultyScreen(game));
@@ -493,26 +488,26 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
 
             batch.begin();
-            font.getData().setScale(GameThreeConstants.ANSWER_SCALE);
+            font.getData().setScale(ObjectGameConstants.ANSWER_SCALE);
             font.setColor(Color.WHITE);
             //prints text on back button
-            font.draw(batch, GameTwoConstants.BACK_TEXT,
+            font.draw(batch, FacialGameConstants.BACK_TEXT,
                     (int) (back.x + 0.2 * back.getWidth()),
                     (int) (back.y + 0.6 * back.getHeight()));
             //prints text on end button
-            font.draw(batch, GameTwoConstants.END_TEXT,
+            font.draw(batch, FacialGameConstants.END_TEXT,
                     (int) (end.x + 0.25 * end.getWidth()),
                     (int) (end.y + 0.6 * end.getHeight()));
 
-            font.setColor(GameThreeConstants.TITLE_COLOR);
-            font.draw(batch, GameTwoConstants.SCORE_LABEL + Integer.toString(score),
-                    GameTwoConstants.SCORE_CENTER, screenHeight - GameTwoConstants.SCORE_CENTER);
+            font.setColor(ObjectGameConstants.TITLE_COLOR);
+            font.draw(batch, FacialGameConstants.SCORE_LABEL + Integer.toString(score),
+                    FacialGameConstants.SCORE_CENTER, screenHeight - FacialGameConstants.SCORE_CENTER);
 
-            final GlyphLayout layout_scores = new GlyphLayout(font, GameTwoConstants.SCORE_LABEL);
+            final GlyphLayout layout_scores = new GlyphLayout(font, FacialGameConstants.SCORE_LABEL);
 
-            font.draw(batch, GameTwoConstants.TRIAL_LABEL + Integer.toString(trial),
-                    GameTwoConstants.SCORE_CENTER,
-                    screenHeight - GameTwoConstants.SCORE_CENTER - layout_scores.height * 1.5f);
+            font.draw(batch, FacialGameConstants.TRIAL_LABEL + Integer.toString(trial),
+                    FacialGameConstants.SCORE_CENTER,
+                    screenHeight - FacialGameConstants.SCORE_CENTER - layout_scores.height * 1.5f);
             batch.end();
 
 
@@ -572,7 +567,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if(!disabled){
 
-            if(difficult == GameThreeConstants.DIFFICULTY_EASY || difficult == GameThreeConstants.DIFFICULTY_MEDIUM) {
+            if(difficult == ObjectGameConstants.DIFFICULTY_EASY || difficult == ObjectGameConstants.DIFFICULTY_MEDIUM) {
                 if (same.contains(screenX, screenHeight - screenY)) {
                     sameSelected = !sameSelected;
                     diffSelected = false;
@@ -672,8 +667,8 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             }
             cShown = colors.get(cShow);
         } else {
-            cCorrect = GameThreeConstants.DEFAULT_COLOR;
-            cShown = GameThreeConstants.DEFAULT_COLOR;
+            cCorrect = ObjectGameConstants.DEFAULT_COLOR;
+            cShown = ObjectGameConstants.DEFAULT_COLOR;
         }
         cIsCorrect = ((int)(Math.random() * 2) == 0);
         sIsCorrect = ((int)(Math.random() * 2) == 0);
@@ -703,9 +698,9 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
     }
 
     private boolean isCorrect(){
-        if(difficult == GameThreeConstants.DIFFICULTY_EASY){
+        if(difficult == ObjectGameConstants.DIFFICULTY_EASY){
             return (sameSelected && sCorrect.equals(sShown)) || (diffSelected && !sCorrect.equals(sShown));
-        } else if(difficult == GameThreeConstants.DIFFICULTY_MEDIUM) {
+        } else if(difficult == ObjectGameConstants.DIFFICULTY_MEDIUM) {
             if(sameSelected){
                 return (sCorrect.equals(sShown) && cCorrect.equals(cShown));
             } else if (diffSelected){
@@ -752,9 +747,9 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
     private void selectState(boolean selected){
         if(!selected){
-            renderer.setColor(GameThreeConstants.TITLE_COLOR);
+            renderer.setColor(ObjectGameConstants.TITLE_COLOR);
         } else {
-            renderer.setColor(GameThreeConstants.EASY_COLOR);
+            renderer.setColor(ObjectGameConstants.EASY_COLOR);
         }
     }
 

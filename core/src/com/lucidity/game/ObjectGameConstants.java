@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
  * Created by lixiaoyan on 7/12/18.
  */
 
-public class GameThreeConstants {
+public class ObjectGameConstants {
     //theme: www.colorcombos.com/color-schemes/294/ColorCombo294.html
     public static final float WORLD_SIZE = 10.0f;
 

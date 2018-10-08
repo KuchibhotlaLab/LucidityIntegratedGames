@@ -52,14 +52,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
         Login login = new Login(getApplicationContext());
         username = login.getUsername();
         TextView locationPrompt = findViewById(R.id.location_prompt);
-        locationPrompt.setText("Please list some of the locations that " + username + " have lived");
-
-        //mListLocations = new ArrayList<>();
-        //mListLocations.add("");
-
-
-        //adapter = new ArrayAdapter<String>(this,
-        //        android.R.layout.simple_list_item_1, mListLocations);
+        locationPrompt.setText("Please list some of locations \n that " + username + " have lived");
 
         adapter = new ListItemAdapter(this);
         ListView listView = findViewById(R.id.list_location);
@@ -71,11 +64,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
         addLocBtn.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                //mListLocations.remove("");
-                //mListLocations.add(editText.getText().toString());
                 adapter.addItem(editText.getText().toString());
                 editText.getText().clear();
-                //adapter.notifyDataSetChanged();
             }
         });
         //stackoverflow.com/questions/22144891/

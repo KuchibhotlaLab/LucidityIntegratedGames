@@ -53,6 +53,7 @@
                         app:layout_constraintDimensionRatio="H, 9:4"
                         android:layout_gravity="center"
                         android:fontFamily="@font/kayak_sans_regular"
+                        android:background="@drawable/blockbtn"
                         android:textColor="@color/colorWhite"
                         android:textSize="28sp" />
 
@@ -75,6 +76,7 @@
                     app:layout_constraintDimensionRatio="H, 9:4"
                     android:layout_gravity="center"
                     android:fontFamily="@font/kayak_sans_regular"
+                    android:background="@drawable/spacebtn"
                     android:textColor="@color/colorWhite"
                     android:textSize="28sp" />
 
@@ -98,6 +100,7 @@
                         app:layout_constraintDimensionRatio="H, 9:4"
                         android:layout_gravity="center"
                         android:fontFamily="@font/kayak_sans_regular"
+                        android:background="@drawable/facebtn"
                         android:textColor="@color/colorWhite"
                         android:textSize="28sp" />
 
@@ -120,10 +123,33 @@
                         app:layout_constraintDimensionRatio="H, 9:4"
                         android:layout_gravity="center"
                         android:fontFamily="@font/kayak_sans_regular"
+                        android:background="@drawable/objbtn"
                         android:textColor="@color/colorWhite"
                         android:textSize="28sp" />
                     <ImageView
                         android:id="@+id/imageView3"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center"
+                        android:scaleType="fitXY" />
+                </android.support.constraint.ConstraintLayout>
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/game5_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        app:layout_constraintDimensionRatio="H, 9:4"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/kayak_sans_regular"
+                        android:textColor="@color/colorWhite"
+                        android:background="@drawable/recallbtn"
+                        android:textSize="28sp" />
+                    <ImageView
+                        android:id="@+id/imageView5"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_gravity="center"
