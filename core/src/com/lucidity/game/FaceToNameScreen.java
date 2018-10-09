@@ -488,12 +488,12 @@ FaceToNameScreen extends InputAdapter implements Screen {
         json.put("username", game.getUsername());
         json.put("time", game.getDateTime());
         json.put("location", game.getLocation());
-        String menu = "";
+        final String menu;
         if (game.getLucid()) {
             menu = "Lucid";
         } else if (game.getPatient()) {
             menu = "Patient";
-        } else if (game.getCare()) {
+        } else {
             menu = "CareGiver";
         }
         json.put("menu", menu);
@@ -517,12 +517,16 @@ FaceToNameScreen extends InputAdapter implements Screen {
                     System.out.println(map);
                 } else {
                     // save scores locally
+                    game.scorePoster.postScoreFtN(game.getUsername(), game.getDateTime(), game.getLocation(),
+                            menu, score, trialSuccess, trialTime);
                 }
             }
 
             public void failed(Throwable t) {
                 String status = "failed";
                 // save scores locally
+                game.scorePoster.postScoreFtN(game.getUsername(), game.getDateTime(), game.getLocation(),
+                        menu, score, trialSuccess, trialTime);
             }
 
             @Override
