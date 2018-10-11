@@ -134,11 +134,12 @@ FaceToNameScreen extends InputAdapter implements Screen {
             int temp = (int) (Math.random() * numValidFiles);
             if (i < numValidFiles) {
                 while (picOrder.contains(temp)) {
-                    temp = ((int) Math.random() * numValidFiles);
+                    temp = (int) (Math.random() * numValidFiles);
                 }
             }
             picOrder.add(temp);
         }
+
         generateTrial();
     }
     @Override
