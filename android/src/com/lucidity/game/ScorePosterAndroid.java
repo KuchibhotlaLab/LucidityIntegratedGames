@@ -268,6 +268,8 @@ public class ScorePosterAndroid implements ScorePoster {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (NullPointerException e){
+            e.printStackTrace();
         }
     }
 
@@ -305,6 +307,8 @@ public class ScorePosterAndroid implements ScorePoster {
                 Log.d("Check Score Added", msg);
             }
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e){
             e.printStackTrace();
         }
     }
@@ -344,6 +348,8 @@ public class ScorePosterAndroid implements ScorePoster {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (NullPointerException e){
+            e.printStackTrace();
         }
     }
 
@@ -381,6 +387,8 @@ public class ScorePosterAndroid implements ScorePoster {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (NullPointerException e){
+            e.printStackTrace();
         }
     }
 
@@ -417,6 +425,8 @@ public class ScorePosterAndroid implements ScorePoster {
                 Log.d("Check Score Added", msg);
             }
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e){
             e.printStackTrace();
         }
     }
