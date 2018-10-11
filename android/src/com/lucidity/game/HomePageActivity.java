@@ -1,10 +1,15 @@
 package com.lucidity.game;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -61,6 +66,15 @@ public class HomePageActivity extends AppCompatActivity {
                 Intent i = new Intent(getApplicationContext(), GalleryActivity.class);
                 i.putExtra("mode", 0);
                 startActivity(i);
+
+            }
+        });
+
+        Button btnSound = findViewById(R.id.sound_button);
+        btnSound.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SoundGallery.class);
+                startActivity(intent);
 
             }
         });

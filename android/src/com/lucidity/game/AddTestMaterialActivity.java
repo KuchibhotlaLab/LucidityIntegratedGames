@@ -193,6 +193,75 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        Button btnSound = findViewById(R.id.add_sound);
+        btnSound.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddTestMaterialActivity.this);
+                LayoutInflater inflater = ((Activity) AddTestMaterialActivity.this).getLayoutInflater();
+                View dialogLayout = inflater.inflate(R.layout.add_sound_dialog,
+                        null);
+
+                final AlertDialog dialog = builder.create();
+                dialog.getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                dialog.setView(dialogLayout, 0, 0, 0, 0);
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.setCancelable(true);
+                WindowManager.LayoutParams wlmp = dialog.getWindow()
+                        .getAttributes();
+                wlmp.gravity = Gravity.BOTTOM;
+
+
+                Button btnRecord = (Button) dialogLayout.findViewById(R.id.btn_add_recording);
+                Button btnStored = (Button) dialogLayout.findViewById(R.id.btn_recording_gallery);
+                Button btnDismiss = (Button) dialogLayout.findViewById(R.id.btn_sound_dismiss);
+
+
+                btnRecord.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Do nothing if button was recently pressed
+                        if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                            return;
+                        }
+                        prevClickTime = SystemClock.elapsedRealtime();
+
+                        Intent intent = new Intent(getApplicationContext(), AddSounds.class);
+                        startActivity(intent);
+                    }
+                });
+
+                btnStored.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Do nothing if button was recently pressed
+                        if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                            return;
+                        }
+                        prevClickTime = SystemClock.elapsedRealtime();
+
+                        Intent intent = new Intent(getApplicationContext(), SoundGallery.class);
+                        intent.putExtra("mode", 1);
+                        startActivity(intent);
+                    }
+                });
+
+
+                btnDismiss.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+
+                builder.setView(dialogLayout);
+
+                dialog.show();
+            }
+        });
     }
 
     /**

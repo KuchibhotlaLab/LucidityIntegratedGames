@@ -6,31 +6,61 @@
     android:layout_height="match_parent"
     tools:context="com.lucidity.game.GalleryActivity">
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/gallery_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:orientation="vertical">
 
-        <GridView
-            android:id="@+id/photoGalary"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:columnWidth="280dp"
-            android:gravity="center"
-            android:horizontalSpacing="2dp"
-            android:numColumns="2"
-            android:padding="2dp"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="2dp" />
-    </ScrollView>
+            android:layout_marginBottom="32dp">
+
+            <TextView
+                android:id="@+id/name_display"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/ostrich_sans_rounded_medium"
+                android:paddingTop="24dp"
+                android:text="Home"
+                android:textAlignment="center"
+                android:textColor="#4b4b4b"
+                android:textSize="48sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@+id/gallery_title">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <GridView
+                android:id="@+id/photoGalary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnWidth="280dp"
+                android:gravity="center"
+                android:horizontalSpacing="2dp"
+                android:numColumns="2"
+                android:padding="2dp"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="2dp" />
+        </ScrollView>
+    </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/add_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_add" />
 
 </android.support.constraint.ConstraintLayout>
