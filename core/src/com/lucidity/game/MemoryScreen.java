@@ -513,6 +513,9 @@ public class MemoryScreen extends InputAdapter implements Screen {
                     HashMap<String, String> map = new Gson().fromJson(status, new TypeToken<HashMap<String, String>>() {
                     }.getType());
                     System.out.println(map);
+
+                    game.scorePoster.postOnline(game.getUsername());
+
                 } else {
                     // save scores locally
                     game.scorePoster.postScoreBlock(game.getUsername(), game.getDateTime(), game.getLocation(),

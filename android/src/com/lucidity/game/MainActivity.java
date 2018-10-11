@@ -247,8 +247,6 @@ public class MainActivity extends AppCompatActivity{
 
         public AsyncResponse delegate = null;
 
-
-
         public VerifyCaregiver(String userText, EditText userInput, AsyncResponse delegate)
         {
             inputText = userText;
@@ -293,6 +291,9 @@ public class MainActivity extends AppCompatActivity{
 
                 if (success == 1) {
                     // successfully verified password
+                    // post locally saved scores to web server if there are any.
+                    ScorePosterAndroid poster = new ScorePosterAndroid(getApplicationContext());
+                    poster.postOnline(username);
                     Intent intent = new Intent(getApplicationContext(), CaregiverHomePage.class);
                     startActivity(intent);
                 } else {
@@ -312,8 +313,6 @@ public class MainActivity extends AppCompatActivity{
             // dismiss the dialog once done
             pDialog.dismiss();
         }*/
-
-
 
         @Override
         protected void onPostExecute(String file_url) {

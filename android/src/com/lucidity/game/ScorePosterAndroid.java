@@ -2,11 +2,32 @@ package com.lucidity.game;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.util.Log;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ScorePosterAndroid implements ScorePoster {
     Context context;
+
+    //urls for uploading scores
+    private String url_block_game = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_blockgame_score.php";
+    private String url_obj_game = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_objectrecognitiongame_score.php";
+    private String url_sp_game = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_spatialgame_score.php";
+    private String url_ntf_game = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_nametofacegame_score.php";
+    private String url_ftn_game = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_facetonamegame_score.php";
+
+    // JSON Node names
+    private static final String TAG_SUCCESS = "success";
+    private static final String TAG_MESSAGE = "message";
+
+    // JSON parser class
+    JSONParser jsonParser = new JSONParser();
 
     public ScorePosterAndroid(Context c) {
         context = c;
@@ -158,6 +179,245 @@ public class ScorePosterAndroid implements ScorePoster {
         gameScore.setTrialtime5(trialTime[4]);
 
         gameScoreDAO.insert(gameScore);
+    }
 
+    public void postOnline(String username) {
+        LucidityDatabase database = Room.databaseBuilder(context, LucidityDatabase.class, "db-BlockGameScores")
+                .build();
+        BlockGameScoreDAO blockGameScoreDAO = database.getBlockGameScoreDAO();
+        List<BlockGameScore> blockGameScoreList = blockGameScoreDAO.getUserBlockGameScores(username);
+        for (BlockGameScore s: blockGameScoreList) {
+            postScoreBlockOnline(s, blockGameScoreDAO);
+        }
+
+        database = Room.databaseBuilder(context, LucidityDatabase.class, "db-ObjGameScores")
+                .build();
+        ObjGameScoreDAO objGameScoreDAO = database.getObjGameScoreDAO();
+        List<ObjGameScore> objGameScoreList = objGameScoreDAO.getUserObjGameScores(username);
+        for (ObjGameScore s: objGameScoreList) {
+            postScoreObjOnline(s, objGameScoreDAO);
+        }
+
+        database = Room.databaseBuilder(context, LucidityDatabase.class, "db-SpGameScores")
+                .build();
+        SpGameScoreDAO spGameScoreDAO = database.getSpGameScoreDAO();
+        List<SpGameScore> spGameScoreList = spGameScoreDAO.getUserSpGameScores(username);
+        for (SpGameScore s: spGameScoreList) {
+            postScoreSpOnline(s, spGameScoreDAO);
+        }
+
+        database = Room.databaseBuilder(context, LucidityDatabase.class, "db-FtNGameScores")
+                .build();
+        FtNGameScoreDAO ftnGameScoreDAO = database.getFtNGameScoreDAO();
+        List<FtNGameScore> ftnGameScoreList = ftnGameScoreDAO.getUserFtNGameScores(username);
+        for (FtNGameScore s: ftnGameScoreList) {
+            postScoreFtNOnline(s, ftnGameScoreDAO);
+        }
+
+        database = Room.databaseBuilder(context, LucidityDatabase.class, "db-NtFGameScores")
+                .build();
+        NtFGameScoreDAO ntfGameScoreDAO = database.getNtFGameScoreDAO();
+        List<NtFGameScore> ntfGameScoreList = ntfGameScoreDAO.getUserNtFGameScores(username);
+        for (NtFGameScore s: ntfGameScoreList) {
+            postScoreNtFOnline(s, ntfGameScoreDAO);
+        }
+    }
+
+    private void postScoreBlockOnline(BlockGameScore s, BlockGameScoreDAO gameScoreDAO) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("username", s.getUsername()));
+        params.add(new BasicNameValuePair("time", s.getTime()));
+        params.add(new BasicNameValuePair("location", s.getLocation()));
+        params.add(new BasicNameValuePair("menu", s.getMenu()));
+        params.add(new BasicNameValuePair("difficulty", s.getDifficulty()));
+        params.add(new BasicNameValuePair("score", s.getScore()));
+        params.add(new BasicNameValuePair("trial1", String.valueOf(s.getTrial1())));
+        params.add(new BasicNameValuePair("trial1-1time", String.valueOf(s.getTrialtime11())));
+        params.add(new BasicNameValuePair("trial1-2time", String.valueOf(s.getTrialtime12())));
+        params.add(new BasicNameValuePair("trial1-3time", String.valueOf(s.getTrialtime13())));
+        params.add(new BasicNameValuePair("trial2", String.valueOf(s.getTrial2())));
+        params.add(new BasicNameValuePair("trial2-1time", String.valueOf(s.getTrialtime21())));
+        params.add(new BasicNameValuePair("trial2-2time", String.valueOf(s.getTrialtime22())));
+        params.add(new BasicNameValuePair("trial2-3time", String.valueOf(s.getTrialtime23())));
+        params.add(new BasicNameValuePair("trial3", String.valueOf(s.getTrial3())));
+        params.add(new BasicNameValuePair("trial3-1time", String.valueOf(s.getTrialtime31())));
+        params.add(new BasicNameValuePair("trial3-2time", String.valueOf(s.getTrialtime32())));
+        params.add(new BasicNameValuePair("trial3-3time", String.valueOf(s.getTrialtime33())));
+        params.add(new BasicNameValuePair("trial4", String.valueOf(s.getTrial4())));
+        params.add(new BasicNameValuePair("trial4-1time", String.valueOf(s.getTrialtime41())));
+        params.add(new BasicNameValuePair("trial4-2time", String.valueOf(s.getTrialtime42())));
+        params.add(new BasicNameValuePair("trial4-3time", String.valueOf(s.getTrialtime43())));
+        params.add(new BasicNameValuePair("trial5", String.valueOf(s.getTrial5())));
+        params.add(new BasicNameValuePair("trial5-1time", String.valueOf(s.getTrialtime51())));
+        params.add(new BasicNameValuePair("trial5-2time", String.valueOf(s.getTrialtime52())));
+        params.add(new BasicNameValuePair("trial5-3time", String.valueOf(s.getTrialtime53())));
+
+        // getting JSON Object
+        JSONObject json = jsonParser.makeHttpRequest(url_block_game,
+                "POST", params);
+
+        // check for success tag
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            String msg = json.getString(TAG_MESSAGE);
+
+            if (success == 1) {
+                gameScoreDAO.delete(s);
+            } else {
+                Log.d("Check Score Added", msg);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void postScoreObjOnline(ObjGameScore s, ObjGameScoreDAO gameScoreDAO) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("username", s.getUsername()));
+        params.add(new BasicNameValuePair("time", s.getTime()));
+        params.add(new BasicNameValuePair("location", s.getLocation()));
+        params.add(new BasicNameValuePair("menu", s.getMenu()));
+        params.add(new BasicNameValuePair("difficulty", s.getDifficulty()));
+        params.add(new BasicNameValuePair("score", s.getScore()));
+        params.add(new BasicNameValuePair("trial1", String.valueOf(s.getTrial1())));
+        params.add(new BasicNameValuePair("trial1time", String.valueOf(s.getTrialtime1())));
+        params.add(new BasicNameValuePair("trial2", String.valueOf(s.getTrial2())));
+        params.add(new BasicNameValuePair("trial2time", String.valueOf(s.getTrialtime2())));
+        params.add(new BasicNameValuePair("trial3", String.valueOf(s.getTrial3())));
+        params.add(new BasicNameValuePair("trial3time", String.valueOf(s.getTrialtime3())));
+        params.add(new BasicNameValuePair("trial4", String.valueOf(s.getTrial4())));
+        params.add(new BasicNameValuePair("trial4time", String.valueOf(s.getTrialtime4())));
+        params.add(new BasicNameValuePair("trial5", String.valueOf(s.getTrial5())));
+        params.add(new BasicNameValuePair("trial5time", String.valueOf(s.getTrialtime5())));
+
+        // getting JSON Object
+        JSONObject json = jsonParser.makeHttpRequest(url_obj_game,
+                "POST", params);
+
+        // check for success tag
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            String msg = json.getString(TAG_MESSAGE);
+
+            if (success == 1) {
+                gameScoreDAO.delete(s);
+            } else {
+                Log.d("Check Score Added", msg);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void postScoreSpOnline(SpGameScore s, SpGameScoreDAO gameScoreDAO) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("username", s.getUsername()));
+        params.add(new BasicNameValuePair("time", s.getTime()));
+        params.add(new BasicNameValuePair("location", s.getLocation()));
+        params.add(new BasicNameValuePair("menu", s.getMenu()));
+        params.add(new BasicNameValuePair("difficulty", s.getDifficulty()));
+        params.add(new BasicNameValuePair("score", s.getScore()));
+        params.add(new BasicNameValuePair("trial1", String.valueOf(s.getTrial1())));
+        params.add(new BasicNameValuePair("trial1time", String.valueOf(s.getTrialtime1())));
+        params.add(new BasicNameValuePair("trial2", String.valueOf(s.getTrial2())));
+        params.add(new BasicNameValuePair("trial2time", String.valueOf(s.getTrialtime2())));
+        params.add(new BasicNameValuePair("trial3", String.valueOf(s.getTrial3())));
+        params.add(new BasicNameValuePair("trial3time", String.valueOf(s.getTrialtime3())));
+        params.add(new BasicNameValuePair("trial4", String.valueOf(s.getTrial4())));
+        params.add(new BasicNameValuePair("trial4time", String.valueOf(s.getTrialtime4())));
+        params.add(new BasicNameValuePair("trial5", String.valueOf(s.getTrial5())));
+        params.add(new BasicNameValuePair("trial5time", String.valueOf(s.getTrialtime5())));
+
+        // getting JSON Object
+        JSONObject json = jsonParser.makeHttpRequest(url_sp_game,
+                "POST", params);
+
+        // check for success tag
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            String msg = json.getString(TAG_MESSAGE);
+
+            if (success == 1) {
+                gameScoreDAO.delete(s);
+            } else {
+                Log.d("Check Score Added", msg);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void postScoreFtNOnline(FtNGameScore s, FtNGameScoreDAO gameScoreDAO) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("username", s.getUsername()));
+        params.add(new BasicNameValuePair("time", s.getTime()));
+        params.add(new BasicNameValuePair("location", s.getLocation()));
+        params.add(new BasicNameValuePair("menu", s.getMenu()));
+        params.add(new BasicNameValuePair("score", s.getScore()));
+        params.add(new BasicNameValuePair("trial1", String.valueOf(s.getTrial1())));
+        params.add(new BasicNameValuePair("trial1time", String.valueOf(s.getTrialtime1())));
+        params.add(new BasicNameValuePair("trial2", String.valueOf(s.getTrial2())));
+        params.add(new BasicNameValuePair("trial2time", String.valueOf(s.getTrialtime2())));
+        params.add(new BasicNameValuePair("trial3", String.valueOf(s.getTrial3())));
+        params.add(new BasicNameValuePair("trial3time", String.valueOf(s.getTrialtime3())));
+        params.add(new BasicNameValuePair("trial4", String.valueOf(s.getTrial4())));
+        params.add(new BasicNameValuePair("trial4time", String.valueOf(s.getTrialtime4())));
+        params.add(new BasicNameValuePair("trial5", String.valueOf(s.getTrial5())));
+        params.add(new BasicNameValuePair("trial5time", String.valueOf(s.getTrialtime5())));
+
+        // getting JSON Object
+        JSONObject json = jsonParser.makeHttpRequest(url_ftn_game,
+                "POST", params);
+
+        // check for success tag
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            String msg = json.getString(TAG_MESSAGE);
+
+            if (success == 1) {
+                gameScoreDAO.delete(s);
+            } else {
+                Log.d("Check Score Added", msg);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void postScoreNtFOnline(NtFGameScore s, NtFGameScoreDAO gameScoreDAO) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("username", s.getUsername()));
+        params.add(new BasicNameValuePair("time", s.getTime()));
+        params.add(new BasicNameValuePair("location", s.getLocation()));
+        params.add(new BasicNameValuePair("menu", s.getMenu()));
+        params.add(new BasicNameValuePair("score", s.getScore()));
+        params.add(new BasicNameValuePair("trial1", String.valueOf(s.getTrial1())));
+        params.add(new BasicNameValuePair("trial1time", String.valueOf(s.getTrialtime1())));
+        params.add(new BasicNameValuePair("trial2", String.valueOf(s.getTrial2())));
+        params.add(new BasicNameValuePair("trial2time", String.valueOf(s.getTrialtime2())));
+        params.add(new BasicNameValuePair("trial3", String.valueOf(s.getTrial3())));
+        params.add(new BasicNameValuePair("trial3time", String.valueOf(s.getTrialtime3())));
+        params.add(new BasicNameValuePair("trial4", String.valueOf(s.getTrial4())));
+        params.add(new BasicNameValuePair("trial4time", String.valueOf(s.getTrialtime4())));
+        params.add(new BasicNameValuePair("trial5", String.valueOf(s.getTrial5())));
+        params.add(new BasicNameValuePair("trial5time", String.valueOf(s.getTrialtime5())));
+
+        // getting JSON Object
+        JSONObject json = jsonParser.makeHttpRequest(url_ntf_game,
+                "POST", params);
+
+        // check for success tag
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            String msg = json.getString(TAG_MESSAGE);
+
+            if (success == 1) {
+                gameScoreDAO.delete(s);
+            } else {
+                Log.d("Check Score Added", msg);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

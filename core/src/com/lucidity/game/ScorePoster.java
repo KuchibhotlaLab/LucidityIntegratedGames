@@ -15,4 +15,6 @@ public interface ScorePoster {
 
     void postScoreFtN(String username, String dateTime, String location, String menu,
                       int score, int[] trialSuccess, double[] trialTime);
+
+    void postOnline(String username);
 }
