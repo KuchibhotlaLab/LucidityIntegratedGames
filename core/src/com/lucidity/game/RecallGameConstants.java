@@ -43,6 +43,9 @@ public class RecallGameConstants {
     public static final String INSTRUCT_TWO = "correct answer associated";
     public static final String INSTRUCT_THREE = "with each prompt given?";
 
+    public static final String PROMPT_ONE = "Who is this?";
+    public static final String PROMPT_TWO = "";
+
     public static final float INSTRUCTION_SIZE = .6f;
     public static final float RESULT_SIZE = 0.65f;
 }

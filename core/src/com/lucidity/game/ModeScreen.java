@@ -208,7 +208,13 @@ public class ModeScreen extends InputAdapter implements Screen {
                 facialMemoryGame.setScreen(new NameToFaceScreen(facialMemoryGame, 0, 1, FacialGameConstants.MODE_ATTR));
             }
         } else if(isRecallGame){
-            recallGame.setScreen(new RecallScreen(recallGame));
+            if (worldTouch.dst(RecallGameConstants.LOCATION_CENTER_NAME) < RecallGameConstants.MODE_BUBBLE_RADIUS) {
+                recallGame.setScreen(new RecallScreen(recallGame, "location"));
+            }
+            if (worldTouch.dst(RecallGameConstants.RELATION_CENTER_NAME) < RecallGameConstants.MODE_BUBBLE_RADIUS) {
+                recallGame.setScreen(new RecallScreen(recallGame, "relation"));
+            }
+
         }
 
 

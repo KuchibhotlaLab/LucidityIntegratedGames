@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/record_wrapper"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:orientation="vertical"
-    tools:context="com.lucidity.game.AddSounds">
-    <!--<Button
-        android:id="@+id/btn_start_record"
+    android:background="@color/colorWhiteTransparent">
+
+    <Button
+        android:id="@+id/btn_add_recording"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/longbutton"
         android:text="Add Microphone Recording"
         android:layout_marginBottom="10dp"/>
     <Button
-        android:id="@+id/btn_stop_record"
+        android:id="@+id/btn_recording_gallery"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Listen to current recordings"
         android:background="@drawable/longbutton"
-        android:layout_marginBottom="10dp"/>-->
-
+        android:layout_marginBottom="10dp"/>
+    <Button
+        android:id="@+id/btn_sound_dismiss"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dismiss"
+        android:background="@drawable/longbutton"/>
 </LinearLayout>
