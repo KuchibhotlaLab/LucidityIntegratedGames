@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.support.v4.app.ActivityCompat;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,24 +79,6 @@ public class AddSounds extends AppCompatActivity {
             alertDialog.show();
             finish();
         }
-
-        mRecordButton = new RecordButton(this);
-
-        LinearLayout ll = findViewById(R.id.record_wrapper);
-        mRecordButton = new RecordButton(this);
-        ll.addView(mRecordButton,
-                new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        0));
-        mPlayButton = new PlayButton(this);
-        ll.addView(mPlayButton,
-                new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        0));
-        setContentView(ll);
-
     }
 
     private void onRecord(boolean start) {
@@ -200,12 +184,40 @@ public class AddSounds extends AppCompatActivity {
         super.onCreate(icicle);
         setContentView(R.layout.activity_add_sounds);
 
+        //TODO: save file internally
         // Record to the external cache directory for visibility
         mFileName = getExternalCacheDir().getAbsolutePath();
         mFileName += "/audiorecordtest.3gp";
-        System.out.println(mFileName);
+        System.out.println("path name: "+ mFileName);
 
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
+
+        mRecordButton = new RecordButton(this);
+
+        LinearLayout ll = findViewById(R.id.record_wrapper);
+        mRecordButton = new RecordButton(this);
+        mRecordButton.setGravity(Gravity.CENTER_VERTICAL);
+        mRecordButton.setBackgroundResource(R.drawable.longbutton);
+        LinearLayout.LayoutParams recordButtonParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                1);
+        recordButtonParams.setMargins(0, 0, 0, 24);
+
+        ll.addView(mRecordButton, recordButtonParams
+                );
+
+        mPlayButton = new PlayButton(this);
+        mPlayButton.setGravity(Gravity.CENTER_VERTICAL);
+        mPlayButton.setBackgroundResource(R.drawable.longbutton);
+        ll.addView(mPlayButton,
+                new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        1));
+
+        //setContentView(ll);
+
     }
 
     @Override

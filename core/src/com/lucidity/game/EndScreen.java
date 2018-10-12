@@ -26,6 +26,7 @@ public class EndScreen extends InputAdapter implements Screen {
     FacialMemoryGame gameDep;
     ObjectRecognitionGame gameOb;
     SpatialMemoryGame gameSpa;
+    RecallGame gameRec;
 
     ExtendViewport memoryViewport;
     ScreenViewport hudViewport;
@@ -35,7 +36,7 @@ public class EndScreen extends InputAdapter implements Screen {
     TextureRegion textureRegion;
     Sprite resizedBg;
 
-    boolean isGameOne, isGameTwo, isGameThree, isGameFour = false;
+    boolean isGameOne, isGameTwo, isGameThree, isGameFour, isGameFive = false;
 
 
     int screenWidth;
@@ -91,6 +92,17 @@ public class EndScreen extends InputAdapter implements Screen {
 
     }
 
+    public EndScreen(RecallGame game, int points, int trials) {
+        this.gameRec = game;
+        this.score = points;
+        this.trial = trials;
+        isGameFive = true;
+        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
+
+        memoryViewport = new ExtendViewport(SpacialGameConstants.WORLD_SIZE, SpacialGameConstants.WORLD_SIZE);
+
+    }
+
 
 
     @Override
@@ -137,6 +149,8 @@ public class EndScreen extends InputAdapter implements Screen {
             batch.begin();
             batch.draw(resizedBg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             batch.end();
+        } else if(isGameFive) {
+            Gdx.gl.glClearColor(RecallGameConstants.BACKGROUND_COLOR.r, RecallGameConstants.BACKGROUND_COLOR.g, RecallGameConstants.BACKGROUND_COLOR.b, 1);
         }
 
         renderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -160,6 +174,8 @@ public class EndScreen extends InputAdapter implements Screen {
         } else if(isGameFour){
             //font.setColor(SpacialGameConstants.TITLE_COLOR);
             font.setColor(Color.WHITE);
+        } else if(isGameFive) {
+            font.setColor(RecallGameConstants.TITLE_COLOR);
         }
 
         final GlyphLayout scoreLayout = new GlyphLayout(font, "Your score is " + Integer.toString(score) + "/" + Integer.toString(trial));

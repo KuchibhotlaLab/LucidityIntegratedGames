@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -131,9 +132,66 @@ public class RecallScreen extends InputAdapter implements Screen {
                 font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
                         screenHeight / 2 + 1.5f * promptLayout_two.height);
             } else {
-                /*final GlyphLayout promptLayout_next = new GlyphLayout(font, RecallGameConstants.PROMPT_NEXT);
-                font.draw(batch, promptLayout_next, (screenWidth - promptLayout_next.width) / 2,
-                        screenHeight / 2);*/
+                //TODO: finish implementing game
+                //Start timer
+                if (timerStart){
+                    trialStartTime = TimeUtils.nanoTime();
+                    timerStart = false;
+                    disableTouchDown = false;
+                }
+
+                renderer.begin(ShapeRenderer.ShapeType.Filled);
+
+                if(!onSelect1){
+                    renderer.setColor(FacialGameConstants.W2F_COLOR);
+                } else {
+                    renderer.setColor(FacialGameConstants.CHOICE_COLOR);
+                }
+                renderer.rect(answer1.x, answer1.y, answer1.getWidth(), answer1.getHeight());
+
+
+                if(!onSelect2){
+                    renderer.setColor(FacialGameConstants.W2F_COLOR);
+                    //System.out.println("you should be in this loop 2 ");
+                } else {
+                    //System.out.println("are you even here 1 ");
+                    renderer.setColor(FacialGameConstants.CHOICE_COLOR);
+                }
+                renderer.rect(answer2.x, answer2.y, answer2.getWidth(), answer2.getHeight());
+
+
+                if(!onEnd){
+                    renderer.setColor(FacialGameConstants.W2F_COLOR);
+                } else {
+                    renderer.setColor(FacialGameConstants.CHOICE_COLOR);
+                    Timer.schedule(new Timer.Task() {
+                                       @Override
+                                       public void run() {
+                                           game.setScreen(new EndScreen(game, score, trial));
+                                       }
+                                   },
+                            1);
+                }
+
+                renderer.rect(end.x, end.y, end.width, end.height);
+
+
+                if(!onBack){
+                    renderer.setColor(FacialGameConstants.W2F_COLOR);
+                } else {
+                    renderer.setColor(FacialGameConstants.CHOICE_COLOR);
+                    Timer.schedule(new Timer.Task() {
+                                       @Override
+                                       public void run() {game.setScreen(new ModeScreen(game));
+                                       }
+                                   },
+                            1);
+                }
+                renderer.rect(back.x, back.y, back.width, back.height);
+
+
+
+                renderer.end();
             }
 
             batch.end();
