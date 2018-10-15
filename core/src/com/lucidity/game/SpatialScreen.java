@@ -139,8 +139,6 @@ public class SpatialScreen extends InputAdapter implements Screen {
                     block.x = i * block.width + screenWidth / 12;
                     block.y = j * block.height + screenHeight  / 4;
                 }
-                //block.x = i * block.width + screenWidth / 12 + offset * i;
-                //block.y = j * block.height + screenHeight  / 4 + offset * j;
                 block.x = i * block.width + startX + offset * i;
                 block.y = j * block.height + screenHeight  / 4 + offset * j;
                 grid[i][j] = block;

@@ -29,8 +29,6 @@ public class RecallGameConstants {
     public static final String TITLE_ONE = "Recall";
     public static final String TITLE_TWO = "Memory Test";
 
-    public static final String INSTRUCTIONS = "Remember the roadblocks.";
-    public static final String INSTRUCTIONS_TWO = "Find a viable path.";
     public static final String SUBMIT_TEXT = "Submit";
 
 
@@ -43,8 +41,11 @@ public class RecallGameConstants {
     public static final String INSTRUCT_TWO = "correct answer associated";
     public static final String INSTRUCT_THREE = "with each prompt given?";
 
-    public static final String PROMPT_ONE = "Who is this?";
-    public static final String PROMPT_TWO = "";
+    public static final String PROMPT_ONE = "Select the ";
+    public static final String PROMPT_RELATION = "of this person to you.";
+    public static final String PROMPT_LOCATION = "that you lived in the past.";
+    public static final String PROMPT_TWO = " is ";
+
 
     public static final float INSTRUCTION_SIZE = .6f;
     public static final float RESULT_SIZE = 0.65f;
