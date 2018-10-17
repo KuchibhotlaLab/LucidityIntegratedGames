@@ -6,13 +6,16 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.app.Fragment;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -37,6 +40,7 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -88,6 +92,30 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date currDate = new Date();
         date = dateFormat.format(currDate);
+
+        Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
+                R.layout.spinner_item_tracking, Arrays.asList(getResources().getStringArray(R.array.tracking_tests))) {
+
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView view = (TextView) super.getView(position, convertView, parent);
+
+                return view;
+            }
+
+
+            public View getDropDownView(int position,  View convertView,  ViewGroup parent) {
+                TextView view = (TextView) super.getDropDownView(position, convertView, parent);
+
+                return view;
+            }
+        };
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
 
         Button btnChangeDay = rootView.findViewById(R.id.change_day);
         btnChangeDay.setOnClickListener(new View.OnClickListener() {
