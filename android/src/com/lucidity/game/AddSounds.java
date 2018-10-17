@@ -1,13 +1,18 @@
 package com.lucidity.game;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.Environment;
+import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,10 +22,22 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class AddSounds extends AppCompatActivity {
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
@@ -34,15 +51,7 @@ public class AddSounds extends AppCompatActivity {
 
     private boolean permissionToRecordAccepted = false;
     private String [] permissions = {Manifest.permission.RECORD_AUDIO};
-
-    /*@Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_sounds);
-
-        //to play local recording
-        //final MediaPlayer mp = MediaPlayer.create(this, R.raw.soho);
-    }*/
+    private String username, audioName;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -53,8 +62,6 @@ public class AddSounds extends AppCompatActivity {
                 break;
         }
         if (!permissionToRecordAccepted ) {
-            //TODO: inflate dialog
-            // set dialog message
 
             LayoutInflater li = LayoutInflater.from(this);
             View promptsView = li.inflate(R.layout.permission_denied_dialog, null);
@@ -184,11 +191,13 @@ public class AddSounds extends AppCompatActivity {
         super.onCreate(icicle);
         setContentView(R.layout.activity_add_sounds);
 
-        //TODO: save file internally
+        Login login = new Login(getApplicationContext());
+        username = login.getUsername();
+
         // Record to the external cache directory for visibility
         mFileName = getExternalCacheDir().getAbsolutePath();
         mFileName += "/audiorecordtest.3gp";
-        System.out.println("path name: "+ mFileName);
+
 
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
 
@@ -216,7 +225,112 @@ public class AddSounds extends AppCompatActivity {
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         1));
 
-        //setContentView(ll);
+        Button mStorageButton = findViewById(R.id.store_audio);
+        mStorageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                inflateSaveDialog();
+            }
+        });
+
+
+    }
+
+    public void inflateSaveDialog(){
+        LayoutInflater li = LayoutInflater.from(this);
+        View promptsView = li.inflate(R.layout.store_audio_dialog, null);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText userInput = promptsView
+                .findViewById(R.id.audio_name);
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("Save",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                // DO THE METHOD HERE WHEN PROCEED IS CLICKED
+                                String user_text = (userInput.getText()).toString();
+
+                                if (user_text.trim().length() == 0) {
+                                    userInput.setError("Please put a non-empty name");
+                                } else {
+                                    audioName = userInput.getText().toString();
+                                    try{
+                                        renameStoreAudio();
+                                    } catch (IOException e){
+                                        System.out.println("Something is wrong");
+                                    }
+                                }
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                dialog.dismiss();
+                            }
+
+                        }
+
+                );
+
+        // create alert dialog
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
+
+    }
+
+    private void renameStoreAudio() throws IOException{
+
+        File sdcard = new File(getExternalCacheDir().getAbsolutePath());
+        String fromFullPath = "/audiorecordtest.3gp";
+        String toFullPath = "/" + audioName + ".3gp";
+
+        File from = new File(sdcard,fromFullPath);
+
+
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        // path to /data/data/yourapp/app_data/audioDir
+        File directory = cw.getDir("audioDir", Context.MODE_PRIVATE);
+        File subfolder = new File(directory, username);
+
+        if(!subfolder.exists()){
+            subfolder.mkdirs();
+        }
+
+        File to = new File(subfolder,toFullPath);
+        from.renameTo(to);
+
+        FileChannel sourceChannel = null;
+        FileChannel destChannel = null;
+        try {
+            sourceChannel = new FileInputStream(from).getChannel();
+            destChannel = new FileOutputStream(to).getChannel();
+            destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
+        }finally{
+            sourceChannel.close();
+            destChannel.close();
+        }
+
+
+        //System.out.println("supposed renamed to be: " + subfolder.getAbsolutePath() + toFullPath);
+        //System.out.println("renamed to be: " + from.getAbsolutePath());
+
+
+        from.delete();
+
+
+        File[] files = new File(subfolder.getAbsolutePath()).listFiles();
+        System.out.println("Print numbers of files: " + files.length);
+        for (int i = 0 ; i < files.length; i++) {
+            System.out.println("Print changed files: " + files[i].getName());
+        }
 
     }
 
@@ -232,5 +346,19 @@ public class AddSounds extends AppCompatActivity {
             mPlayer.release();
             mPlayer = null;
         }
+    }
+
+    private String getFilename()
+    {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        // path to /data/data/yourapp/app_data/audioDir
+        File directory = cw.getDir("audioDir", Context.MODE_PRIVATE);
+        File subfolder = new File(directory, username);
+
+        if(!subfolder.exists()){
+            subfolder.mkdirs();
+        }
+
+        return (subfolder.getAbsolutePath() + "/" + System.currentTimeMillis() + ".mp3");
     }
 }

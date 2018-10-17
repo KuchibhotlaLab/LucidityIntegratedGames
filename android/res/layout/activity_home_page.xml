@@ -32,11 +32,13 @@
                 app:layout_constraintStart_toStartOf="parent" />
         </FrameLayout>
 
+        <!--TODO: figure how to reduce the gap-->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="wrap_content"
@@ -44,13 +46,28 @@
                 android:layout_gravity="bottom|left"
                 android:layout_weight="1">
 
+
+                <!--<ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="H, 8:9"
+                    android:layout_gravity="center"
+                    android:src="@drawable/memorytestbutton"/>
+
                 <Button
+                    android:id="@+id/game_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:background="@color/colorWhiteTransparent"
+                    app:layout_constraintDimensionRatio="H, 8:9" />-->
+                <ImageButton
                     android:id="@+id/game_button"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    app:layout_constraintDimensionRatio="H, 9:8"
-                    android:layout_gravity="center"
-                    android:background="@drawable/memorytestbutton" />
+                    app:layout_constraintDimensionRatio="H, 8:9"
+                    android:background="@color/colorWhiteTransparent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/memorytestbutton"/>
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
@@ -58,36 +75,39 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
                 android:layout_weight="1">
-
-                <Button
+                <ImageButton
                     android:id="@+id/reminders"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    app:layout_constraintDimensionRatio="H, 9:8"
-                    android:layout_gravity="center"
-                    android:background="@drawable/remindersbutton" />
+                    app:layout_constraintDimensionRatio="H, 8:9"
+                    android:background="@color/colorWhiteTransparent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/remindersbutton"/>
             </android.support.constraint.ConstraintLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent">
             <android.support.constraint.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|left"
                 android:layout_weight="1">
 
-                <Button
+                <ImageButton
                     android:id="@+id/photos_button"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    app:layout_constraintDimensionRatio="H, 9:8"
-                    android:layout_gravity="center"
-                    android:background="@drawable/photobutton" />
+                    app:layout_constraintDimensionRatio="H, 8:9"
+                    android:background="@color/colorWhiteTransparent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/photobutton"/>
+
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
@@ -95,14 +115,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|right"
                 android:layout_weight="1">
-
-                <Button
+                <ImageButton
                     android:id="@+id/sound_button"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    app:layout_constraintDimensionRatio="H, 9:8"
-                    android:layout_gravity="center"
-                    android:background="@drawable/musicbutton" />
+                    app:layout_constraintDimensionRatio="H, 8:9"
+                    android:background="@color/colorWhiteTransparent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/musicbutton"/>
 
             </android.support.constraint.ConstraintLayout>
         </LinearLayout>

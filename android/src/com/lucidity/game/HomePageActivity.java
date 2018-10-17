@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class HomePageActivity extends AppCompatActivity {
@@ -36,7 +37,7 @@ public class HomePageActivity extends AppCompatActivity {
         TextView nameDisplay = (TextView) findViewById(R.id.name_display);
         nameDisplay.setText("Hello, " + name);
 
-        Button btnGame = findViewById(R.id.game_button);
+        ImageButton btnGame = findViewById(R.id.game_button);
         btnGame.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 //Do nothing if button was recently pressed
@@ -54,7 +55,7 @@ public class HomePageActivity extends AppCompatActivity {
             }
         });
 
-        Button btnPhotos = findViewById(R.id.photos_button);
+        ImageButton btnPhotos = findViewById(R.id.photos_button);
         btnPhotos.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 //Do nothing if button was recently pressed
@@ -70,7 +71,7 @@ public class HomePageActivity extends AppCompatActivity {
             }
         });
 
-        Button btnSound = findViewById(R.id.sound_button);
+        ImageButton btnSound = findViewById(R.id.sound_button);
         btnSound.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SoundGallery.class);

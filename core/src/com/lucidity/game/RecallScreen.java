@@ -52,7 +52,7 @@ public class RecallScreen extends InputAdapter implements Screen {
     String[] choices;
     int numOfAnswer = 3;
     boolean[] onSelectAns;
-    boolean onEnd, onBack = false;
+    boolean onEnd, onBack, hasAdded, isCorrect = false;
     String correct;
     String correctPrompt;
     String gameMode;
@@ -208,23 +208,16 @@ public class RecallScreen extends InputAdapter implements Screen {
                     }
 
                     if(choices[i].equals(correct)){
-                        ++score;
-
-                        //record correct
-                        if(trial <= maxTrial) {
-                            trialSuccess[trial - 1] = 1;
-                        }
                         font.setColor(BlockGameConstants.CORRECT_COLOR);
                         final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
                         font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight* 3 / 4);
 
                         final GlyphLayout promptLayout = new GlyphLayout(font, FacialGameConstants.CORRECT_MESSAGE);
                         font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight* 3 / 4 + 1.5f * reactionLayout.height);
+                        isCorrect = true;
+
+
                     } else {
-                        if(trial <= maxTrial) {
-                            //record incorrect
-                            trialSuccess[trial - 1] = 0;
-                        }
                         font.setColor(BlockGameConstants.INCORRECT_COLOR);
                         final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
                         font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight* 3 / 4);
@@ -298,9 +291,34 @@ public class RecallScreen extends InputAdapter implements Screen {
             font.draw(batch, FacialGameConstants.END_TEXT,
                     (int) (end.x + 0.25 * end.getWidth()),
                     (int) (end.y + 0.6 * end.getHeight()));
+
+            font.draw(batch, FacialGameConstants.SCORE_LABEL + Integer.toString(score),
+                    FacialGameConstants.SCORE_CENTER, screenHeight - FacialGameConstants.SCORE_CENTER);
+
+            final GlyphLayout layout_scores = new GlyphLayout(font, FacialGameConstants.SCORE_LABEL);
+
+            font.draw(batch, FacialGameConstants.TRIAL_LABEL + Integer.toString(trial),
+                    FacialGameConstants.SCORE_CENTER,
+                    screenHeight - FacialGameConstants.SCORE_CENTER - layout_scores.height * 1.5f);
+
             batch.end();
 
             if(elapsed - delayed >= 1f && delayOn) {
+                if(isCorrect){
+                    if(!hasAdded){
+                        score++;
+                        if(trial <= 5) {
+                            trialSuccess[trial - 1] = 1;
+                        }
+                        hasAdded = true;
+                    } else {
+                        if(trial <= 5) {
+                            trialSuccess[trial - 1] = 0;
+                        }
+                    }
+
+                }
+
                 if(trial == 5) {
                     //postScore();
                     game.setScreen(new EndScreen(game, score, trial));
@@ -308,6 +326,7 @@ public class RecallScreen extends InputAdapter implements Screen {
                 ++trial;
                 generateTrial();
             }
+
         }
     }
 
@@ -350,6 +369,8 @@ public class RecallScreen extends InputAdapter implements Screen {
         choices = new String[numOfAnswer];
         onEnd = false;
         onBack = false;
+        isCorrect = false;
+        hasAdded = false;
         timerStart = true;
         populateChoices();
     }

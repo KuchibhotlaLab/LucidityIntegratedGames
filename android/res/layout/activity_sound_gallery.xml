@@ -6,4 +6,9 @@
     android:layout_height="match_parent"
     tools:context="com.lucidity.game.SoundGallery">
 
+    <ScrollView
+        android:id="@+id/sound_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"/>
 </android.support.constraint.ConstraintLayout>
