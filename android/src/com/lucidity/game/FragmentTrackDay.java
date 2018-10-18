@@ -1,6 +1,7 @@
 package com.lucidity.game;
 
 import android.app.DatePickerDialog;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -12,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.app.Fragment;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -47,7 +49,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class FragmentTrackDay extends Fragment implements OnChartGestureListener, OnChartValueSelectedListener {
+public class FragmentTrackDay extends Fragment implements OnChartGestureListener, OnChartValueSelectedListener, AdapterView.OnItemSelectedListener {
     final String[] labelsDay = {"12 AM", "3 AM", "6 AM", "9 AM", "12 PM", "3 PM", "6 PM", "9 PM", "12 AM"};
 
     private LineChart chart;
@@ -58,6 +60,9 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
 
     //used to prevent a task from executing multiple times when a button is tapped multiple times
     private long prevClickTime = 0;
+
+    //gets the current games to display data from
+    Spinner spinner;
 
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
@@ -93,7 +98,7 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
         Date currDate = new Date();
         date = dateFormat.format(currDate);
 
-        Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner);
+        spinner = (Spinner) rootView.findViewById(R.id.spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
                 R.layout.spinner_item_tracking, Arrays.asList(getResources().getStringArray(R.array.tracking_tests))) {
@@ -104,9 +109,12 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
                 return view;
             }
 
-
             public View getDropDownView(int position,  View convertView,  ViewGroup parent) {
                 TextView view = (TextView) super.getDropDownView(position, convertView, parent);
+                Typeface font = Typeface.createFromAsset(getContext().getAssets(),"data/Kayak-Sans-Regular.ttf");
+                view.setTypeface(font);
+                view.setTextSize(18);
+                view.setBackgroundResource(R.color.colorLightPurple);
 
                 return view;
             }
@@ -116,6 +124,7 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
 
         Button btnChangeDay = rootView.findViewById(R.id.change_day);
         btnChangeDay.setOnClickListener(new View.OnClickListener() {
@@ -134,8 +143,6 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
                 dialog.show();
             }
         });
-
-        setData(date);
 
         chart.getDescription().setEnabled(false);
         chart.setScaleEnabled(false);
@@ -162,6 +169,15 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
         yAxis.setLabelCount(6, true);
 
         return rootView;
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        setData(date, pos);
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
     }
 
     @Override
@@ -245,11 +261,11 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
             String dayString = Integer.toString(dayOfMonth);
             if (dayString.length() == 1) {dayString = "0" + dayString;}
             date = year + "-" + monthString + "-" + dayString;
-            setData(date);
+            setData(date, spinner.getSelectedItemPosition());
         }
     }
 
-    private void setData(String date){
+    private void setData(String date, int pos){
         chart.clear();
         TextView tv = rootView.findViewById(R.id.day_label);
         tv.setText(date.substring(5) + "-" + date.substring(0,4));
@@ -260,11 +276,11 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
         //Check for internet connection first
         ConnectivityChecker checker = ConnectivityChecker.getInstance(getActivity());
         if (checker.isConnected()){
-            GetScores task = new GetScores(date);
+            GetScores task = new GetScores(date, pos);
             task.execute();
             //wait for task to finish
             try {
-                task.get(1000, TimeUnit.MILLISECONDS);
+                task.get(5000, TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -333,10 +349,12 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
     class GetScores extends AsyncTask<String, String, String> {
 
         private String date;
+        private int pos;
 
-        public GetScores(String d)
+        public GetScores(String d, int p)
         {
             date = d;
+            pos = p;
         }
 
         /**
@@ -351,6 +369,7 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
                 List<NameValuePair> params = new ArrayList<NameValuePair>();
                 params.add(new BasicNameValuePair("username", username));
                 params.add(new BasicNameValuePair("date", date));
+                params.add(new BasicNameValuePair("pos", String.valueOf(pos)));
 
                 // getting pictures and tags from web
                 JSONObject json = jsonParser.makeHttpRequest(

@@ -2,6 +2,7 @@ package com.lucidity.game;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -11,9 +12,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -36,6 +40,7 @@ import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -44,7 +49,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class FragmentTrackMonth extends Fragment {
+public class FragmentTrackMonth extends Fragment implements AdapterView.OnItemSelectedListener{
 
     private BarChart chart;
 
@@ -53,6 +58,9 @@ public class FragmentTrackMonth extends Fragment {
 
     //used to prevent a task from executing multiple times when a button is tapped multiple times
     private long prevClickTime = 0;
+
+    //gets the current games to display data from
+    Spinner spinner;
 
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
@@ -88,6 +96,35 @@ public class FragmentTrackMonth extends Fragment {
         Date currDate = new Date();
         date = dateFormat.format(currDate);
 
+        spinner = (Spinner) rootView.findViewById(R.id.spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
+                R.layout.spinner_item_tracking, Arrays.asList(getResources().getStringArray(R.array.tracking_tests))) {
+
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView view = (TextView) super.getView(position, convertView, parent);
+
+                return view;
+            }
+
+
+            public View getDropDownView(int position,  View convertView,  ViewGroup parent) {
+                TextView view = (TextView) super.getDropDownView(position, convertView, parent);
+                Typeface font = Typeface.createFromAsset(getContext().getAssets(),"data/Kayak-Sans-Regular.ttf");
+                view.setTypeface(font);
+                view.setTextSize(18);
+                view.setBackgroundResource(R.color.colorLightPurple);
+
+                return view;
+            }
+        };
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
         Button btnChangeMonth = rootView.findViewById(R.id.change_month);
         btnChangeMonth.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -101,7 +138,7 @@ public class FragmentTrackMonth extends Fragment {
             }
         });
 
-        setData(date);
+        setData(date, spinner.getSelectedItemPosition());
 
         chart.setFitBars(true); // make the x-axis fit exactly all bars
         chart.getDescription().setEnabled(false);
@@ -119,6 +156,15 @@ public class FragmentTrackMonth extends Fragment {
         yAxis.setLabelCount(6, true);
 
         return rootView;
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        setData(date, pos);
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
     }
 
     private void pickMonth(String date) {
@@ -153,13 +199,13 @@ public class FragmentTrackMonth extends Fragment {
                 } else {
                     chosenDate = yearpicker.getValue() + "-" + monthpicker.getValue();
                 }
-                setData(chosenDate);
+                setData(chosenDate, spinner.getSelectedItemPosition());
                 builder.dismiss();
             }
         });
     }
 
-    private void setData(String d){
+    private void setData(String d, int pos){
         date = d;
         chart.clear();
         TextView tv = rootView.findViewById(R.id.month_label);
@@ -173,11 +219,11 @@ public class FragmentTrackMonth extends Fragment {
         //Check for internet connection first
         ConnectivityChecker checker = ConnectivityChecker.getInstance(getActivity());
         if (checker.isConnected()){
-            GetScores task = new GetScores(date);
+            GetScores task = new GetScores(date, pos);
             task.execute();
             //wait for task to finish
             try {
-                task.get(1000, TimeUnit.MILLISECONDS);
+                task.get(5000, TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -245,10 +291,12 @@ public class FragmentTrackMonth extends Fragment {
     class GetScores extends AsyncTask<String, String, String> {
 
         private String date;
+        private int pos;
 
-        public GetScores(String d)
+        public GetScores(String d, int p)
         {
             date = d;
+            pos = p;
         }
 
         /**
@@ -263,6 +311,7 @@ public class FragmentTrackMonth extends Fragment {
                 List<NameValuePair> params = new ArrayList<NameValuePair>();
                 params.add(new BasicNameValuePair("username", username));
                 params.add(new BasicNameValuePair("date", date));
+                params.add(new BasicNameValuePair("pos", String.valueOf(pos)));
 
                 // getting pictures and tags from web
                 JSONObject json = jsonParser.makeHttpRequest(

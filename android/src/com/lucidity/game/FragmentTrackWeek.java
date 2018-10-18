@@ -1,5 +1,6 @@
 package com.lucidity.game;
 
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -27,18 +32,22 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class FragmentTrackWeek extends Fragment {
+public class FragmentTrackWeek extends Fragment implements AdapterView.OnItemSelectedListener {
 
     final int NUMDAYS = 7;
     private BarChart chart;
 
     private String username;
+
+    //gets the current games to display data from
+    Spinner spinner;
 
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
@@ -79,7 +88,36 @@ public class FragmentTrackWeek extends Fragment {
             calendar.add(Calendar.DATE, -1);
         }
 
-        setData(dates);
+        spinner = (Spinner) rootView.findViewById(R.id.spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
+                R.layout.spinner_item_tracking, Arrays.asList(getResources().getStringArray(R.array.tracking_tests))) {
+
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView view = (TextView) super.getView(position, convertView, parent);
+
+                return view;
+            }
+
+
+            public View getDropDownView(int position,  View convertView,  ViewGroup parent) {
+                TextView view = (TextView) super.getDropDownView(position, convertView, parent);
+                Typeface font = Typeface.createFromAsset(getContext().getAssets(),"data/Kayak-Sans-Regular.ttf");
+                view.setTypeface(font);
+                view.setTextSize(18);
+                view.setBackgroundResource(R.color.colorLightPurple);
+
+                return view;
+            }
+        };
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
+        setData(dates, spinner.getSelectedItemPosition());
 
         chart.setFitBars(true); // make the x-axis fit exactly all bars
         chart.getDescription().setEnabled(false);
@@ -111,7 +149,16 @@ public class FragmentTrackWeek extends Fragment {
         return rootView;
     }
 
-    private void setData(String[] d){
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        setData(dates, pos);
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
+    }
+
+    private void setData(String[] d, int pos){
         chart.clear();
 
         timesRaw = new ArrayList<>();
@@ -120,11 +167,11 @@ public class FragmentTrackWeek extends Fragment {
         //Check for internet connection first
         ConnectivityChecker checker = ConnectivityChecker.getInstance(getActivity());
         if (checker.isConnected()){
-            GetScores task = new GetScores(d);
+            GetScores task = new GetScores(d, pos);
             task.execute();
             //wait for task to finish
             try {
-                task.get(1000, TimeUnit.MILLISECONDS);
+                task.get(5000, TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -175,10 +222,12 @@ public class FragmentTrackWeek extends Fragment {
     class GetScores extends AsyncTask<String, String, String> {
 
         private String[] dates;
+        private int pos;
 
-        public GetScores(String[] d)
+        public GetScores(String[] d, int p)
         {
             dates = d;
+            pos = p;
         }
 
         /**
@@ -195,6 +244,7 @@ public class FragmentTrackWeek extends Fragment {
                 for (int i = 0; i < 7; i++) {
                     params.add(new BasicNameValuePair("date" + (i+1), dates[i]));
                 }
+                params.add(new BasicNameValuePair("pos", String.valueOf(pos)));
 
                 // getting pictures and tags from web
                 JSONObject json = jsonParser.makeHttpRequest(
