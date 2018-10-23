@@ -1,6 +1,7 @@
 package com.lucidity.game;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -213,6 +214,9 @@ public class FragmentTrackMonth extends Fragment implements AdapterView.OnItemSe
         int yearVal = Integer.valueOf((date.substring(0,4)));
         tv.setText(new DateFormatSymbols().getMonths()[monthVal] + " " + yearVal);
 
+        Calendar calendar = new GregorianCalendar(yearVal, monthVal, 1);
+        numDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+
         timesRaw = new ArrayList<>();
         allScores = new ArrayList<>();
 
@@ -221,23 +225,12 @@ public class FragmentTrackMonth extends Fragment implements AdapterView.OnItemSe
         if (checker.isConnected()){
             GetScores task = new GetScores(date, pos);
             task.execute();
-            //wait for task to finish
-            try {
-                task.get(5000, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
-            }
         } else {
             checker.displayNoConnectionDialog();
         }
+    }
 
-        Calendar calendar = new GregorianCalendar(yearVal, monthVal, 1);
-        numDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-
+    private void updateChart() {
         ArrayList<BarEntry> entries = new ArrayList<>();
         float x[] = new float[numDays];
         float y[] = new float[numDays];
@@ -283,6 +276,7 @@ public class FragmentTrackMonth extends Fragment implements AdapterView.OnItemSe
                 }
             }
         });
+        chart.invalidate();
     }
 
     /**
@@ -292,11 +286,25 @@ public class FragmentTrackMonth extends Fragment implements AdapterView.OnItemSe
 
         private String date;
         private int pos;
+        private ProgressDialog pDialog;
 
         public GetScores(String d, int p)
         {
             date = d;
             pos = p;
+        }
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(getContext());
+            pDialog.setMessage("Getting scores data...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
         }
 
         /**
@@ -340,6 +348,12 @@ public class FragmentTrackMonth extends Fragment implements AdapterView.OnItemSe
                 e.printStackTrace();
             }
             return "complete";
+        }
+
+        @Override
+        protected void onPostExecute(String file_url) {
+            pDialog.dismiss();
+            updateChart();
         }
     }
 }

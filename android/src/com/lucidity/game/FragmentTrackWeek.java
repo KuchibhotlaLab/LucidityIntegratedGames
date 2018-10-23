@@ -1,5 +1,6 @@
 package com.lucidity.game;
 
+import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -169,20 +170,12 @@ public class FragmentTrackWeek extends Fragment implements AdapterView.OnItemSel
         if (checker.isConnected()){
             GetScores task = new GetScores(d, pos);
             task.execute();
-            //wait for task to finish
-            try {
-                task.get(5000, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
-            }
         } else {
             checker.displayNoConnectionDialog();
         }
+    }
 
+    private void updateChart() {
         ArrayList<BarEntry> entries = new ArrayList<>();
         float x[] = new float[NUMDAYS];
         float y[] = new float[NUMDAYS];
@@ -214,6 +207,7 @@ public class FragmentTrackWeek extends Fragment implements AdapterView.OnItemSel
         BarData data = new BarData(dataSet);
         data.setBarWidth(0.9f); // set custom bar width
         chart.setData(data);
+        chart.invalidate();
     }
 
     /**
@@ -223,11 +217,25 @@ public class FragmentTrackWeek extends Fragment implements AdapterView.OnItemSel
 
         private String[] dates;
         private int pos;
+        private ProgressDialog pDialog;
 
         public GetScores(String[] d, int p)
         {
             dates = d;
             pos = p;
+        }
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(getContext());
+            pDialog.setMessage("Getting scores data...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
         }
 
         /**
@@ -273,6 +281,12 @@ public class FragmentTrackWeek extends Fragment implements AdapterView.OnItemSel
                 e.printStackTrace();
             }
             return "complete";
+        }
+
+        @Override
+        protected void onPostExecute(String file_url) {
+            pDialog.dismiss();
+            updateChart();
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.lucidity.game;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -278,20 +279,12 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
         if (checker.isConnected()){
             GetScores task = new GetScores(date, pos);
             task.execute();
-            //wait for task to finish
-            try {
-                task.get(5000, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
-            }
         } else {
             checker.displayNoConnectionDialog();
         }
+    }
 
+    private void updateChart(){
         ArrayList<Entry> entries = new ArrayList<>();
         long[] tsSeconds = new long[timesRaw.size()];
         int[] tsDiff = new int[timesRaw.size()];
@@ -341,6 +334,7 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
 
         LineData data = new LineData(dataSet);
         chart.setData(data);
+        chart.invalidate();
     }
 
     /**
@@ -350,11 +344,25 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
 
         private String date;
         private int pos;
+        private ProgressDialog pDialog;
 
         public GetScores(String d, int p)
         {
             date = d;
             pos = p;
+        }
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(getContext());
+            pDialog.setMessage("Getting scores data...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
         }
 
         /**
@@ -398,6 +406,12 @@ public class FragmentTrackDay extends Fragment implements OnChartGestureListener
                 e.printStackTrace();
             }
             return "complete";
+        }
+
+        @Override
+        protected void onPostExecute(String file_url) {
+            pDialog.dismiss();
+            updateChart();
         }
     }
 }
