@@ -2,10 +2,13 @@ package com.lucidity.game;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,11 @@ import android.widget.TextView;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class QuestionnaireActivity extends AppCompatActivity {
@@ -34,6 +42,9 @@ public class QuestionnaireActivity extends AppCompatActivity {
 
     // Progress Dialog
     private ProgressDialog pDialog;
+
+    // url to add location
+    private static String url_add_location = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_location.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
@@ -70,6 +81,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
         });
         //stackoverflow.com/questions/22144891/
     }
+
     public class ListItemAdapter extends BaseAdapter implements ListAdapter {
         private ArrayList<String> mListLocations = new ArrayList<>();
         private Context context;
@@ -122,8 +134,83 @@ public class QuestionnaireActivity extends AppCompatActivity {
 
         public void addItem(String item){
             mListLocations.add(item);
+            SaveItem saveTask = new SaveItem(item);
+            saveTask.execute();
             notifyDataSetChanged();
         }
+    }
 
+    /**
+     * Background Async Task to save added location to MySQL
+     * */
+    class SaveItem extends AsyncTask<String, String, String> {
+        private String loc;
+
+        public SaveItem(String location)
+        {
+            loc = location;
+        }
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(QuestionnaireActivity.this);
+            pDialog.setMessage("Uploading location...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        /**
+         * Save information
+         * */
+        protected String doInBackground(String... args) {
+
+            // Building Parameters
+            java.util.List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("username", username));
+            params.add(new BasicNameValuePair("location", loc));
+
+            // getting JSON Object
+            JSONObject json = jsonParser.makeHttpRequest(url_add_location,
+                    "POST", params);
+
+            // check log cat for response
+            Log.d("Create Response", json.toString());
+
+            // check for success tag
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+                String msg = json.getString(TAG_MESSAGE);
+
+                if (success == 1) {
+                    Log.d("Check Location Added", "Success");
+
+                    //Save location locally
+                    LucidityDatabase database = Room.databaseBuilder(getApplicationContext(), LucidityDatabase.class, "db-Locations")
+                            .build();
+                    LocationDAO locationDAO = database.getLocationDAO();
+
+                    Location location = new Location();
+                    location.setUsername(username);
+                    location.setLocation(loc);
+
+                    locationDAO.insert(location);
+                } else {
+                    Log.d("Check Location Added", msg);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String file_url) {
+            pDialog.dismiss();
+        }
     }
 }

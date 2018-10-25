@@ -113,7 +113,6 @@ public class GalleryActivity extends AppCompatActivity {
             }
         }
 
-
         //get the image sent by selected
         //reference: stackoverflow.com/questions/11010386
         String filename = getIntent().getStringExtra("image");
@@ -425,7 +424,7 @@ public class GalleryActivity extends AppCompatActivity {
             pDialog = new ProgressDialog(GalleryActivity.this);
             pDialog.setMessage("Uploading Picture...");
             pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
+            pDialog.setCancelable(false);
             pDialog.show();
         }
 
