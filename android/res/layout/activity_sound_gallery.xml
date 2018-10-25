@@ -6,9 +6,31 @@
     android:layout_height="match_parent"
     tools:context="com.lucidity.game.SoundGallery">
 
-    <ScrollView
-        android:id="@+id/sound_gallery"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"/>
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:fontFamily="@font/ostrich_sans_rounded_medium"
+            android:text="Add a recording"
+            android:textAlignment="center"
+            android:textColor="#4b4b4b"
+            android:textSize="48sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <ListView
+            android:id="@+id/sound_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"/>
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

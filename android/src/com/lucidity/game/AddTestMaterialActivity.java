@@ -215,6 +215,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
 
 
                 Button btnRecord = (Button) dialogLayout.findViewById(R.id.btn_add_recording);
+                Button btnSpotify = (Button) dialogLayout.findViewById(R.id.btn_add_online);
                 Button btnStored = (Button) dialogLayout.findViewById(R.id.btn_recording_gallery);
                 Button btnDismiss = (Button) dialogLayout.findViewById(R.id.btn_sound_dismiss);
 
@@ -229,6 +230,20 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                         prevClickTime = SystemClock.elapsedRealtime();
 
                         Intent intent = new Intent(getApplicationContext(), AddSounds.class);
+                        startActivity(intent);
+                    }
+                });
+
+                btnSpotify.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Do nothing if button was recently pressed
+                        if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                            return;
+                        }
+                        prevClickTime = SystemClock.elapsedRealtime();
+
+                        Intent intent = new Intent(getApplicationContext(), AddSpotify.class);
                         startActivity(intent);
                     }
                 });

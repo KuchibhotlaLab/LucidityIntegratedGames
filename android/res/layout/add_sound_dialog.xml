@@ -14,6 +14,13 @@
         android:text="Add Microphone Recording"
         android:layout_marginBottom="10dp"/>
     <Button
+        android:id="@+id/btn_add_online"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add clips from spotify"
+        android:background="@drawable/longbutton"
+        android:layout_marginBottom="10dp"/>
+    <Button
         android:id="@+id/btn_recording_gallery"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
