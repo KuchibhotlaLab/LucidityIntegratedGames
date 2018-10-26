@@ -13,6 +13,7 @@ public class RecallGame extends Game {
     private ArrayList<String> picturenames;
     private ArrayList<ArrayList<String>> picturetags;
     private ArrayList<String> picturegenders;
+    private ArrayList<String> livedlocations;
     private boolean isLucid, isPatient, isCare;
     private String dateTime;
     private String coordinates;
@@ -20,11 +21,12 @@ public class RecallGame extends Game {
     public ScorePoster scorePoster;
 
     public RecallGame(ActionResolver a, ScorePoster s, ArrayList<String> pnames, ArrayList<ArrayList<String>> ptags,
-                      ArrayList<String> pgenders, String date, String location){
+                      ArrayList<String> pgenders, ArrayList<String> locs, String date, String location){
         username = a.getUsername();
         picturenames = pnames;
         picturetags = ptags;
         picturegenders = pgenders;
+        livedlocations = locs;
         isLucid = a.getLucidity();
         isPatient = a.getPatient();
         isCare = a.getCare();
@@ -52,6 +54,8 @@ public class RecallGame extends Game {
     public ArrayList<ArrayList<String>> getPicturetags() { return picturetags; }
 
     public ArrayList<String> getPicturegenders() { return picturegenders; }
+
+    public ArrayList<String> getLivedlocations() { return livedlocations; }
 
     public boolean getLucid(){return isLucid;}
     public boolean getPatient(){return isPatient;}

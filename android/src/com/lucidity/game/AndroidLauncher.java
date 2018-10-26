@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,6 +62,7 @@ public class AndroidLauncher extends AndroidApplication {
     private ArrayList<ArrayList<String>> tagsForGame;
     //gives an arraylist of genders for each picture in the picture list, ordered the same way
     private ArrayList<String> gendersForGame;
+    private ArrayList<String> livedLocations;
 
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
@@ -135,12 +137,13 @@ public class AndroidLauncher extends AndroidApplication {
             picturesForGame = new ArrayList<>();
             tagsForGame = new ArrayList<>();
             gendersForGame = new ArrayList<>();
-            GetPicturesAndTags task = new GetPicturesAndTags();
+            livedLocations = new ArrayList<>();
+            GetPicturesAndTags picTask = new GetPicturesAndTags();
+            picTask.execute();
 
-            task.execute();
             //wait for task to finish
             try {
-                task.get(1000, TimeUnit.MILLISECONDS);
+                picTask.get(1000, TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -149,13 +152,26 @@ public class AndroidLauncher extends AndroidApplication {
                 e.printStackTrace();
             }
 
-            if(picturesForGame.size() < 4){
+            GetStoredLocation locTask = new GetStoredLocation();
+            locTask.execute();
+            try {
+                locTask.get(1000, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            }
+
+            if(picturesForGame.size() < 4 || livedLocations.size() < 2){
                 //TODO: call dialogue
                 final Context mContext = this;
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
                 alertDialogBuilder
-                        .setMessage("No pictures. Please provide at least \n " +
-                                "two pictures of each sex.")
+                        .setMessage("Please provide at least \n " +
+                                "two pictures of each sex \n" +
+                                "and two past lived locations.")
                         .setCancelable(false)
                         .setPositiveButton("ok",new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
@@ -174,7 +190,7 @@ public class AndroidLauncher extends AndroidApplication {
                 initialize(new FacialMemoryGame(a, s, picturesForGame, tagsForGame, gendersForGame,
                     currentDateTimeString, coordinates), config);
             } else if(gameType.equals("recall")){
-                initialize(new RecallGame(a, s, picturesForGame, tagsForGame, gendersForGame,
+                initialize(new RecallGame(a, s, picturesForGame, tagsForGame, gendersForGame, livedLocations,
                         currentDateTimeString, coordinates), config);
             }
 
@@ -207,6 +223,29 @@ public class AndroidLauncher extends AndroidApplication {
                 picTags.add(image.getImageRelation());
                 tagsForGame.add(picTags);
                 gendersForGame.add(String.valueOf(image.getGender()));
+            }
+
+            return "complete";
+        }
+    }
+
+
+    /**
+     * Background Async Task to get the images and tags for the person dependent game
+     * */
+    class GetStoredLocation extends AsyncTask<String, String, String> {
+
+        /**
+         * Getting everything from local SQLite database
+         * */
+        protected String doInBackground(String... args) {
+            LucidityDatabase database = Room.databaseBuilder(getApplicationContext(), LucidityDatabase.class, "db-Locations")
+                    .build();
+            LocationDAO locationDAO = database.getLocationDAO();
+
+            List<com.lucidity.game.Location> locations = locationDAO.getUserLocations(username);
+            for(com.lucidity.game.Location loc : locations) {
+                livedLocations.add(loc.getLocation());
             }
 
             return "complete";

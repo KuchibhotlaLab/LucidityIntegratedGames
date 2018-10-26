@@ -12,9 +12,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:orientation="vertical"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
-        android:paddingTop="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,13 +22,60 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/ostrich_sans_rounded_medium"
-            android:paddingTop="24dp"
+            android:paddingTop="36dp"
+            android:paddingBottom="36dp"
             android:text="@string/care_menu"
             android:textAlignment="center"
             android:textColor="#4b4b4b"
             android:textSize="48sp" />
 
-        <FrameLayout
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/administer_games"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H, 9:4"
+                android:layout_gravity="center"
+                android:background="@drawable/admintestbutton"
+                android:textColor="#fff" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/tracking"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H, 9:4"
+                android:layout_gravity="center"
+                android:background="@drawable/trackingbutton"
+                android:textColor="#fff" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/settings"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H, 9:4"
+                android:layout_gravity="center"
+                android:background="@drawable/settingsbutton"
+                android:textColor="#fff" />
+
+        </android.support.constraint.ConstraintLayout>
+
+
+        <!--<FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -99,8 +143,7 @@
                 android:layout_gravity="top|center"
                 android:scaleType="fitCenter"
                 android:src="@drawable/settingsbutton" />
-        </FrameLayout>
-
+        </FrameLayout>-->
 
     </LinearLayout>
 

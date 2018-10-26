@@ -12,8 +12,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:orientation="vertical"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,62 +36,81 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:orientation="horizontal"></LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
             android:orientation="horizontal"
-            android:paddingBottom="10dp"
-            android:paddingTop="20dp">
+            app:layout_constraintTop_toTopOf="parent">
 
-            <Button
-                android:id="@+id/External"
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom|left"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/externaldatabutton" />
+                android:layout_weight="1">
+                <ImageButton
+                    android:id="@+id/External"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="H, 8:9"
+                    android:background="@color/colorWhiteTransparent"
+                    android:scaleType="fitEnd"
+                    android:src="@drawable/externaldatabutton"/>
+            </android.support.constraint.ConstraintLayout>
 
-            <Button
-                android:id="@+id/upload_test_material"
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/testmaterialbutton" />
+                android:layout_weight="1">
+                <ImageButton
+                    android:id="@+id/upload_test_material"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="H, 8:9"
+                    android:background="@color/colorWhiteTransparent"
+                    android:scaleType="fitEnd"
+                    android:src="@drawable/testmaterialbutton"/>
+            </android.support.constraint.ConstraintLayout>
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
             android:orientation="horizontal"
-            android:paddingBottom="20dp"
-            android:paddingTop="10dp">
-
-            <Button
-                android:id="@+id/MH"
+            app:layout_constraintTop_toTopOf="parent">
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="top|left"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/medhistorybutton" />
+                android:layout_weight="1">
 
-            <Button
-                android:id="@+id/wearable"
+                <ImageButton
+                    android:id="@+id/MH"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="H, 8:9"
+                    android:background="@color/colorWhite"
+                    android:scaleType="fitStart"
+                    android:src="@drawable/medhistorybutton"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="top|right"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/wearablebutton" />
+                android:layout_weight="1">
+                <ImageButton
+                    android:id="@+id/wearable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="H, 8:9"
+                    android:background="@color/colorWhiteTransparent"
+                    android:scaleType="fitStart"
+                    android:src="@drawable/wearablebutton"/>
+
+            </android.support.constraint.ConstraintLayout>
         </LinearLayout>
 
     </LinearLayout>

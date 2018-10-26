@@ -47,6 +47,8 @@ public class RecallGameConstants {
     public static final String PROMPT_TWO = " is ";
 
 
+    public static final String[] RANDOM_LOCATION_NAMES = {"Arlington", "Baton Rouge", "San Diego", "Kansas City", "Henderson", "Houston"};
+
     public static final float INSTRUCTION_SIZE = .6f;
     public static final float RESULT_SIZE = 0.65f;
 }

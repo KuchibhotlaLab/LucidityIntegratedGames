@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -22,7 +23,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         getWindow().getDecorView().setBackgroundColor(Color.parseColor("#E9E9E9"));
 
-        Button register = findViewById(R.id.MH);
+        ImageButton register = findViewById(R.id.MH);
         register.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //Do nothing if button was recently pressed
@@ -36,7 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        Button wearable = findViewById(R.id.wearable);
+        ImageButton wearable = findViewById(R.id.wearable);
         wearable.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //Do nothing if button was recently pressed
@@ -50,7 +51,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        Button test = findViewById(R.id.upload_test_material);
+        ImageButton test = findViewById(R.id.upload_test_material);
         test.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //Do nothing if button was recently pressed

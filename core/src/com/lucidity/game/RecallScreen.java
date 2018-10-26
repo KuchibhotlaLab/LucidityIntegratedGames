@@ -46,6 +46,7 @@ public class RecallScreen extends InputAdapter implements Screen {
     ArrayList<String> imgNames;
     ArrayList<ArrayList<String>> imgTags;
     ArrayList<String> imgGenders;
+    ArrayList<String> locations;
 
     Rectangle end, back;
     Rectangle[] answers;
@@ -108,6 +109,7 @@ public class RecallScreen extends InputAdapter implements Screen {
         imgTags = game.getPicturetags();
         imgGenders = game.getPicturegenders();
         username = game.getUsername();
+        locations = game.getLivedlocations();
 
         timerStart = true;
         trialTime = new double[maxTrial];
@@ -389,6 +391,22 @@ public class RecallScreen extends InputAdapter implements Screen {
                     String filler = imgTags.get((int )(Math.random() * imgTags.size())).get(1);
                     while(selected.contains(filler)){
                         filler = imgTags.get((int )(Math.random() * imgTags.size())).get(1);
+                    }
+                    choices[i] = filler;
+                    selected.add(filler);
+                }
+            }
+        } else if(gameMode.equals("location")){
+            int correctPos = (int )(Math.random() * locations.size());
+            correct = locations.get(correctPos);
+            choices[(int)(Math.random() * numOfAnswer)] = correct;
+            selected.add(correct);
+
+            for(int i = 0; i < numOfAnswer; i++){
+                if(choices[i] == null){
+                    String filler = RecallGameConstants.RANDOM_LOCATION_NAMES[(int )(Math.random() * RecallGameConstants.RANDOM_LOCATION_NAMES.length)];
+                    while(selected.contains(filler)){
+                        filler = RecallGameConstants.RANDOM_LOCATION_NAMES[(int )(Math.random() * RecallGameConstants.RANDOM_LOCATION_NAMES.length)];
                     }
                     choices[i] = filler;
                     selected.add(filler);
