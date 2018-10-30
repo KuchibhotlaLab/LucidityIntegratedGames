@@ -43,8 +43,9 @@ public class QuestionnaireActivity extends AppCompatActivity {
     // Progress Dialog
     private ProgressDialog pDialog;
 
-    // url to add location
+    // url to add and delete location
     private static String url_add_location = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_location.php";
+    private static String url_delete_location = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/delete_location.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
@@ -89,6 +90,21 @@ public class QuestionnaireActivity extends AppCompatActivity {
         ListItemAdapter(Context context){
             this.mListLocations = new ArrayList<>();
             this.context = context;
+
+            new Thread(new Runnable() {
+                public void run() {
+                    //Load previously added locations
+                    LucidityDatabase database = Room.databaseBuilder(getApplicationContext(), LucidityDatabase.class, "db-Locations")
+                            .build();
+                    LocationDAO locationDAO = database.getLocationDAO();
+
+                    java.util.List<Location> prevLocations = locationDAO.getUserLocations(username);
+                    for(Location prevLocation : prevLocations) {
+                        mListLocations.add(prevLocation.getLocation());
+                    }
+                    notifyDataSetChanged();
+                }
+            }).start();
         }
 
         @Override
@@ -124,6 +140,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //TODO: call dialoge
+                    DeleteItem deleteTask = new DeleteItem(mListLocations.get(position));
+                    deleteTask.execute();
                     mListLocations.remove(position); //or some other task
                     notifyDataSetChanged();
                 }
@@ -201,6 +219,77 @@ public class QuestionnaireActivity extends AppCompatActivity {
                     locationDAO.insert(location);
                 } else {
                     Log.d("Check Location Added", msg);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String file_url) {
+            pDialog.dismiss();
+        }
+    }
+
+    /**
+     * Background Async Task to delete a location from MySQL
+     * */
+    class DeleteItem extends AsyncTask<String, String, String> {
+        private String loc;
+
+        public DeleteItem(String location)
+        {
+            loc = location;
+        }
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(QuestionnaireActivity.this);
+            pDialog.setMessage("Deleting location...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        /**
+         * Delete information
+         * */
+        protected String doInBackground(String... args) {
+
+            // Building Parameters
+            java.util.List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("username", username));
+            params.add(new BasicNameValuePair("location", loc));
+
+            // getting JSON Object
+            JSONObject json = jsonParser.makeHttpRequest(url_delete_location,
+                    "POST", params);
+
+            // check log cat for response
+            Log.d("Create Response", json.toString());
+
+            // check for success tag
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+                String msg = json.getString(TAG_MESSAGE);
+
+                if (success == 1) {
+                    Log.d("Check Location Deleted", "Success");
+
+                    //Delete location locally
+                    LucidityDatabase database = Room.databaseBuilder(getApplicationContext(), LucidityDatabase.class, "db-Locations")
+                            .build();
+                    LocationDAO locationDAO = database.getLocationDAO();
+
+                    Location location = locationDAO.getLocation(username, loc);
+                    locationDAO.delete(location);
+                } else {
+                    Log.d("Check Location Deleted", msg);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

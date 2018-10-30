@@ -46,19 +46,22 @@
                 android:textSize="20sp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:fontFamily="@font/ostrich_sans_rounded_medium"
+                android:fontFamily="@font/kayak_sans_regular"
+                android:inputType="textCapWords"
                 android:hint="Add a new item to List View" />
 
             <Button
                 android:id="@+id/addLocBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add New Item" />
+                android:text="Add New Item"
+                android:fontFamily="@font/kayak_sans_regular"/>
 
             <ListView
                 android:id="@+id/list_location"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:fontFamily="@font/kayak_sans_regular">
             </ListView>
 
             <TextView
