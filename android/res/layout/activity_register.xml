@@ -38,6 +38,7 @@
                 android:ems="10"
                 android:gravity="center"
                 android:hint="@string/prompt_name"
+                android:inputType="textCapWords"
                 android:textColor="@color/colorWhite"
                 android:textSize="30sp" />
         </android.support.design.widget.TextInputLayout>

@@ -63,6 +63,7 @@
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:inputType="textCapWords"
                     android:hint="@string/prompt_name_image" />
 
             </android.support.design.widget.TextInputLayout>
@@ -77,6 +78,7 @@
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:inputType="textCapWords"
                     android:hint="@string/prompt_relation_image" />
             </android.support.design.widget.TextInputLayout>
 
