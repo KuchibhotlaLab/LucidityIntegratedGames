@@ -205,6 +205,7 @@ public class DisplayImageActivity extends AppCompatActivity {
 
                     Image image = imageDAO.getImage(uname, filename);
                     imageDAO.delete(image);
+                    database.close();
                 } else {
                     Log.d("Image Deleted", msg);
                 }

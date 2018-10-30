@@ -224,6 +224,7 @@ public class AndroidLauncher extends AndroidApplication {
                 tagsForGame.add(picTags);
                 gendersForGame.add(String.valueOf(image.getGender()));
             }
+            database.close();
 
             return "complete";
         }
@@ -247,6 +248,7 @@ public class AndroidLauncher extends AndroidApplication {
             for(com.lucidity.game.Location loc : locations) {
                 livedLocations.add(loc.getLocation());
             }
+            database.close();
 
             return "complete";
         }

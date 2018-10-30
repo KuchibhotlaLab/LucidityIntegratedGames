@@ -102,6 +102,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
                     for(Location prevLocation : prevLocations) {
                         mListLocations.add(prevLocation.getLocation());
                     }
+                    database.close();
                     notifyDataSetChanged();
                 }
             }).start();
@@ -217,6 +218,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
                     location.setLocation(loc);
 
                     locationDAO.insert(location);
+                    database.close();
                 } else {
                     Log.d("Check Location Added", msg);
                 }
@@ -288,6 +290,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
 
                     Location location = locationDAO.getLocation(username, loc);
                     locationDAO.delete(location);
+                    database.close();
                 } else {
                     Log.d("Check Location Deleted", msg);
                 }

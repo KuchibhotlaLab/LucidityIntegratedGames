@@ -69,6 +69,7 @@ public class ScorePosterAndroid implements ScorePoster {
         gameScore.setTrialtime53(attemptTime[4][2]);
 
         gameScoreDAO.insert(gameScore);
+        database.close();
     }
 
     public void postScoreObj(String username, String dateTime, String location, String menu,
@@ -97,6 +98,7 @@ public class ScorePosterAndroid implements ScorePoster {
         gameScore.setTrialtime5(trialTime[4]);
 
         gameScoreDAO.insert(gameScore);
+        database.close();
     }
 
     public void postScoreSp(String username, String dateTime, String location, String menu,
@@ -125,6 +127,7 @@ public class ScorePosterAndroid implements ScorePoster {
         gameScore.setTrialtime5(trialTime[4]);
 
         gameScoreDAO.insert(gameScore);
+        database.close();
     }
 
     public void postScoreNtF(String username, String dateTime, String location, String menu,
@@ -152,6 +155,7 @@ public class ScorePosterAndroid implements ScorePoster {
         gameScore.setTrialtime5(trialTime[4]);
 
         gameScoreDAO.insert(gameScore);
+        database.close();
     }
 
     public void postScoreFtN(String username, String dateTime, String location, String menu,
@@ -179,6 +183,7 @@ public class ScorePosterAndroid implements ScorePoster {
         gameScore.setTrialtime5(trialTime[4]);
 
         gameScoreDAO.insert(gameScore);
+        database.close();
     }
 
     public void postOnline(String username) {
@@ -189,6 +194,7 @@ public class ScorePosterAndroid implements ScorePoster {
         for (BlockGameScore s: blockGameScoreList) {
             postScoreBlockOnline(s, blockGameScoreDAO);
         }
+        database.close();
 
         database = Room.databaseBuilder(context, LucidityDatabase.class, "db-ObjGameScores")
                 .build();
@@ -197,6 +203,7 @@ public class ScorePosterAndroid implements ScorePoster {
         for (ObjGameScore s: objGameScoreList) {
             postScoreObjOnline(s, objGameScoreDAO);
         }
+        database.close();
 
         database = Room.databaseBuilder(context, LucidityDatabase.class, "db-SpGameScores")
                 .build();
@@ -205,6 +212,7 @@ public class ScorePosterAndroid implements ScorePoster {
         for (SpGameScore s: spGameScoreList) {
             postScoreSpOnline(s, spGameScoreDAO);
         }
+        database.close();
 
         database = Room.databaseBuilder(context, LucidityDatabase.class, "db-FtNGameScores")
                 .build();
@@ -213,6 +221,7 @@ public class ScorePosterAndroid implements ScorePoster {
         for (FtNGameScore s: ftnGameScoreList) {
             postScoreFtNOnline(s, ftnGameScoreDAO);
         }
+        database.close();
 
         database = Room.databaseBuilder(context, LucidityDatabase.class, "db-NtFGameScores")
                 .build();
@@ -221,6 +230,7 @@ public class ScorePosterAndroid implements ScorePoster {
         for (NtFGameScore s: ntfGameScoreList) {
             postScoreNtFOnline(s, ntfGameScoreDAO);
         }
+        database.close();
     }
 
     private void postScoreBlockOnline(BlockGameScore s, BlockGameScoreDAO gameScoreDAO) {

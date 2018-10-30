@@ -469,6 +469,7 @@ public class GalleryActivity extends AppCompatActivity {
                     image.setGender(g.charAt(0));
 
                     imageDAO.insert(image);
+                    database.close();
                 } else {
                     Log.d("Check Image Added", msg);
                 }
