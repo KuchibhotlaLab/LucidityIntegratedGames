@@ -2,11 +2,13 @@ package com.lucidity.game;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.SystemClock;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -153,7 +155,19 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        FloatingActionButton notif = findViewById(R.id.button_notification);
+        notif.setVisibility(View.GONE);
+        CheckScores checkScoresTask = new CheckScores();
+        checkScoresTask.execute();
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        CheckScores checkScoresTask = new CheckScores();
+        checkScoresTask.execute();
+    }
+
 
     public void showDialog()
     {
@@ -237,7 +251,96 @@ public class MainActivity extends AppCompatActivity{
     }
 
     /**
-     * Background Async Task to Verify the caregiver password
+     * Background Async Task to check if scores need to be uploaded
+     * */
+    class CheckScores extends AsyncTask<String, String, String> {
+        private boolean areScoresUploaded = true;
+
+        protected String doInBackground(String... args) {
+
+            LucidityDatabase database = Room.databaseBuilder(context, LucidityDatabase.class, "db-BlockGameScores")
+                    .build();
+            BlockGameScoreDAO blockGameScoreDAO = database.getBlockGameScoreDAO();
+            List<BlockGameScore> blockGameScoreList = blockGameScoreDAO.getUserBlockGameScores(username);
+            database.close();
+            if(!blockGameScoreList.isEmpty()) {
+                areScoresUploaded = false;
+                return null;
+            }
+
+            database = Room.databaseBuilder(context, LucidityDatabase.class, "db-ObjGameScores")
+                    .build();
+            ObjGameScoreDAO objGameScoreDAO = database.getObjGameScoreDAO();
+            List<ObjGameScore> objGameScoreList = objGameScoreDAO.getUserObjGameScores(username);
+            database.close();
+            if(!objGameScoreList.isEmpty()) {
+                areScoresUploaded = false;
+                return null;
+            }
+
+            database = Room.databaseBuilder(context, LucidityDatabase.class, "db-SpGameScores")
+                    .build();
+            SpGameScoreDAO spGameScoreDAO = database.getSpGameScoreDAO();
+            List<SpGameScore> spGameScoreList = spGameScoreDAO.getUserSpGameScores(username);
+            database.close();
+            if(!spGameScoreList.isEmpty()) {
+                areScoresUploaded = false;
+                return null;
+            }
+
+            database = Room.databaseBuilder(context, LucidityDatabase.class, "db-FtNGameScores")
+                    .build();
+            FtNGameScoreDAO ftnGameScoreDAO = database.getFtNGameScoreDAO();
+            List<FtNGameScore> ftnGameScoreList = ftnGameScoreDAO.getUserFtNGameScores(username);
+            database.close();
+            if(!ftnGameScoreList.isEmpty()) {
+                areScoresUploaded = false;
+                return null;
+            }
+
+            database = Room.databaseBuilder(context, LucidityDatabase.class, "db-NtFGameScores")
+                    .build();
+            NtFGameScoreDAO ntfGameScoreDAO = database.getNtFGameScoreDAO();
+            List<NtFGameScore> ntfGameScoreList = ntfGameScoreDAO.getUserNtFGameScores(username);
+            database.close();
+            if(!ntfGameScoreList.isEmpty()) {
+                areScoresUploaded = false;
+                return null;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String file_url) {
+            FloatingActionButton notif = findViewById(R.id.button_notification);
+
+            if (areScoresUploaded == false) {
+                notif.setVisibility(View.VISIBLE);
+                notif.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                        alertDialogBuilder
+                                .setMessage("You have game results that have not been uploaded online yet.")
+                                .setCancelable(false)
+                                .setPositiveButton("ok",new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.show();
+                    }
+                });
+            } else {
+                notif.setVisibility(View.GONE);
+            }
+        }
+
+    }
+
+    /**
+     * Background Async Task to verify the caregiver password
      * */
     class VerifyCaregiver extends AsyncTask<String, String, String> {
 
