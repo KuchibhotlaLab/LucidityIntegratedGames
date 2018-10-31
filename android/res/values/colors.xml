@@ -8,5 +8,6 @@
     <color name="colorWhiteTransparent">#66ffffff</color>
     <color name="BackgroundMain">#ffffff</color>
     <color name="Transparent">#00000000</color>
+    <color name="colorDarkPink">#d37da0</color>
     <!--<color name="BackgroundMain">#D5DBDB</color>-->
 </resources>

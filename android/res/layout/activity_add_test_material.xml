@@ -6,31 +6,121 @@
     android:layout_height="match_parent"
     android:background="@color/BackgroundMain"
     tools:context="com.lucidity.game.AddTestMaterialActivity">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/care_menu_display">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/ostrich_sans_rounded_medium"
+            android:text="@string/care_menu"
+            android:textAlignment="center"
+            android:textColor="#4b4b4b"
+            android:textSize="48sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </FrameLayout>
+
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/care_menu_display">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
-            android:layout_marginStart="32dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:orientation="vertical">
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <Button
+                <Button
+                    android:id="@+id/add_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:background="@drawable/carephoto"
+                    app:layout_constraintDimensionRatio="H, 9:4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitXY" />
+            </android.support.constraint.ConstraintLayout>
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/add_reminder"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="H, 9:4"
+                    android:background="@drawable/carereminder"/>
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitXY" />
+            </android.support.constraint.ConstraintLayout>
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/add_history"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="H, 9:4"
+                    android:layout_gravity="center"
+                    android:background="@drawable/carepersonal" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitXY" />
+            </android.support.constraint.ConstraintLayout>
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/add_sound"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="H, 9:4"
+                    android:layout_gravity="center"
+                    android:background="@drawable/caremusic" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitXY" />
+            </android.support.constraint.ConstraintLayout>
+        </LinearLayout>
+
+
+
+        <!--<Button
                 android:id="@+id/add_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="64dp"
                 android:layout_marginBottom="64dp"
-                android:background="@drawable/longbutton"
+                android:background="@drawable/carePhoto"
                 android:fontFamily="@font/kayak_sans_regular"
-                android:text="@string/photos"
                 android:textColor="@color/colorWhite"
                 android:textSize="36sp"
                 tools:layout_editor_absoluteX="101dp"
@@ -42,9 +132,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="64dp"
-                android:background="@drawable/longbutton"
+                android:background="@drawable/careReminder"
                 android:fontFamily="@font/kayak_sans_regular"
-                android:text="@string/reminders"
                 android:textColor="@color/colorWhite"
                 android:textSize="36sp"
                 tools:layout_editor_absoluteX="101dp"
@@ -56,9 +145,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="64dp"
-                android:background="@drawable/longbutton"
+                android:background="@drawable/carePersonal"
                 android:fontFamily="@font/kayak_sans_regular"
-                android:text="@string/histories"
                 android:textColor="@color/colorWhite"
                 android:textSize="36sp"
                 tools:layout_editor_absoluteX="101dp"
@@ -69,15 +157,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="64dp"
-                android:background="@drawable/longbutton"
+                android:background="@drawable/careMusic"
                 android:fontFamily="@font/kayak_sans_regular"
-                android:text="@string/sounds"
                 android:textColor="@color/colorWhite"
                 android:textSize="36sp"
                 tools:layout_editor_absoluteX="101dp"
-                tools:layout_editor_absoluteY="50dp" />
+                tools:layout_editor_absoluteY="50dp" />-->
 
-        </LinearLayout>
     </ScrollView>
 
 

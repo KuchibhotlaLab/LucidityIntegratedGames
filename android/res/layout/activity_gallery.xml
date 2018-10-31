@@ -6,28 +6,49 @@
     android:layout_height="match_parent"
     tools:context="com.lucidity.game.GalleryActivity">
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_add" />
+
+    <Button
+        android:id="@+id/menu"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/popupmenu"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/name_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/ostrich_sans_rounded_medium"
+        android:text="@string/photos"
+        android:textAlignment="center"
+        android:textColor="#4b4b4b"
+        android:textSize="48sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:orientation="vertical"
         android:id="@+id/gallery_title">
-
-
-        <TextView
-            android:id="@+id/name_display"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:fontFamily="@font/ostrich_sans_rounded_medium"
-            android:paddingTop="18dp"
-            android:layout_marginBottom="24dp"
-            android:text="@string/photos"
-            android:textAlignment="center"
-            android:textColor="#4b4b4b"
-            android:textSize="48sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
     </LinearLayout>
+
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout2"
@@ -39,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:fillViewport="true"
-            app:layout_constraintDimensionRatio="H, 8:10">
+            app:layout_constraintDimensionRatio="H, 8:12">
 
             <GridView
                 android:id="@+id/photoGalary"
@@ -54,15 +75,4 @@
                 android:verticalSpacing="2dp" />
         </ScrollView>
     </android.support.constraint.ConstraintLayout>
-
-    <!--android:clickable="true"-->
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_add" />
 </android.support.constraint.ConstraintLayout>

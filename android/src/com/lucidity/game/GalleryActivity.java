@@ -189,6 +189,7 @@ public class GalleryActivity extends AppCompatActivity {
         gallery.setOnItemClickListener(itemClickListener);
 
         FloatingActionButton addImg = findViewById(R.id.add_img);
+        //Button addImg = findViewById(R.id.add_img);
         if (mode == 0){
             addImg.setVisibility(View.GONE);
         } else {
@@ -314,9 +315,10 @@ public class GalleryActivity extends AppCompatActivity {
 
             if (convertView == null) {
                 imageView = new ImageView(mContext);
-                imageView.setLayoutParams(new GridView.LayoutParams(400, 400));
-                imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-                imageView.setPadding(20, 20, 20, 20);
+                imageView.setLayoutParams(new GridView.LayoutParams(400, 600));
+                //imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                imageView.setPadding(5, 5, 0, 5);
             }
             else
             {

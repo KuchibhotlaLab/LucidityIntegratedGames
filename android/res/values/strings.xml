@@ -56,4 +56,9 @@
         <item>Recall Memory Test</item>
     </string-array>
 
+    <string name="photoFromGal"> Add Photo\nFrom Gallery </string>
+    <string name="photoFromCam"> Add Photo\nFrom Camera </string>
+    <string name="photoSync"> Sync with\nAccount </string>
+    <string name="photoGal"> Current\nGallery </string>
+
 </resources>
