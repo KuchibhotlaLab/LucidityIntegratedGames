@@ -2,6 +2,7 @@ package com.lucidity.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,11 +12,14 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.net.HttpParametersUtils;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.w3c.dom.css.Rect;
 
@@ -23,6 +27,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 /**
  * Created by lixiaoyan on 10/8/18.
@@ -322,7 +327,7 @@ public class RecallScreen extends InputAdapter implements Screen {
                 }
 
                 if(trial == 5) {
-                    //postScore();
+                    postScore();
                     game.setScreen(new EndScreen(game, score, trial));
                 }
                 ++trial;
@@ -434,5 +439,67 @@ public class RecallScreen extends InputAdapter implements Screen {
             }
         }
         return true;
+    }
+
+    //Posts score and stats to MySQL database
+    private void postScore() {
+        Net.HttpRequest httpPost = new Net.HttpRequest(Net.HttpMethods.POST);
+        httpPost.setUrl("http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_recallgame_score.php");
+
+        //set parameters
+        Map<String, String> json = new HashMap<String, String>();
+        json.put("username", game.getUsername());
+        json.put("time", game.getDateTime());
+        json.put("location", game.getLocation());
+        final String menu;
+        if (game.getLucid()) {
+            menu = "Lucid";
+        } else if (game.getPatient()) {
+            menu = "Patient";
+        } else {
+            menu = "CareGiver";
+        }
+        json.put("menu", menu);
+        json.put("mode", gameMode);
+        json.put("score", String.valueOf(score));
+        for (int i = 0; i < trial; i++) {
+            String trialNum = "trial" + (i + 1);
+            json.put(trialNum, String.valueOf(trialSuccess[i]));
+            json.put(trialNum + "time", String.valueOf(trialTime[i]));
+        }
+
+        httpPost.setContent(HttpParametersUtils.convertHttpParameters(json));
+
+        //Send JSON and Look for response
+        Gdx.net.sendHttpRequest(httpPost, new Net.HttpResponseListener() {
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                if (httpResponse.getStatus().getStatusCode() == 200) {
+                    //success
+                    String status = httpResponse.getResultAsString().trim();
+                    HashMap<String, String> map = new Gson().fromJson(status, new TypeToken<HashMap<String, String>>() {
+                    }.getType());
+                    System.out.println(map);
+
+                    game.scorePoster.postOnline(game.getUsername());
+
+                } else {
+                    // save scores locally
+                    game.scorePoster.postScoreRe(game.getUsername(), game.getDateTime(), game.getLocation(),
+                            menu, gameMode, score, trialSuccess, trialTime);
+                }
+            }
+
+            public void failed(Throwable t) {
+                String status = "failed";
+                // save scores locally
+                game.scorePoster.postScoreRe(game.getUsername(), game.getDateTime(), game.getLocation(),
+                        menu, gameMode, score, trialSuccess, trialTime);
+            }
+
+            @Override
+            public void cancelled() {
+
+            }
+        });
     }
 }

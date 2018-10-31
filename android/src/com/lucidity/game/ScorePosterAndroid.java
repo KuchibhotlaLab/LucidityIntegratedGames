@@ -21,6 +21,7 @@ public class ScorePosterAndroid implements ScorePoster {
     private String url_sp_game = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_spatialgame_score.php";
     private String url_ntf_game = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_nametofacegame_score.php";
     private String url_ftn_game = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_facetonamegame_score.php";
+    private String url_re_game = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_recallgame_score.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
@@ -186,6 +187,35 @@ public class ScorePosterAndroid implements ScorePoster {
         database.close();
     }
 
+    public void postScoreRe(String username, String dateTime, String location, String menu,
+                            String mode, int score, int[] trialSuccess, double[] trialTime) {
+
+        LucidityDatabase database = Room.databaseBuilder(context, LucidityDatabase.class, "db-ReGameScores")
+                .build();
+        ReGameScoreDAO gameScoreDAO = database.getReGameScoreDAO();
+
+        ReGameScore gameScore = new ReGameScore();
+        gameScore.setUsername(username);
+        gameScore.setTime(dateTime);
+        gameScore.setLocation(location);
+        gameScore.setMenu(menu);
+        gameScore.setMode(mode);
+        gameScore.setScore(String.valueOf(score));
+        gameScore.setTrial1(trialSuccess[0]);
+        gameScore.setTrialtime1(trialTime[0]);
+        gameScore.setTrial2(trialSuccess[1]);
+        gameScore.setTrialtime2(trialTime[1]);
+        gameScore.setTrial3(trialSuccess[2]);
+        gameScore.setTrialtime3(trialTime[2]);
+        gameScore.setTrial4(trialSuccess[3]);
+        gameScore.setTrialtime4(trialTime[3]);
+        gameScore.setTrial5(trialSuccess[4]);
+        gameScore.setTrialtime5(trialTime[4]);
+
+        gameScoreDAO.insert(gameScore);
+        database.close();
+    }
+
     public void postOnline(String username) {
         LucidityDatabase database = Room.databaseBuilder(context, LucidityDatabase.class, "db-BlockGameScores")
                 .build();
@@ -229,6 +259,15 @@ public class ScorePosterAndroid implements ScorePoster {
         List<NtFGameScore> ntfGameScoreList = ntfGameScoreDAO.getUserNtFGameScores(username);
         for (NtFGameScore s: ntfGameScoreList) {
             postScoreNtFOnline(s, ntfGameScoreDAO);
+        }
+        database.close();
+
+        database = Room.databaseBuilder(context, LucidityDatabase.class, "db-ReGameScores")
+                .build();
+        ReGameScoreDAO reGameScoreDAO = database.getReGameScoreDAO();
+        List<ReGameScore> reGameScoreList = reGameScoreDAO.getUserReGameScores(username);
+        for (ReGameScore s: reGameScoreList) {
+            postScoreReOnline(s, reGameScoreDAO);
         }
         database.close();
     }
@@ -440,4 +479,45 @@ public class ScorePosterAndroid implements ScorePoster {
             e.printStackTrace();
         }
     }
+
+    private void postScoreReOnline(ReGameScore s, ReGameScoreDAO gameScoreDAO) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("username", s.getUsername()));
+        params.add(new BasicNameValuePair("time", s.getTime()));
+        params.add(new BasicNameValuePair("location", s.getLocation()));
+        params.add(new BasicNameValuePair("menu", s.getMenu()));
+        params.add(new BasicNameValuePair("mode", s.getMode()));
+        params.add(new BasicNameValuePair("score", s.getScore()));
+        params.add(new BasicNameValuePair("trial1", String.valueOf(s.getTrial1())));
+        params.add(new BasicNameValuePair("trial1time", String.valueOf(s.getTrialtime1())));
+        params.add(new BasicNameValuePair("trial2", String.valueOf(s.getTrial2())));
+        params.add(new BasicNameValuePair("trial2time", String.valueOf(s.getTrialtime2())));
+        params.add(new BasicNameValuePair("trial3", String.valueOf(s.getTrial3())));
+        params.add(new BasicNameValuePair("trial3time", String.valueOf(s.getTrialtime3())));
+        params.add(new BasicNameValuePair("trial4", String.valueOf(s.getTrial4())));
+        params.add(new BasicNameValuePair("trial4time", String.valueOf(s.getTrialtime4())));
+        params.add(new BasicNameValuePair("trial5", String.valueOf(s.getTrial5())));
+        params.add(new BasicNameValuePair("trial5time", String.valueOf(s.getTrialtime5())));
+
+        // getting JSON Object
+        JSONObject json = jsonParser.makeHttpRequest(url_re_game,
+                "POST", params);
+
+        // check for success tag
+        try {
+            int success = json.getInt(TAG_SUCCESS);
+            String msg = json.getString(TAG_MESSAGE);
+
+            if (success == 1) {
+                gameScoreDAO.delete(s);
+            } else {
+                Log.d("Check Score Added", msg);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -254,9 +254,10 @@ public class MainActivity extends AppCompatActivity{
      * Background Async Task to check if scores need to be uploaded
      * */
     class CheckScores extends AsyncTask<String, String, String> {
-        private boolean areScoresUploaded = true;
+        private boolean areScoresUploaded;
 
         protected String doInBackground(String... args) {
+            areScoresUploaded = true;
 
             LucidityDatabase database = Room.databaseBuilder(context, LucidityDatabase.class, "db-BlockGameScores")
                     .build();
@@ -307,6 +308,17 @@ public class MainActivity extends AppCompatActivity{
                 areScoresUploaded = false;
                 return null;
             }
+
+            database = Room.databaseBuilder(context, LucidityDatabase.class, "db-ReGameScores")
+                    .build();
+            ReGameScoreDAO reGameScoreDAO = database.getReGameScoreDAO();
+            List<ReGameScore> reGameScoreList = reGameScoreDAO.getUserReGameScores(username);
+            database.close();
+            if(!reGameScoreList.isEmpty()) {
+                areScoresUploaded = false;
+                return null;
+            }
+
             return null;
         }
 
