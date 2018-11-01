@@ -61,6 +61,9 @@ android {
         implementation 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
         implementation "com.google.code.gson:gson:2.6.1"
         implementation 'com.android.support:multidex:1.0.3'
+        //implementation 'com.spotify.sdk:spotify-auth:<version>@aar'
+        //implementation(name: 'spotify-auth-release-1.1.0', ext: 'aar')
+        //implementation 'com.spotify.android:auth:1.0.0-alpha'
     }
 
 }
