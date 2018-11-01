@@ -76,6 +76,11 @@ public class AddTestMaterialActivity extends AppCompatActivity {
         Button btn_photo = findViewById(R.id.add_photo);
         btn_photo.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                //Do nothing if button was recently pressed
+                if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                    return;
+                }
+                prevClickTime = SystemClock.elapsedRealtime();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddTestMaterialActivity.this);
                 LayoutInflater inflater = ((Activity) AddTestMaterialActivity.this).getLayoutInflater();

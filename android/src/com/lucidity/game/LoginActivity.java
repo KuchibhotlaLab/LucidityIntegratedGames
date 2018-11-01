@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
         // Check login status
         login = new Login(getApplicationContext());
         // Proceed to main page if logged in
-        if(login.LoggedIn()){
+        if(login.LoggedIn() && login.getUsername() != null && login.getName() != null){
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
             //close this screen
