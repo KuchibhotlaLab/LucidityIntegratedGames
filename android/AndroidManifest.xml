@@ -81,6 +81,9 @@
         <activity android:name=".AddSounds" />
         <activity android:name=".SoundGallery" />
         <activity android:name=".AddSpotify"></activity>
+        <activity
+            android:name="com.spotify.sdk.android.authentication.LoginActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>

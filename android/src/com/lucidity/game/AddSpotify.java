@@ -1,6 +1,7 @@
 package com.lucidity.game;
 
 import android.app.SearchManager;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
@@ -34,6 +36,12 @@ https://developer.spotify.com/documentation/android/quick-start/
 https://developer.spotify.com/documentation/web-api/libraries/
 https://stackoverflow.com/questions/37995704/getting-and-playing-30-second-previews-from-spotify
 https://stackoverflow.com/questions/12698428/starting-a-song-from-spotify-intent
+
+https://developer.spotify.com/documentation/general/guides/content-linking-guide/
+https://stackoverflow.com/questions/29059466/how-to-automatically-play-playlist-in-spotify-android-app
+https://stackoverflow.com/questions/28524063/spotify-android-intent-play-on-launch
+https://github.com/spotify/android-auth/issues/41
+play spotify song from custom android application stack overflow
 */
 //TODO NOTICE: spotify is registered for non-monetary personal project permission
 public class AddSpotify extends AppCompatActivity {
@@ -55,6 +63,13 @@ public class AddSpotify extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
+
+        Log.d("Spotify is installed: ", Boolean.toString(detectSpotify()));
+        if(!detectSpotify()){
+            installSpotify();
+        }
+
+        playSong();
 
         //autorizing user
         // Set the connection parameters
@@ -87,23 +102,15 @@ public class AddSpotify extends AppCompatActivity {
                 });
 
         //Opens the spotify app
-        /*PackageManager pm = getPackageManager();
-        boolean isSpotifyInstalled;
-        try {
-            pm.getPackageInfo("com.spotify.music", 0);
-            isSpotifyInstalled = true;
-        } catch (PackageManager.NameNotFoundException e) {
-            isSpotifyInstalled = false;
-        }
-        if(isSpotifyInstalled) {
+        /*if(isSpotifyInstalled) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse("spotify:album:0sNOF9WDwhWunNAHPD3Baj"));
             intent.putExtra(Intent.EXTRA_REFERRER,
                     Uri.parse("android-app://" + this.getPackageName()));
             startActivity(intent);
         }*/
-        //playPlayMusic();
-        playSearchSong("skyfall");
+        //playMusic();
+        //playSearchSong("skyfall");
 
 
     }
@@ -118,7 +125,7 @@ public class AddSpotify extends AppCompatActivity {
         SpotifyAppRemote.disconnect(mSpotifyAppRemote);
     }
 
-    private void playPlayMusic() {
+    private void playMusic() {
         Intent i = new Intent(Intent.ACTION_MEDIA_BUTTON);
         i.setComponent(new ComponentName("com.spotify.music", "com.spotify.music.internal.receiver.MediaButtonReceiver"));
         i.putExtra(Intent.EXTRA_KEY_EVENT,new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY));
@@ -141,6 +148,55 @@ public class AddSpotify extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
+        }
+    }
+
+    public boolean detectSpotify(){
+        PackageManager pm = getPackageManager();
+        boolean isSpotifyInstalled;
+        try {
+            pm.getPackageInfo("com.spotify.music", 0);
+            isSpotifyInstalled = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            isSpotifyInstalled = false;
+        }
+        return isSpotifyInstalled;
+    }
+
+    public void installSpotify(){
+        final String appPackageName = "com.spotify.music";
+        final String referrer = "adjust_campaign=PACKAGE_NAME&adjust_tracker=ndjczk&utm_source=adjust_preinstall";
+
+        try {
+            Uri uri = Uri.parse("market://details")
+                    .buildUpon()
+                    .appendQueryParameter("id", appPackageName)
+                    .appendQueryParameter("referrer", referrer)
+                    .build();
+            startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        } catch (android.content.ActivityNotFoundException ignored) {
+            Uri uri = Uri.parse("https://play.google.com/store/apps/details")
+                    .buildUpon()
+                    .appendQueryParameter("id", appPackageName)
+                    .appendQueryParameter("referrer", referrer)
+                    .build();
+            startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        }
+    }
+
+    public void playSong(){
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setAction(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
+        intent.setComponent(new ComponentName("com.spotify.mobile.android.ui", "com.spotify.mobile.android.ui.Launcher"));
+        intent.putExtra(SearchManager.QUERY, "michael jackson smooth criminal");
+        try {
+            startActivity(intent);
+        }catch (ActivityNotFoundException e) {
+            /*Toast.makeText(this, "You must first install Spotify", Toast.LENGTH_LONG).show();
+            Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse("market://details?id=com.spotify.mobile.android.ui"));
+            startActivity(i);*/
+            Log.e("The error is: ", e.getMessage());
+            System.out.println("The error is: "+ e.getMessage());
         }
     }
 }
