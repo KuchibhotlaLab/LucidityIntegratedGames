@@ -80,10 +80,12 @@
         <activity android:name=".QuestionnaireActivity" />
         <activity android:name=".AddSounds" />
         <activity android:name=".SoundGallery" />
-        <activity android:name=".AddSpotify"></activity>
-        <activity
-            android:name="com.spotify.sdk.android.authentication.LoginActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".AddSpotify">
+            <intent-filter>
+                <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
