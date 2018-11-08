@@ -3,6 +3,7 @@ package com.lucidity.game;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.arch.persistence.room.Room;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,6 +35,7 @@ import com.google.android.gms.vision.face.FaceDetector;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -44,6 +46,8 @@ public class FaceDetectActivity extends AppCompatActivity{
     private CameraSource mCameraSource = null;
     private CameraSourcePreview mPreview;
     private GraphicOverlay mGraphicOverlay;
+
+    private  String username;
 
     private static final int RC_HANDLE_GMS = 9001;
     // permission request codes need to be < 256
@@ -56,6 +60,9 @@ public class FaceDetectActivity extends AppCompatActivity{
         setContentView(R.layout.activity_face_detect);
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
+
+        Login login = new Login(getApplicationContext());
+        username = login.getUsername();
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
@@ -282,8 +289,37 @@ public class FaceDetectActivity extends AppCompatActivity{
             mOverlay.add(mFaceGraphic);
             mFaceGraphic.updateFace(face);
             if(mFaceGraphic.preferableSize()){
-                takeScreenshot();
-                FullTestGenerator gen = new FullTestGenerator();
+                final String filename = takeScreenshot();
+
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date date = new Date();
+                final String currentDateTimeString = dateFormat.format(date);
+                final FullTestGenerator gen = new FullTestGenerator();
+
+                new Thread(new Runnable() {
+                    public void run() {
+                        //Start saving an object to represent the full test
+                        LucidityDatabase database = Room.databaseBuilder(getApplicationContext(), LucidityDatabase.class, "db-FullTestRuns")
+                                .build();
+                        FullTestRunDAO fullTestRunDAO = database.getFullTestRunDAO();
+
+                        FullTestRun testRun = new FullTestRun();
+                        testRun.setUsername(username);
+                        testRun.setTime(currentDateTimeString);
+                        testRun.setMenu("CareGiver");
+                        testRun.setPicture(filename);
+                        testRun.setTesttype1(gen.getGameType(Integer.parseInt(gen.toString().substring(0,1))));
+                        testRun.setTesttype2(gen.getGameType(Integer.parseInt(gen.toString().substring(1,2))));
+                        testRun.setTesttype3(gen.getGameType(Integer.parseInt(gen.toString().substring(2,3))));
+                        testRun.setTesttype4(gen.getGameType(Integer.parseInt(gen.toString().substring(3,4))));
+                        testRun.setTesttime1("");
+                        testRun.setTesttime2("");
+                        testRun.setTesttime3("");
+                        testRun.setTesttime4("");
+                        fullTestRunDAO.insert(testRun);
+                        database.close();
+                    }
+                }).start();
                 Intent i = new Intent(getBaseContext(), AndroidLauncher.class);
                 i.putExtra("isLucid", false);
                 i.putExtra("isCare", true);
@@ -292,7 +328,7 @@ public class FaceDetectActivity extends AppCompatActivity{
                 i.putExtra("order", gen.toString());
                 i.putExtra("counter", 0);
                 i.putExtra("difficulty", -1);
-
+                i.putExtra("startTime", currentDateTimeString);
                 startActivity(i);
                 finish();
             }
@@ -324,15 +360,16 @@ public class FaceDetectActivity extends AppCompatActivity{
     //TODO: take screenshot of surface view
     //stackoverflow.com/questions/27817577/
     //stackoverflow.com/questions/26545970/
-    private void takeScreenshot() {
+    private String takeScreenshot() {
         Date now = new Date();
         android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+        String filename = "";
 
         try {
             // image naming and path  to include sd card  appending name you choose for file
             //String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg";
 
-            String filename = now + ".jpg";
+            filename = now + ".jpg";
             // create bitmap screen capture
             /*View v1 = getWindow().getDecorView().getRootView();
             v1.setDrawingCacheEnabled(true);
@@ -361,6 +398,8 @@ public class FaceDetectActivity extends AppCompatActivity{
             // Several error may come out with file handling or DOM
             e.printStackTrace();
         }
+
+        return filename;
     }
 
 

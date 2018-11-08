@@ -217,30 +217,34 @@ public class EndScreen extends InputAdapter implements Screen {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if(isGameOne){
             if(gameIndep.actionResolver.getCounter() == 3 || gameIndep.actionResolver.getPatient()){
+                gameIndep.scorePoster.postSuiteOnline(gameIndep.getUsername());
                 Gdx.app.exit();
             } else {
-                gameIndep.actionResolver.NextGame();
+                gameIndep.actionResolver.NextGame(gameIndep.scorePoster.getTestSuiteStartTime());
                 Gdx.app.exit();
             }
         } else if(isGameTwo){
             if(gameDep.actionResolver.getCounter() == 3 || gameDep.actionResolver.getPatient()){
+                gameDep.scorePoster.postSuiteOnline(gameDep.getUsername());
                 Gdx.app.exit();
             } else {
-                gameDep.actionResolver.NextGame();
+                gameDep.actionResolver.NextGame(gameDep.scorePoster.getTestSuiteStartTime());
                 Gdx.app.exit();
             }
         } else if(isGameThree){
             if(gameOb.actionResolver.getCounter() == 3 || gameOb.actionResolver.getPatient()){
+                gameOb.scorePoster.postSuiteOnline(gameOb.getUsername());
                 Gdx.app.exit();
             } else {
-                gameOb.actionResolver.NextGame();
+                gameOb.actionResolver.NextGame(gameOb.scorePoster.getTestSuiteStartTime());
                 Gdx.app.exit();
             }
         } else if(isGameFour){
             if(gameSpa.actionResolver.getCounter() == 3 || gameSpa.actionResolver.getPatient()){
+                gameSpa.scorePoster.postSuiteOnline(gameSpa.getUsername());
                 Gdx.app.exit();
             } else {
-                gameSpa.actionResolver.NextGame();
+                gameSpa.actionResolver.NextGame(gameSpa.scorePoster.getTestSuiteStartTime());
                 Gdx.app.exit();
             }
         }

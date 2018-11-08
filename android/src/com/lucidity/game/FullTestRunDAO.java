@@ -29,4 +29,7 @@ public interface FullTestRunDAO {
 
     @Query("UPDATE FullTestRuns SET testtime4=:testTime WHERE username = :uname AND time = :startTime")
     void updateTime4(String testTime, String uname, String startTime);
+
+    @Query("UPDATE FullTestRuns SET testtime5=:testTime WHERE username = :uname AND time = :startTime")
+    void updateTime5(String testTime, String uname, String startTime);
 }

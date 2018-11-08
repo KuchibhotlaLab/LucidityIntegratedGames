@@ -20,4 +20,10 @@ public interface ScorePoster {
                      String mode, int score, int[] trialSuccess, double[] trialTime);
 
     void postOnline(String username);
+
+    void postSuiteOnline(String username);
+
+    void updateTestRun(String username, int counter, String dateTime);
+
+    String getTestSuiteStartTime();
 }

@@ -14,7 +14,6 @@ import java.util.List;
 
 public class ScorePosterAndroid implements ScorePoster {
     Context context;
-
     //urls for uploading scores
     private String url_block_game = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_blockgame_score.php";
     private String url_obj_game = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_objectrecognitiongame_score.php";
@@ -22,6 +21,7 @@ public class ScorePosterAndroid implements ScorePoster {
     private String url_ntf_game = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_nametofacegame_score.php";
     private String url_ftn_game = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_facetonamegame_score.php";
     private String url_re_game = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_recallgame_score.php";
+    private String url_full_test = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_full_test_suite.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
@@ -30,8 +30,16 @@ public class ScorePosterAndroid implements ScorePoster {
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
 
+    //remembers the start time of the testSuite
+    private String testSuiteStartTime;
+
     public ScorePosterAndroid(Context c) {
         context = c;
+    }
+
+    public ScorePosterAndroid(Context c, String time) {
+        context = c;
+        testSuiteStartTime = time;
     }
 
     public void postScoreBlock(String username, String dateTime, String location, String menu,
@@ -270,6 +278,78 @@ public class ScorePosterAndroid implements ScorePoster {
             postScoreReOnline(s, reGameScoreDAO);
         }
         database.close();
+    }
+
+    public void postSuiteOnline(String username) {
+        LucidityDatabase database = Room.databaseBuilder(context, LucidityDatabase.class, "db-FullTestRuns")
+                .build();
+        FullTestRunDAO fullTestRunDAO = database.getFullTestRunDAO();
+
+        List<FullTestRun> fullTestRuns = fullTestRunDAO.getUserTestSuiteRuns(username);
+        for (FullTestRun f: fullTestRuns) {
+            if(!f.getTesttime1().isEmpty()) {
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                params.add(new BasicNameValuePair("username", f.getUsername()));
+                params.add(new BasicNameValuePair("startTime", f.getTime()));
+                params.add(new BasicNameValuePair("menu", f.getMenu()));
+                params.add(new BasicNameValuePair("picture", f.getPicture()));
+                params.add(new BasicNameValuePair("testtype1", f.getTesttype1()));
+                params.add(new BasicNameValuePair("testtime1", f.getTesttime1()));
+                params.add(new BasicNameValuePair("testtype2", f.getTesttype2()));
+                params.add(new BasicNameValuePair("testtime2", f.getTesttime2()));
+                params.add(new BasicNameValuePair("testtype3", f.getTesttype3()));
+                params.add(new BasicNameValuePair("testtime3", f.getTesttime3()));
+                params.add(new BasicNameValuePair("testtype4", f.getTesttype4()));
+                params.add(new BasicNameValuePair("testtime4", f.getTesttime4()));
+
+                // getting JSON Object
+                JSONObject json = jsonParser.makeHttpRequest(url_full_test,
+                        "POST", params);
+
+                // check for success tag
+                try {
+                    int success = json.getInt(TAG_SUCCESS);
+                    String msg = json.getString(TAG_MESSAGE);
+
+                    if (success == 1) {
+                        fullTestRunDAO.delete(f);
+                    } else {
+                        Log.d("Check Test Suite Added", msg);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (NullPointerException e){
+                    e.printStackTrace();
+                }
+            } else {
+                fullTestRunDAO.delete(f);
+            }
+        }
+        database.close();
+    }
+
+    public void updateTestRun(String username, int counter, String dateTime) {
+        LucidityDatabase database = Room.databaseBuilder(context, LucidityDatabase.class, "db-FullTestRuns")
+                .build();
+        FullTestRunDAO fullTestRunDAO = database.getFullTestRunDAO();
+
+        switch (counter){
+            case 0:
+                fullTestRunDAO.updateTime1(dateTime, username, testSuiteStartTime);
+                break;
+            case 1:
+                fullTestRunDAO.updateTime2(dateTime, username, testSuiteStartTime);
+                break;
+            case 2:
+                fullTestRunDAO.updateTime3(dateTime, username, testSuiteStartTime);
+                break;
+            case 3:
+                fullTestRunDAO.updateTime4(dateTime, username, testSuiteStartTime);
+                break;
+            case 4:
+                fullTestRunDAO.updateTime5(dateTime, username, testSuiteStartTime);
+                break;
+        }
     }
 
     private void postScoreBlockOnline(BlockGameScore s, BlockGameScoreDAO gameScoreDAO) {
@@ -520,4 +600,7 @@ public class ScorePosterAndroid implements ScorePoster {
         }
     }
 
+    public String getTestSuiteStartTime() {
+        return testSuiteStartTime;
+    }
 }

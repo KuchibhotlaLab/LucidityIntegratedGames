@@ -32,4 +32,21 @@ public class FullTestGenerator {
         }
         return order;
     }
+
+    public String getGameType(int gameNum) {
+        switch (gameNum){
+            case 0:
+                return "Block";
+            case 1:
+                return "Face";
+            case 2:
+                return "Object";
+            case 3:
+                return "Spatial";
+            case 4:
+                return "Recall";
+        }
+
+        return "";
+    }
 }

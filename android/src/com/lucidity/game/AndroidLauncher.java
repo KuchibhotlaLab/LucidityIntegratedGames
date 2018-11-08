@@ -54,6 +54,7 @@ public class AndroidLauncher extends AndroidApplication {
     private boolean network_enabled = false;
 
     String gameType;
+    String testSuiteStartTime;
 
     //gives the names of pictures to use for the person dependent game
     private ArrayList<String> picturesForGame;
@@ -89,6 +90,7 @@ public class AndroidLauncher extends AndroidApplication {
             if (gameType.equals("check order")) {
                 order = extras.getString("order");
                 gameCounter = extras.getInt("counter");
+                testSuiteStartTime = extras.getString("startTime");
                 int nextGame = Integer.valueOf(order.substring(gameCounter, gameCounter +1));
                 switch (nextGame){
                     case 0:
@@ -111,7 +113,7 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 
         ActionResolverAndroid a = new ActionResolverAndroid(getApplicationContext(), username, isLucid, isCare, isPatient, order, gameCounter, difficulty);
-        ScorePoster s = new ScorePosterAndroid(getApplicationContext());
+        ScorePoster s = new ScorePosterAndroid(getApplicationContext(), testSuiteStartTime);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
