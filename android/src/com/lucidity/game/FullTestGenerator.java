@@ -1,26 +1,26 @@
 package com.lucidity.game;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class FullTestGenerator {
     static final int NUM_GAMES = 4;
+    static final int NUM_GAME_TYPES = 5;
     int[] gameOrder;
 
     public FullTestGenerator(){
-        gameOrder = new int[NUM_GAMES];
-        for( int i = 0; i < NUM_GAMES; i++){
-            gameOrder[i] = i;
+        ArrayList<Integer> games = new ArrayList<Integer>();
+        for (int i = 0; i < NUM_GAME_TYPES; i++) {
+            games.add(i);
         }
 
         int index;
-        int temp;
         Random random = new Random();
-        for (int i = gameOrder.length - 1; i > 0; i--)
-        {
-            index = random.nextInt(i + 1);
-            temp = gameOrder[index];
-            gameOrder[index] = gameOrder[i];
-            gameOrder[i] = temp;
+        gameOrder = new int[NUM_GAMES];
+        for( int i = 0; i < NUM_GAMES; i++){
+            index = random.nextInt(games.size());
+            gameOrder[i] = games.get(index);
+            games.remove(index);
         }
     }
 

@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity{
                 Date date = new Date();
                 final String currentDateTimeString = dateFormat.format(date);
                 final FullTestGenerator gen = new FullTestGenerator();
+                System.out.println(gen);
 
                 new Thread(new Runnable() {
                     public void run() {
@@ -351,12 +352,26 @@ public class MainActivity extends AppCompatActivity{
                 return null;
             }
 
+            database = Room.databaseBuilder(context, LucidityDatabase.class, "db-FullTestRuns")
+                    .build();
+            FullTestRunDAO fullTestRunDAO = database.getFullTestRunDAO();
+
+            List<FullTestRun> fullTestRuns = fullTestRunDAO.getUserTestSuiteRuns(username);
+            for (FullTestRun f: fullTestRuns) {
+                if (!f.getTesttime1().isEmpty()) {
+                    areScoresUploaded = false;
+                    return null;
+                } else {
+                    fullTestRunDAO.delete(f);
+                }
+            }
+            database.close();
             return null;
         }
 
         @Override
         protected void onPostExecute(String file_url) {
-            FloatingActionButton notif = findViewById(R.id.button_notification);
+            final FloatingActionButton notif = findViewById(R.id.button_notification);
 
             if (areScoresUploaded == false) {
                 notif.setVisibility(View.VISIBLE);
@@ -364,14 +379,33 @@ public class MainActivity extends AppCompatActivity{
                     public void onClick(View v) {
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                         alertDialogBuilder
-                                .setMessage("You have game results that have not been uploaded online yet.")
+                                .setMessage("You have game results that have not been uploaded online yet. Press OK to upload them now.")
                                 .setCancelable(false)
-                                .setPositiveButton("ok",new DialogInterface.OnClickListener() {
+                                .setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        //Check for internet connection first
+                                        ConnectivityChecker checker = ConnectivityChecker.getInstance(MainActivity.this);
+                                        if (checker.isConnected()){
+                                            new Thread(new Runnable() {
+                                                public void run() {
+                                                    // post locally saved scores to web server if there are any.
+                                                    ScorePosterAndroid poster = new ScorePosterAndroid(getApplicationContext());
+                                                    poster.postOnline(username);
+                                                    poster.postSuiteOnline(username);
+                                                }
+                                            }).start();
+                                            notif.setVisibility(View.GONE);
+                                        } else {
+                                            checker.displayNoConnectionDialog();
+                                        }
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,int id) {
                                         dialog.dismiss();
                                     }
                                 });
-
                         AlertDialog alertDialog = alertDialogBuilder.create();
                         alertDialog.show();
                     }
@@ -380,7 +414,6 @@ public class MainActivity extends AppCompatActivity{
                 notif.setVisibility(View.GONE);
             }
         }
-
     }
 
     /**

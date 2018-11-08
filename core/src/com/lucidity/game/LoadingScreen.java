@@ -347,7 +347,19 @@ public class LoadingScreen extends InputAdapter implements Screen {
                 SpMemGame.setScreen(new SpatialScreen(SpMemGame, diff));
             }
         } else if(isRecGame){
-            RecGame.setScreen(new ModeScreen(RecGame));
+            if (RecGame.actionResolver.getLucidity() || RecGame.actionResolver.getCare()) {
+                int modeSelect = (int) (Math.random() * 2);
+                switch (modeSelect) {
+                    case 0:
+                        RecGame.setScreen(new RecallScreen(RecGame, "location"));
+                        break;
+                    case 1:
+                        RecGame.setScreen(new RecallScreen(RecGame, "relation"));
+                        break;
+                }
+            } else {
+                RecGame.setScreen(new ModeScreen(RecGame));
+            }
         }
         return false;
     }

@@ -247,6 +247,14 @@ public class EndScreen extends InputAdapter implements Screen {
                 gameSpa.actionResolver.NextGame(gameSpa.scorePoster.getTestSuiteStartTime());
                 Gdx.app.exit();
             }
+        } else if(isGameFive){
+            if(gameRec.actionResolver.getCounter() == 3 || gameRec.actionResolver.getPatient()){
+                gameRec.scorePoster.postSuiteOnline(gameRec.getUsername());
+                Gdx.app.exit();
+            } else {
+                gameRec.actionResolver.NextGame(gameRec.scorePoster.getTestSuiteStartTime());
+                Gdx.app.exit();
+            }
         }
         return false;
     }
