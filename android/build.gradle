@@ -64,7 +64,7 @@ android {
         implementation 'com.android.support:multidex:1.0.3'
         //implementation 'com.spotify.sdk:spotify-auth:<version>@aar'
         //implementation(name: 'spotify-auth-release-1.1.0', ext: 'aar')
-        //implementation 'com.spotify.android:auth:1.0.0-alpha'
+        implementation 'com.spotify.sdk:spotify-auth-release-1.1.0@aar'
         implementation 'se.michaelthelin.spotify:spotify-web-api-java:2.1.1'
 
     }
