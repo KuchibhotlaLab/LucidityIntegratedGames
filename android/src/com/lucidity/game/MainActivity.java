@@ -25,7 +25,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
@@ -140,7 +143,36 @@ public class MainActivity extends AppCompatActivity{
                 }
                 prevClickTime = SystemClock.elapsedRealtime();
 
-                FullTestGenerator gen = new FullTestGenerator();
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date date = new Date();
+                final String currentDateTimeString = dateFormat.format(date);
+                final FullTestGenerator gen = new FullTestGenerator();
+                System.out.println(gen);
+
+                new Thread(new Runnable() {
+                    public void run() {
+                        //Start saving an object to represent the full test
+                        LucidityDatabase database = Room.databaseBuilder(getApplicationContext(), LucidityDatabase.class, "db-FullTestRuns")
+                                .build();
+                        FullTestRunDAO fullTestRunDAO = database.getFullTestRunDAO();
+
+                        FullTestRun testRun = new FullTestRun();
+                        testRun.setUsername(username);
+                        testRun.setTime(currentDateTimeString);
+                        testRun.setMenu("Patient");
+                        testRun.setPicture("");
+                        testRun.setTesttype1(gen.getGameType(Integer.parseInt(gen.toString().substring(0,1))));
+                        testRun.setTesttype2(gen.getGameType(Integer.parseInt(gen.toString().substring(1,2))));
+                        testRun.setTesttype3(gen.getGameType(Integer.parseInt(gen.toString().substring(2,3))));
+                        testRun.setTesttype4(gen.getGameType(Integer.parseInt(gen.toString().substring(3,4))));
+                        testRun.setTesttime1("");
+                        testRun.setTesttime2("");
+                        testRun.setTesttime3("");
+                        testRun.setTesttime4("");
+                        fullTestRunDAO.insert(testRun);
+                        database.close();
+                    }
+                }).start();
 
                 Intent i = new Intent(getApplicationContext(), AndroidLauncher.class);
                 i.putExtra("isLucid", true);
@@ -150,8 +182,9 @@ public class MainActivity extends AppCompatActivity{
                 i.putExtra("order", gen.toString());
                 i.putExtra("counter", 0);
                 i.putExtra("difficulty", -1);
+                i.putExtra("startTime", currentDateTimeString);
 
-                    startActivity(i);
+                startActivity(i);
             }
         });
 
@@ -319,12 +352,26 @@ public class MainActivity extends AppCompatActivity{
                 return null;
             }
 
+            database = Room.databaseBuilder(context, LucidityDatabase.class, "db-FullTestRuns")
+                    .build();
+            FullTestRunDAO fullTestRunDAO = database.getFullTestRunDAO();
+
+            List<FullTestRun> fullTestRuns = fullTestRunDAO.getUserTestSuiteRuns(username);
+            for (FullTestRun f: fullTestRuns) {
+                if (!f.getTesttime1().isEmpty()) {
+                    areScoresUploaded = false;
+                    return null;
+                } else {
+                    fullTestRunDAO.delete(f);
+                }
+            }
+            database.close();
             return null;
         }
 
         @Override
         protected void onPostExecute(String file_url) {
-            FloatingActionButton notif = findViewById(R.id.button_notification);
+            final FloatingActionButton notif = findViewById(R.id.button_notification);
 
             if (areScoresUploaded == false) {
                 notif.setVisibility(View.VISIBLE);
@@ -332,14 +379,33 @@ public class MainActivity extends AppCompatActivity{
                     public void onClick(View v) {
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
                         alertDialogBuilder
-                                .setMessage("You have game results that have not been uploaded online yet.")
+                                .setMessage("You have game results that have not been uploaded online yet. Press OK to upload them now.")
                                 .setCancelable(false)
-                                .setPositiveButton("ok",new DialogInterface.OnClickListener() {
+                                .setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        //Check for internet connection first
+                                        ConnectivityChecker checker = ConnectivityChecker.getInstance(MainActivity.this);
+                                        if (checker.isConnected()){
+                                            new Thread(new Runnable() {
+                                                public void run() {
+                                                    // post locally saved scores to web server if there are any.
+                                                    ScorePosterAndroid poster = new ScorePosterAndroid(getApplicationContext());
+                                                    poster.postOnline(username);
+                                                    poster.postSuiteOnline(username);
+                                                }
+                                            }).start();
+                                            notif.setVisibility(View.GONE);
+                                        } else {
+                                            checker.displayNoConnectionDialog();
+                                        }
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,int id) {
                                         dialog.dismiss();
                                     }
                                 });
-
                         AlertDialog alertDialog = alertDialogBuilder.create();
                         alertDialog.show();
                     }
@@ -348,7 +414,6 @@ public class MainActivity extends AppCompatActivity{
                 notif.setVisibility(View.GONE);
             }
         }
-
     }
 
     /**
@@ -409,6 +474,7 @@ public class MainActivity extends AppCompatActivity{
                     // post locally saved scores to web server if there are any.
                     ScorePosterAndroid poster = new ScorePosterAndroid(getApplicationContext());
                     poster.postOnline(username);
+                    poster.postSuiteOnline(username);
                     Intent intent = new Intent(getApplicationContext(), CaregiverHomePage.class);
                     startActivity(intent);
                 } else {

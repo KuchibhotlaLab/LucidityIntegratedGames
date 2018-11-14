@@ -14,9 +14,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
@@ -51,12 +53,17 @@ public class AddTestMaterialActivity extends AppCompatActivity {
 
     // Progress Dialog
     private ProgressDialog pDialog;
+    private ProgressDialog pDialog2;
 
     //JSONArray of results
     JSONArray picturesJSON = null;
+    JSONArray locationsJSON = null;
 
     // url to get pictures and tags
     private static String url_get_pictures_and_tags = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/get_pictures_and_tags.php";
+
+    // url to get locations
+    private static String url_get_locations = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/get_locations.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
@@ -72,6 +79,36 @@ public class AddTestMaterialActivity extends AppCompatActivity {
         //Used to upload to AWS S3 storage
         transferHelper = new TransferHelper();
         transferUtility = transferHelper.getTransferUtility(this);
+
+        //Pop up menu for logging out
+        final Button btnMenu = findViewById(R.id.button_menu);
+        btnMenu.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                PopupMenu menu = new PopupMenu(AddTestMaterialActivity.this,btnMenu);
+                menu.getMenuInflater().inflate(R.menu.menu_popup_test_material, menu.getMenu());
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.sync:
+                                ConnectivityChecker checker = ConnectivityChecker.getInstance(AddTestMaterialActivity.this);
+                                if (checker.isConnected()){
+                                    SyncPic syncPicTask = new SyncPic();
+                                    syncPicTask.execute();
+                                    SyncLoc syncLocTask = new SyncLoc();
+                                    syncLocTask.execute();
+                                } else {
+                                    checker.displayNoConnectionDialog();
+                                }
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+                menu.show();
+            }
+        });
 
         Button btn_photo = findViewById(R.id.add_photo);
         btn_photo.setOnClickListener(new View.OnClickListener() {
@@ -160,8 +197,8 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                         //Check for internet connection before uploading
                         ConnectivityChecker checker = ConnectivityChecker.getInstance(AddTestMaterialActivity.this);
                         if (checker.isConnected()){
-                            Sync syncTask = new Sync();
-                            syncTask.execute();
+                            SyncPic syncPicTask = new SyncPic();
+                            syncPicTask.execute();
                         } else {
                             checker.displayNoConnectionDialog();
                         }
@@ -267,8 +304,6 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
-
-
                 btnDismiss.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -276,9 +311,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                     }
                 });
 
-
                 builder.setView(dialogLayout);
-
                 dialog.show();
             }
         });
@@ -287,7 +320,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
     /**
      * Background Async Task to sync pictures on phone with user's account
      * */
-    class Sync extends AsyncTask<String, String, String> {
+    class SyncPic extends AsyncTask<String, String, String> {
 
         /**
          * Before starting background thread Show Progress Dialog
@@ -364,6 +397,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                                 imageDAO.delete(image);
 
                                 file.delete();
+                                database.close();
                             }
                         }
                     }
@@ -378,7 +412,6 @@ public class AddTestMaterialActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
@@ -389,6 +422,106 @@ public class AddTestMaterialActivity extends AppCompatActivity {
             // dismiss the dialog once done
             pDialog.dismiss();
             Toast.makeText(getApplicationContext(), "Pictures Synced!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Background Async Task to sync locations on phone with user's account
+     * */
+    class SyncLoc extends AsyncTask<String, String, String> {
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog2 = new ProgressDialog(AddTestMaterialActivity.this);
+            pDialog2.setMessage("Syncing Locations...");
+            pDialog2.setIndeterminate(false);
+            pDialog2.setCancelable(false);
+            pDialog2.show();
+        }
+
+        /**
+         * Get locations from MySQL, then download the ones that aren't on the phone
+         */
+        protected String doInBackground(String... args) {
+
+            final ArrayList<String> locations = new ArrayList<>();
+
+            // Check for success tag
+            int success;
+            try {
+                // Building Parameters
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                params.add(new BasicNameValuePair("username", username));
+
+                // getting pictures from web
+                JSONObject json = jsonParser.makeHttpRequest(
+                        url_get_locations, "GET", params);
+
+                // check your log for json response
+                Log.d("get locations", json.toString());
+
+                // json success tag
+                success = json.getInt(TAG_SUCCESS);
+                if (success == 1) {
+
+                    // Get array of locations
+                    locationsJSON = json.getJSONArray("locations");
+
+                    // loop through locations found
+                    for (int i = 0; i < locationsJSON.length(); i++) {
+                        JSONObject locObject = locationsJSON.getJSONObject(i);
+
+                        // add locations to arraylists
+                        locations.add(locObject.getString("location"));
+                    }
+
+                    LucidityDatabase database = Room.databaseBuilder(getApplicationContext(), LucidityDatabase.class, "db-Locations")
+                            .build();
+                    LocationDAO locationDAO = database.getLocationDAO();
+
+                    List<Location> localLocations = locationDAO.getUserLocations(username);
+
+                    //Delete locations on local device but not on web server
+                    for (Location e: localLocations) {
+                        if(!locations.contains(e.getLocation())) {
+                            locationDAO.delete(e);
+                        }
+                    }
+
+                    ArrayList<String> localLocationsStrings = new ArrayList<>();
+                    localLocations = locationDAO.getUserLocations(username);
+                    for (Location e: localLocations) {
+                        localLocationsStrings.add(e.getLocation());
+                    }
+
+                    for (String e: locations) {
+                        if (!localLocationsStrings.contains(e)){
+                            Location location = new Location();
+                            location.setUsername(username);
+                            location.setLocation(e);
+
+                            locationDAO.insert(location);
+                        }
+                    }
+                    database.close();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         * **/
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog once done
+            pDialog2.dismiss();
+            Toast.makeText(getApplicationContext(), "Locations Synced!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -467,6 +600,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
             ImageDAO imageDAO = database.getImageDAO();
 
             imageDAO.insert(image);
+            database.close();
 
             return null;
         }

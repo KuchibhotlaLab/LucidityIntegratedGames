@@ -29,6 +29,7 @@
     <string name="title_activity_med_history_demo">MedHistoryDemo</string>
     <string name="care_menu">Caregiver Menu</string>
     <string name="settings_menu">Settings Menu</string>
+    <string name="test_material">Test Materials</string>
     <string name="game_menu">Tests Menu</string>
     <string name="person_dependent">Dependent</string>
     <string name="person_independent">Independent</string>

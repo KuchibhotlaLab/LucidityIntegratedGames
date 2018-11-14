@@ -35,12 +35,11 @@ public class ActionResolverAndroid implements ActionResolver {
         difficulty = d;
     }
 
-    public void NextGame() {
+    public void NextGame(final String testSuiteStartTime) {
         handler.post(new Runnable() {
             @Override
             public void run() {
                 Intent i = new Intent(context, AndroidLauncher.class);
-                i.putExtra("username", username);
                 i.putExtra("isLucid", isLucid);
                 i.putExtra("isCare", isCare);
                 i.putExtra("isPatient", isPatient);
@@ -48,6 +47,7 @@ public class ActionResolverAndroid implements ActionResolver {
                 i.putExtra("order", order);
                 i.putExtra("counter", counter + 1);
                 i.putExtra("difficulty", difficulty);
+                i.putExtra("startTime", testSuiteStartTime);
                 context.startActivity(i);
             }
         });

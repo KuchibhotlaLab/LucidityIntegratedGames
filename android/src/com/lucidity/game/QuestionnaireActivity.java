@@ -64,7 +64,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
         Login login = new Login(getApplicationContext());
         username = login.getUsername();
         TextView locationPrompt = findViewById(R.id.location_prompt);
-        locationPrompt.setText("Please list some of locations \n that " + username + " have lived");
+        locationPrompt.setText("Please list some of the locations \nthat " + username + " has lived in");
 
         adapter = new ListItemAdapter(this);
         ListView listView = findViewById(R.id.list_location);

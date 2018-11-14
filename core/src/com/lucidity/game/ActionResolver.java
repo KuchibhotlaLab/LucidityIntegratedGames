@@ -11,7 +11,7 @@ public interface ActionResolver {
     public boolean getPatient();
     public String getUsername();
     public int getCounter();
-    public void NextGame();
+    public void NextGame(final String testSuiteStartTime);
     public int getDifficulty();
     public void setDifficulty(int d);
 }

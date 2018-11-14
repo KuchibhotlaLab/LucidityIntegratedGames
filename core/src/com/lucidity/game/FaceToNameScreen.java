@@ -538,5 +538,9 @@ FaceToNameScreen extends InputAdapter implements Screen {
 
             }
         });
+
+        if(game.getCare() || game.getLucid()) {
+            game.scorePoster.updateTestRun(game.getUsername(), game.actionResolver.getCounter(), game.getDateTime());
+        }
     }
 }
