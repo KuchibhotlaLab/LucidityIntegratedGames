@@ -190,6 +190,8 @@ public class MainActivity extends AppCompatActivity{
 
         FloatingActionButton notif = findViewById(R.id.button_notification);
         notif.setVisibility(View.GONE);
+        TextView notifText = findViewById(R.id.text_notif);
+        notifText.setVisibility(View.GONE);
         CheckScores checkScoresTask = new CheckScores();
         checkScoresTask.execute();
     }
@@ -372,9 +374,11 @@ public class MainActivity extends AppCompatActivity{
         @Override
         protected void onPostExecute(String file_url) {
             final FloatingActionButton notif = findViewById(R.id.button_notification);
+            final TextView notifText = findViewById(R.id.text_notif);
 
             if (areScoresUploaded == false) {
                 notif.setVisibility(View.VISIBLE);
+                notifText.setVisibility(View.VISIBLE);
                 notif.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
@@ -395,6 +399,7 @@ public class MainActivity extends AppCompatActivity{
                                                 }
                                             }).start();
                                             notif.setVisibility(View.GONE);
+                                            notifText.setVisibility(View.GONE);
                                         } else {
                                             checker.displayNoConnectionDialog();
                                         }
@@ -412,6 +417,7 @@ public class MainActivity extends AppCompatActivity{
                 });
             } else {
                 notif.setVisibility(View.GONE);
+                notifText.setVisibility(View.GONE);
             }
         }
     }

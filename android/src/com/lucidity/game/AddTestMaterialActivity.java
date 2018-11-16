@@ -231,8 +231,73 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                 }
                 prevClickTime = SystemClock.elapsedRealtime();
 
-                Intent intent = new Intent(getApplicationContext(), QuestionnaireActivity.class);
-                startActivity(intent);
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddTestMaterialActivity.this);
+                LayoutInflater inflater = ((Activity) AddTestMaterialActivity.this).getLayoutInflater();
+                View dialogLayout = inflater.inflate(R.layout.add_location_dialog,
+                        null);
+
+                final AlertDialog dialog = builder.create();
+                dialog.getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                dialog.setView(dialogLayout, 0, 0, 0, 0);
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.setCancelable(true);
+                WindowManager.LayoutParams wlmp = dialog.getWindow()
+                        .getAttributes();
+                wlmp.gravity = Gravity.BOTTOM;
+
+
+                Button btnView = (Button) dialogLayout.findViewById(R.id.btn_view_location);
+                Button btnSync = (Button) dialogLayout.findViewById(R.id.btn_sync_location);
+                Button btnDismiss = (Button) dialogLayout.findViewById(R.id.btn_cancel_location_dialog);
+
+
+                btnView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Do nothing if button was recently pressed
+                        if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                            return;
+                        }
+                        prevClickTime = SystemClock.elapsedRealtime();
+
+                        Intent intent = new Intent(getApplicationContext(), QuestionnaireActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+
+                btnSync.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Do nothing if button was recently pressed
+                        if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                            return;
+                        }
+                        prevClickTime = SystemClock.elapsedRealtime();
+
+                        //Check for internet connection before uploading
+                        ConnectivityChecker checker = ConnectivityChecker.getInstance(AddTestMaterialActivity.this);
+                        if (checker.isConnected()){
+                            SyncLoc syncLocTask = new SyncLoc();
+                            syncLocTask.execute();
+                        } else {
+                            checker.displayNoConnectionDialog();
+                        }
+                    }
+                });
+
+                btnDismiss.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+
+                builder.setView(dialogLayout);
+
+                dialog.show();
             }
         });
 
