@@ -61,5 +61,8 @@
     <string name="photoFromCam"> Add Photo\nFrom Camera </string>
     <string name="photoSync"> Sync with\nAccount </string>
     <string name="photoGal"> Current\nGallery </string>
+    <string name="locationSync"> Sync with\nAccount </string>
+    <string name="locationView"> View Current\nLocations </string>
+    <string name="uploadNotif">Upload Results</string>
 
 </resources>
