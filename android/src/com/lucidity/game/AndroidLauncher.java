@@ -167,7 +167,6 @@ public class AndroidLauncher extends AndroidApplication {
             }
 
             if(picturesForGame.size() < 4 || livedLocations.size() < 2){
-                //TODO: call dialogue
                 final Context mContext = this;
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
                 alertDialogBuilder
@@ -200,6 +199,8 @@ public class AndroidLauncher extends AndroidApplication {
             initialize(new ObjectRecognitionGame(a, s, currentDateTimeString, coordinates), config);
         } else if(gameType.equals("space")){
             initialize(new SpatialMemoryGame(a, s, currentDateTimeString, coordinates), config);
+        } else if(gameType.equals("music")){
+            initialize(new MusicGame(a, s, currentDateTimeString, coordinates), config);
         }
     }
 

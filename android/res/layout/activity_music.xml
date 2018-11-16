@@ -3,23 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.lucidity.game.AddSpotify">
+    tools:context="com.lucidity.game.Music">
     <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_width="match_parent"
         android:orientation="horizontal"
         android:gravity="center">
         <Button
-            android:id="@+id/search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="search"/>
-        <Button
-            android:id="@+id/play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="play"/>
+            android:text="Add music"/>
+
     </LinearLayout>
-
-
 </android.support.constraint.ConstraintLayout>

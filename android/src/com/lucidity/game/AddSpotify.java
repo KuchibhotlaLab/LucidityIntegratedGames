@@ -11,33 +11,37 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
+import com.spotify.android.appremote.api.ContentApi;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 
+import com.spotify.protocol.client.CallResult;
+import com.spotify.protocol.client.ErrorCallback;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.PlayerState;
-//import com.spotify.protocol.types.Track;
+import com.spotify.protocol.types.Track;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import com.neovisionaries.i18n.CountryCode;
+/*import com.neovisionaries.i18n.CountryCode;
 import com.wrapper.spotify.SpotifyApi;
 import com.wrapper.spotify.exceptions.SpotifyWebApiException;
 import com.wrapper.spotify.requests.data.tracks.GetTrackRequest;
-import com.wrapper.spotify.model_objects.specification.Track;
-
+import com.wrapper.spotify.model_objects.specification.Track;*/
 
 
 /* TODO:
 https://developer.spotify.com/documentation/web-api/libraries/
 https://stackoverflow.com/questions/37995704/getting-and-playing-30-second-previews-from-spotify
 https://stackoverflow.com/questions/12698428/starting-a-song-from-spotify-intent
+https://spotify.github.io/android-sdk/app-remote-lib/docs/
 
 https://developer.spotify.com/documentation/general/guides/content-linking-guide/
 https://stackoverflow.com/questions/28524063/spotify-android-intent-play-on-launch
@@ -49,22 +53,27 @@ https://stackoverflow.com/questions/25633343/how-to-know-the-login-status-in-spo
 /*TODO:
 THE SHA fingerprint needs to be updated on Feb. 9th 2019
 https://stackoverflow.com/questions/34908193/spotify-api-invalid-app-id
-https://stackoverflow.com/questions/27307265/control-playback-of-the-spotify-app-from-another-android-app*/
+https://stackoverflow.com/questions/27307265/control-playback-of-the-spotify-app-from-another-android-app
+*/
 //TODO NOTICE: spotify is registered for non-monetary personal project permission
 //https://github.com/thelinmichael/spotify-web-api-java
 public class AddSpotify extends AppCompatActivity {
     private static final String CLIENT_ID = "ab466596aaa041d89f062bc0845a16f0";
-    private static final String REDIRECT_URI = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/callback/";
+    private static final String REDIRECT_URI = "testschema://callback";
     private SpotifyAppRemote mSpotifyAppRemote;
     public static final int AUTH_TOKEN_REQUEST_CODE = 0x10;
     public static final int AUTH_CODE_REQUEST_CODE = 0x11;
     private static final int REQUEST_CODE = 1337;
+    private ContentApi mContentApi;
+    private Button search, play;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_spotify);
+        search = findViewById(R.id.search);
+        play = findViewById(R.id.play);
     }
 
     @Override
@@ -83,9 +92,7 @@ public class AddSpotify extends AppCompatActivity {
                         .setRedirectUri(REDIRECT_URI)
                         .showAuthView(true)
                         .build();
-        System.out.println("authorized, theoretically");
 
-        //
         SpotifyAppRemote.connect(this, connectionParams,
                 new Connector.ConnectionListener() {
 
@@ -95,7 +102,9 @@ public class AddSpotify extends AppCompatActivity {
                         System.out.println("Connected spotify successfully!");
 
                         // Now you can start interacting with App Remote
+
                         connected();
+                        //playSearchSong("skyfall");
                     }
 
                     @Override
@@ -105,6 +114,7 @@ public class AddSpotify extends AppCompatActivity {
                         // Something went wrong when attempting to connect! Handle errors here
                     }
                 });
+
 
         //Opens the spotify app
         /*if(isSpotifyInstalled) {
@@ -119,7 +129,8 @@ public class AddSpotify extends AppCompatActivity {
     }
 
     private void connected() {
-        /*mSpotifyAppRemote.getPlayerApi().play("spotify:user:spotify:playlist:37i9dQZF1DX7K31D69s4M1");
+        mSpotifyAppRemote.getPlayerApi().play("spotify:user:spotify:playlist:6NerOPkqXvkD6pbe9P3WVe");
+        //mSpotifyAppRemote.getPlayerApi().play("spotify:user:spotify:playlist:37i9dQZF1DX7K31D69s4M1");
         // Subscribe to PlayerState
         mSpotifyAppRemote.getPlayerApi()
                 .subscribeToPlayerState()
@@ -131,9 +142,25 @@ public class AddSpotify extends AppCompatActivity {
                             Log.d("AddSpotify", track.name + " by " + track.artist.name);
                         }
                     }
-                });*/
+                });
         //playSearchSong("skyfall");
         //getTrack_Async();
+    }
+
+    private void callback(){
+        mSpotifyAppRemote.getPlayerApi().getPlayerState()
+                .setResultCallback(new CallResult.ResultCallback<PlayerState>() {
+                    @Override
+                    public void onResult(PlayerState playerState) {
+                        // have fun with playerState
+                    }
+                })
+                .setErrorCallback(new ErrorCallback() {
+                    @Override
+                    public void onError(Throwable throwable) {
+                        // =(
+                    }
+                });
     }
 
     @Override
@@ -168,6 +195,7 @@ public class AddSpotify extends AppCompatActivity {
         }
 
     }
+
 
     public boolean detectSpotify(){
         PackageManager pm = getPackageManager();
@@ -218,7 +246,7 @@ public class AddSpotify extends AppCompatActivity {
         }
     }
 
-    private static final String accessToken = "taHZ2SdB-bPA3FsK3D7ZN5npZS47cMy-IEySVEGttOhXmqaVAIo0ESvTCLjLBifhHOHOIuhFUKPW1WMDP7w6dj3MAZdWT8CLI2MkZaXbYLTeoDvXesf2eeiLYPBGdx8tIwQJKgV8XdnzH_DONk";
+    /*private static final String accessToken = "taHZ2SdB-bPA3FsK3D7ZN5npZS47cMy-IEySVEGttOhXmqaVAIo0ESvTCLjLBifhHOHOIuhFUKPW1WMDP7w6dj3MAZdWT8CLI2MkZaXbYLTeoDvXesf2eeiLYPBGdx8tIwQJKgV8XdnzH_DONk";
     private static final String id = "01iyCAUm8EvOFqVWYJ3dVX";
 
     private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
@@ -250,5 +278,5 @@ public class AddSpotify extends AppCompatActivity {
         } catch (InterruptedException | ExecutionException e) {
             System.out.println("Error: " + e.getCause().getMessage());
         }
-    }
+    }*/
 }

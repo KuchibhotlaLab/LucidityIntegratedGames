@@ -135,11 +135,11 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                 wlmp.gravity = Gravity.BOTTOM;
 
 
-                Button btnGallery = (Button) dialogLayout.findViewById(R.id.btn_add_gallery);
-                Button btnCamera = (Button) dialogLayout.findViewById(R.id.btn_add_camera);
-                Button btnStored = (Button) dialogLayout.findViewById(R.id.btn_current_gal);
-                Button btnSync = (Button) dialogLayout.findViewById(R.id.btn_sync);
-                Button btnDismiss = (Button) dialogLayout.findViewById(R.id.btn_cancel_img_dialog);
+                Button btnGallery = dialogLayout.findViewById(R.id.btn_add_gallery);
+                Button btnCamera = dialogLayout.findViewById(R.id.btn_add_camera);
+                Button btnStored = dialogLayout.findViewById(R.id.btn_current_gal);
+                Button btnSync = dialogLayout.findViewById(R.id.btn_sync);
+                Button btnDismiss = dialogLayout.findViewById(R.id.btn_cancel_img_dialog);
 
 
                 btnGallery.setOnClickListener(new View.OnClickListener() {
@@ -232,7 +232,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                 prevClickTime = SystemClock.elapsedRealtime();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddTestMaterialActivity.this);
-                LayoutInflater inflater = ((Activity) AddTestMaterialActivity.this).getLayoutInflater();
+                LayoutInflater inflater = ( AddTestMaterialActivity.this).getLayoutInflater();
                 View dialogLayout = inflater.inflate(R.layout.add_location_dialog,
                         null);
 
@@ -247,9 +247,9 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                 wlmp.gravity = Gravity.BOTTOM;
 
 
-                Button btnView = (Button) dialogLayout.findViewById(R.id.btn_view_location);
-                Button btnSync = (Button) dialogLayout.findViewById(R.id.btn_sync_location);
-                Button btnDismiss = (Button) dialogLayout.findViewById(R.id.btn_cancel_location_dialog);
+                Button btnView = dialogLayout.findViewById(R.id.btn_view_location);
+                Button btnSync = dialogLayout.findViewById(R.id.btn_sync_location);
+                Button btnDismiss = dialogLayout.findViewById(R.id.btn_cancel_location_dialog);
 
 
                 btnView.setOnClickListener(new View.OnClickListener() {
@@ -306,7 +306,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddTestMaterialActivity.this);
-                LayoutInflater inflater = ((Activity) AddTestMaterialActivity.this).getLayoutInflater();
+                LayoutInflater inflater = (AddTestMaterialActivity.this).getLayoutInflater();
                 View dialogLayout = inflater.inflate(R.layout.add_sound_dialog,
                         null);
 
@@ -321,10 +321,10 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                 wlmp.gravity = Gravity.BOTTOM;
 
 
-                Button btnRecord = (Button) dialogLayout.findViewById(R.id.btn_add_recording);
-                Button btnSpotify = (Button) dialogLayout.findViewById(R.id.btn_add_online);
-                Button btnStored = (Button) dialogLayout.findViewById(R.id.btn_recording_gallery);
-                Button btnDismiss = (Button) dialogLayout.findViewById(R.id.btn_sound_dismiss);
+                Button btnRecord = dialogLayout.findViewById(R.id.btn_add_recording);
+                Button btnSpotify = dialogLayout.findViewById(R.id.btn_add_online);
+                Button btnStored = dialogLayout.findViewById(R.id.btn_recording_gallery);
+                Button btnDismiss = dialogLayout.findViewById(R.id.btn_sound_dismiss);
 
 
                 btnRecord.setOnClickListener(new View.OnClickListener() {
@@ -350,7 +350,8 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                         }
                         prevClickTime = SystemClock.elapsedRealtime();
 
-                        Intent intent = new Intent(getApplicationContext(), AddSpotify.class);
+                        //Intent intent = new Intent(getApplicationContext(), AddSpotify.class);
+                        Intent intent = new Intent(getApplicationContext(), Music.class);
                         startActivity(intent);
                     }
                 });
@@ -416,7 +417,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
             int success;
             try {
                 // Building Parameters
-                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                List<NameValuePair> params = new ArrayList<>();
                 params.add(new BasicNameValuePair("username", username));
 
                 // getting pictures from web
@@ -450,8 +451,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
 
                     if (folder.exists()) {
                         File[] files = folder.listFiles();
-                        for (int i = 0; i < files.length; i++) {
-                            File file = files[i];
+                        for (File file : files) {
                             if (!picNames.contains(file.getName())) {
                                 //Delete image and tags locally
                                 LucidityDatabase database = Room.databaseBuilder(getApplicationContext(), LucidityDatabase.class, "db-Images")
@@ -519,7 +519,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
             int success;
             try {
                 // Building Parameters
-                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                List<NameValuePair> params = new ArrayList<>();
                 params.add(new BasicNameValuePair("username", username));
 
                 // getting pictures from web
