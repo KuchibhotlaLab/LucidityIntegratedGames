@@ -11,9 +11,14 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.net.HttpParametersUtils;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -46,9 +51,10 @@ public class MusicScreen extends InputAdapter implements Screen {
     SpriteBatch batch;
     BitmapFont font;
 
-    Texture musicBtn, homeBut, returnBut;
-    Rectangle end, back, play;
-    boolean onEnd, onBack, onplay= false;
+    Texture playBtn, stopBtn, homeBut, returnBut, musicBtn;
+    Rectangle end, back, play, answerOne, answerTwo;
+    boolean onEnd, onBack, onplay, onSelectOne, onSelectTwo;
+
 
     private boolean timerStart;
     private long trialStartTime;
@@ -59,12 +65,14 @@ public class MusicScreen extends InputAdapter implements Screen {
     boolean delayOn= false;
     float delayed = -10000;
 
-    private boolean disableTouchDown=true;
+    private boolean disableTouchDown=false;
     String username;
     Music music;
     ArrayList<Music> validSongs;
 
-    String name, author;
+    private String name, author, answer, filler;
+    private int questionNumber;
+    private String promptOne, promptTwo;
 
 
     public MusicScreen(MusicGame game) {
@@ -77,7 +85,8 @@ public class MusicScreen extends InputAdapter implements Screen {
         batch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
 
-        musicBtn = new Texture(Gdx.files.internal("data/musicBtn.png"));
+        playBtn = new Texture(Gdx.files.internal("data/playBtn.png"));
+        stopBtn = new Texture(Gdx.files.internal("data/stopBtn.png"));
         homeBut = new Texture(Gdx.files.internal("data/homeBtn.png"));
         returnBut = new Texture(Gdx.files.internal("data/returnBtn.png"));
 
@@ -92,7 +101,16 @@ public class MusicScreen extends InputAdapter implements Screen {
         play = new Rectangle();
         play.width = play.height = end.height;
         play.x = screenWidth / 4;
-        play.y = screenHeight * 2 / 3;
+        //play.y = screenHeight * 2 / 3;
+        play.y = screenHeight / 2;
+
+        answerOne = new Rectangle();
+        answerTwo = new Rectangle();
+        answerOne.height = answerTwo.height = screenHeight / 12;
+        answerOne.width = answerTwo.width = screenWidth / 2;
+        answerOne.x = answerTwo.x = screenWidth / 4;
+        answerOne.y = screenHeight / 10;
+        answerTwo.y = answerOne.y + answerOne.height;
 
         validSongs = new ArrayList<Music>();
 
@@ -128,12 +146,7 @@ public class MusicScreen extends InputAdapter implements Screen {
         Gdx.gl.glClearColor(MusicGameConstants.BACKGROUND_COLOR.r, MusicGameConstants.BACKGROUND_COLOR.g, MusicGameConstants.BACKGROUND_COLOR.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         elapsed += delta;
-        batch.begin();
-        triggerEnd();
-        triggerBack();
-        triggerPlaySong();
-        batch.end();
-        /*if(elapsed < 2) {
+        if(elapsed < 2) {
             batch.begin();
             font.getData().setScale(FacialGameConstants.PROMPT_SCALE);
 
@@ -154,11 +167,26 @@ public class MusicScreen extends InputAdapter implements Screen {
 
         } else {
             batch.begin();
+            font.getData().setScale(FacialGameConstants.PROMPT_SCALE);
+
+            final GlyphLayout promptLayout_two = new GlyphLayout(font, promptTwo);
+            font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2, screenHeight * 3/ 4);
+
+            final GlyphLayout promptLayout_one = new GlyphLayout(font, promptOne);
+            font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
+                    screenHeight * 3/ 4 + 1.5f * promptLayout_two.height);
+
             triggerEnd();
             triggerBack();
-            triggerPlaySong();
+            batch.draw(musicBtn, play.x, play.y, play.width, play.height);
+            //playButton.draw(batch, 1);
             batch.end();
-        }*/
+
+            renderer.begin(ShapeRenderer.ShapeType.Filled);
+            drawAnswerButton(onSelectOne, answerOne);
+            drawAnswerButton(onSelectTwo, answerTwo);
+            renderer.end();
+        }
     }
     @Override
     public void resize(int width, int height) {
@@ -202,7 +230,22 @@ public class MusicScreen extends InputAdapter implements Screen {
 
             if(play.contains(screenX, screenHeight - screenY)){
                 onplay = !onplay;
-                System.out.println("playing status: " + onplay);
+                if(onplay){
+                    music.stop();
+                    musicBtn = playBtn;
+                } else {
+                    music.play();
+                    musicBtn = stopBtn;
+                }
+            }
+
+            if (answerOne.contains(screenX, screenHeight - screenY)) {
+                onSelectOne = !onSelectOne;
+                onSelectTwo = false;
+            }
+            if (answerTwo.contains(screenX, screenHeight - screenY)) {
+                onSelectTwo = !onSelectTwo;
+                onSelectOne = false;
             }
         }
         return true;
@@ -210,11 +253,56 @@ public class MusicScreen extends InputAdapter implements Screen {
 
     private void generateTrial(){
         music = Gdx.audio.newMusic(Gdx.files.absolute("data/user/0/com.lucidity.game/app_audioDir/Observent.mp3"));
-        //music.play();
         name = "Observent";
         author = "Florent Mothe";
         trial++;
+        musicBtn = playBtn;
+        questionNumber++;
+        setQuestion();
+        setAnswer();
+    }
 
+    private void drawAnswerButton(boolean selected, Rectangle answer){
+        if(!selected){
+            renderer.setColor(FacialGameConstants.W2F_COLOR);
+        } else {
+            renderer.setColor(FacialGameConstants.CHOICE_COLOR);
+        }
+        renderer.rect(answer.x, answer.y, answer.getWidth(), answer.getHeight());
+    }
+
+    private void setQuestion(){
+        switch (questionNumber) {
+            case 1:
+                promptOne = "Have your heard";
+                promptTwo = "of this song before?";
+                break;
+            case 2:
+                promptOne = "What is the name";
+                promptTwo = "of this song?";
+                break;
+            case 3:
+                promptOne = "Who is the author";
+                promptTwo = "of this song?";
+                break;
+        }
+    }
+
+    private void setAnswer(){
+        switch (questionNumber) {
+            case 1:
+                answer = "True";
+                filler = "False";
+                break;
+            case 2:
+                answer = name;
+                filler = "False";
+                break;
+            case 3:
+                answer = author;
+                filler = "False";
+                break;
+        }
     }
 
     private void triggerBack(){
@@ -237,26 +325,14 @@ public class MusicScreen extends InputAdapter implements Screen {
         if(onEnd){
             disableTouchDown = true;
             returnBut = new Texture(Gdx.files.internal("data/returnBtnPressed.png"));
-            /*Timer.schedule(new Timer.Task() {
+            Timer.schedule(new Timer.Task() {
                                @Override
-                               public void run() {game.setScreen(new DifficultyScreen(game));
+                               public void run() {Gdx.app.exit();//game.setScreen(new DifficultyScreen(game));
                                }
                            },
-                    1);*/
+                    1);
         }
         batch.draw(returnBut, end.x, end.y, end.width, end.height);
-
-    }
-
-    private void triggerPlaySong(){
-        if(onplay){
-            music.stop();
-            onplay = false;
-        } else {
-            music.play();
-            onplay = true;
-        }
-        batch.draw(musicBtn, play.x, play.y, play.width, play.height);
 
     }
 
