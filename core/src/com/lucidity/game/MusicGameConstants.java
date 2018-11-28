@@ -22,9 +22,13 @@ public class MusicGameConstants {
     public static final Color RELATION_COLOR = LOCATION_COLOR;
 
     public static final Color DARK_BLUE = Color.valueOf("#003c5a");
-    public static final Color LIGHT_GRAY = Color.valueOf("#555f63");
+    public static final Color MEDIUM_GRAY = Color.valueOf("#555f63");
+    public static final Color LIGHT_GRAY = Color.valueOf("#768084");
     public static final Color BRIGHT_ORANGE = Color.valueOf("#ff6511");
     public static final Color LIGHT_YELLOW = Color.valueOf("#fccda2");
+    public static final Color TURQOIUS = Color.valueOf("#0d7071");
+    public static final Color LIGHT_TURQOIUS = Color.valueOf("#41857f");
+
 
     public static final String MODE_ONE = "Identify";
     public static final String MODE_ONE_SECOND = "Location";

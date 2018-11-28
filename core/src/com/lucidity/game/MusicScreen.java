@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.net.HttpParametersUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -40,8 +41,8 @@ public class MusicScreen extends InputAdapter implements Screen {
 
     private MusicGame game;
 
-    ExtendViewport viewport;
-    ScreenViewport hudViewport;
+    private ExtendViewport viewport;
+    private ScreenViewport hudViewport;
 
     private int screenWidth, screenHeight;
     private int score;
@@ -50,14 +51,15 @@ public class MusicScreen extends InputAdapter implements Screen {
 
     private ShapeRenderer renderer;
 
-    Sprite display;
-    SpriteBatch batch;
-    BitmapFont font;
+    private Sprite display;
+    private SpriteBatch batch;
+    private BitmapFont font;
 
-    Texture playBtn, stopBtn, homeBut, returnBut, musicBtn;
-    Rectangle end, back, play, answerOne, answerTwo;
-    boolean onEnd, onBack, onplay, onSelectOne, onSelectTwo;
-    boolean answerIsSelected, isCorrect;
+    private Texture playBtn, stopBtn, homeBut, returnBut, musicBtn, volumn;
+    private Rectangle end, back, answerOne, answerTwo;
+    private boolean onEnd, onBack, onplay, onSelectOne, onSelectTwo;
+    private boolean answerIsSelected, isCorrect;
+    private Circle play;
 
 
     private boolean timerStart;
@@ -65,14 +67,14 @@ public class MusicScreen extends InputAdapter implements Screen {
     private int[] trialSuccess;
     private double[] trialTime;
 
-    float elapsed = 0;
-    boolean delayOn= false;
-    float delayed = -10000;
+    private float elapsed = 0;
+    private boolean delayOn= false;
+    private float delayed = -10000;
 
     private boolean disableTouchDown=false;
-    String username;
-    Music music;
-    ArrayList<Music> validSongs;
+    private String username;
+    private Music music;
+    private HashMap<String, Music> validSongs;
 
     private String name, author, answer, attrOne, attrTwo;
     private int questionNumber = 0;
@@ -91,8 +93,9 @@ public class MusicScreen extends InputAdapter implements Screen {
 
         playBtn = new Texture(Gdx.files.internal("data/playBtn.png"));
         stopBtn = new Texture(Gdx.files.internal("data/stopBtn.png"));
-        homeBut = new Texture(Gdx.files.internal("data/homeBtn.png"));
-        returnBut = new Texture(Gdx.files.internal("data/returnBtn.png"));
+        homeBut = new Texture(Gdx.files.internal("data/homeMusic.png"));
+        returnBut = new Texture(Gdx.files.internal("data/returnMusic.png"));
+        volumn = new Texture(Gdx.files.internal("data/volumn.png"));
 
         end = new Rectangle();
         back = new Rectangle();
@@ -102,40 +105,50 @@ public class MusicScreen extends InputAdapter implements Screen {
         end.x = screenWidth / 2;
         back.x = screenWidth * 3 / 4;
 
-        play = new Rectangle();
-        play.width = play.height = end.height;
-        play.x = screenWidth / 4;
-        //play.y = screenHeight * 2 / 3;
-        play.y = screenHeight / 2;
+        play = new Circle();
+        play.setRadius(end.height);
+        play.setX(screenWidth / 4);
+        play.setY(screenHeight * 7 / 12);
+
+        int gap = screenHeight / 16;
 
         answerOne = new Rectangle();
         answerTwo = new Rectangle();
         answerOne.height = answerTwo.height = screenHeight / 12;
-        answerOne.width = answerTwo.width = screenWidth / 2;
-        answerOne.x = answerTwo.x = screenWidth / 4;
+        answerOne.width = answerTwo.width = screenWidth * 2 / 3;
+        answerOne.x = answerTwo.x = screenWidth / 6;
         answerOne.y = screenHeight / 10;
-        answerTwo.y = answerOne.y + answerOne.height;
+        answerTwo.y = answerOne.y + answerOne.height + gap;
 
         timerStart = true;
         trialTime = new double[5];
         trialSuccess = new int[5];
 
-        validSongs = new ArrayList<Music>();
+        validSongs = new HashMap<String, Music>();
 
-        String locRoot = "data/user/0/com.lucidity.game/app_audioDir/" + username;
+        //TODO: add username as file
+        String locRoot = "data/user/0/com.lucidity.game/app_audioDir/";
         File folder = new File(locRoot);
         File[] listOfFiles = folder.listFiles();
         if(listOfFiles != null){
             for(File file : listOfFiles){
                 if(file.isFile()){
                     if("mp3".equals(file.getName().substring(file.getName().length()-3, file.getName().length()))){
-                        validSongs.add(Gdx.audio.newMusic(Gdx.files.absolute(locRoot+file.getName())));
+                        validSongs.put(file.getName(), Gdx.audio.newMusic(Gdx.files.absolute(locRoot+file.getName())));
                     }
                 }
             }
         }
 
-        generateTrial();
+        System.out.println("number of songs: " + validSongs.entrySet().size());
+        for (Map.Entry<String, Music> entry : validSongs.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
+            System.out.println("Songs are: " + key);
+        }
+
+        generateQuestion();
     }
 
     @Override
@@ -153,9 +166,6 @@ public class MusicScreen extends InputAdapter implements Screen {
         viewport.apply(true);
         Gdx.gl.glClearColor(MusicGameConstants.BACKGROUND_COLOR.r, MusicGameConstants.BACKGROUND_COLOR.g, MusicGameConstants.BACKGROUND_COLOR.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        renderer.begin(ShapeRenderer.ShapeType.Filled);
-        drawBackground();
-        renderer.end();
         elapsed += delta;
         if(elapsed < 2) {
             batch.begin();
@@ -177,6 +187,13 @@ public class MusicScreen extends InputAdapter implements Screen {
             batch.end();
 
         } else {
+            renderer.begin(ShapeRenderer.ShapeType.Filled);
+            drawBackground();
+            drawAnswerButton(onSelectOne, answerOne);
+            drawAnswerButton(onSelectTwo, answerTwo);
+            drawRingedCircle("button", play.x, play.y, play.radius * 3 / 2);
+            renderer.end();
+
             batch.begin();
             font.setColor(Color.WHITE);
             font.getData().setScale(FacialGameConstants.PROMPT_SCALE);
@@ -190,14 +207,10 @@ public class MusicScreen extends InputAdapter implements Screen {
 
             triggerEnd();
             triggerBack();
-            batch.draw(musicBtn, play.x, play.y, play.width, play.height);
+            batch.draw(musicBtn, play.x - play.radius/2, play.y - play.radius/2, play.radius, play.radius);
+            batch.draw(volumn, play.x + play.radius * 2, play.y - play.radius * 3 / 4, screenWidth / 3, play.radius * 4 / 3);
             //playButton.draw(batch, 1);
             batch.end();
-
-            renderer.begin(ShapeRenderer.ShapeType.Filled);
-            drawAnswerButton(onSelectOne, answerOne);
-            drawAnswerButton(onSelectTwo, answerTwo);
-            renderer.end();
 
             if(!delayOn && answerIsSelected){
                 delayOn = true;
@@ -316,35 +329,53 @@ public class MusicScreen extends InputAdapter implements Screen {
     }
 
     private void computeScore(){
-        if(isCorrect && answerIsSelected) {
-            ++score;
-            isCorrect = false;
+        if(questionNumber == 1 && !isCorrect){
+            ++trial;
+            setSong();
+            questionNumber = 0;
+            elapsed = 0;
+        } else {
+            if(isCorrect && answerIsSelected) {
+                ++score;
+                isCorrect = false;
 
-            //record correct
-            if(trial <= 5) {
-                trialSuccess[trial - 1] +=1;
+                //record correct
+                if(trial <= 5) {
+                    trialSuccess[trial - 1] +=1;
+                }
+            }
+            if(questionNumber >= 3){
+                ++trial;
+                setSong();
+                questionNumber = 0;
+                elapsed = 0;
             }
         }
-        if(trial == 5) {
-            triggerEnd();
+
+        if(trial > 5) {
+            Gdx.app.exit();
             //postScore();
             //game.setScreen(new EndScreen(game, score, trial));
         }
-        if(questionNumber >= 3){
-            ++trial;
-            questionNumber = 0;
-        }
-        generateTrial();
+        generateQuestion();
     }
 
-    private void generateTrial(){
+    private void setSong(){
         music = Gdx.audio.newMusic(Gdx.files.absolute("data/user/0/com.lucidity.game/app_audioDir/Observent.mp3"));
         name = "Observent";
         author = "Florent Mothe";
+        //TODO: fill in to random generate song
+        /*int position = (int) (Math.random() * validSongs.size());
+        int index = 0;
+        for (Map.Entry<String, Music> entry : validSongs.entrySet()) {
+
+        }*/
+
+
+    }
+    private void generateQuestion(){
         musicBtn = playBtn;
         questionNumber++;
-
-        elapsed = 0;
         delayed = -10000;
         delayOn = false;
 
@@ -357,18 +388,21 @@ public class MusicScreen extends InputAdapter implements Screen {
         answerIsSelected = false;
         disableTouchDown = false;
 
-
         setQuestion();
         setAnswer();
     }
 
     private void drawAnswerButton(boolean selected, Rectangle answer){
         if(!selected){
-            renderer.setColor(FacialGameConstants.W2F_COLOR);
+            renderer.setColor(MusicGameConstants.LIGHT_GRAY);
+            renderer.rect(answer.x, answer.y, answer.getWidth(), answer.getHeight());
+
+            drawCircle(MusicGameConstants.DARK_BLUE, screenWidth * 3 / 4, answer.y + answer.height / 2, answer.height / 3);
         } else {
-            renderer.setColor(FacialGameConstants.CHOICE_COLOR);
+            renderer.setColor(MusicGameConstants.TURQOIUS);
+            renderer.rect(answer.x, answer.y, answer.getWidth(), answer.getHeight());
+            drawCircle(MusicGameConstants.LIGHT_TURQOIUS, screenWidth * 3 / 4, answer.y + answer.height / 2, answer.height / 3);
         }
-        renderer.rect(answer.x, answer.y, answer.getWidth(), answer.getHeight());
     }
 
     private void setQuestion(){
@@ -391,7 +425,7 @@ public class MusicScreen extends InputAdapter implements Screen {
     private void setAnswer(){
         switch (questionNumber) {
             case 1:
-                answer = "True";
+                answer = "I have";
                 break;
             case 2:
                 answer = name;
@@ -413,7 +447,7 @@ public class MusicScreen extends InputAdapter implements Screen {
     private void triggerBack(){
         if(onBack){
             disableTouchDown = true;
-            homeBut = new Texture(Gdx.files.internal("data/homeBtnPressed.png"));
+            homeBut = new Texture(Gdx.files.internal("data/homeMusicPressed.png"));
             /*Timer.schedule(new Timer.Task() {
                                @Override
                                public void run() {
@@ -429,7 +463,7 @@ public class MusicScreen extends InputAdapter implements Screen {
     private void triggerEnd(){
         if(onEnd){
             disableTouchDown = true;
-            returnBut = new Texture(Gdx.files.internal("data/returnBtnPressed.png"));
+            returnBut = new Texture(Gdx.files.internal("data/returnMusicPressed.png"));
             Timer.schedule(new Timer.Task() {
                                @Override
                                public void run() {Gdx.app.exit();//game.setScreen(new DifficultyScreen(game));
@@ -461,24 +495,26 @@ public class MusicScreen extends InputAdapter implements Screen {
     }
 
     private void drawBackground(){
-        renderer.setColor(MusicGameConstants.DARK_BLUE);
-        renderer.circle(screenWidth * 4/ 5, screenHeight/4, screenHeight/4);
-        renderer.setColor(MusicGameConstants.LIGHT_GRAY);
-        renderer.circle(screenWidth* 4/ 5, screenHeight/4, screenHeight/6);
-
-
-        renderer.setColor(MusicGameConstants.DARK_BLUE);
-        renderer.circle(-screenWidth/7, screenHeight/4, screenHeight/6);
-        renderer.setColor(MusicGameConstants.LIGHT_GRAY);
-        renderer.circle(-screenWidth/7, screenHeight/4, screenHeight /9);
-
-        renderer.setColor(MusicGameConstants.DARK_BLUE);
-        renderer.circle(screenWidth/5, screenHeight, screenHeight/8);
-        renderer.setColor(MusicGameConstants.LIGHT_GRAY);
-        renderer.circle(screenWidth/5, screenHeight, screenHeight /12);
-
+        drawRingedCircle("background", screenWidth * 5 / 6, screenHeight/8, screenHeight/4);
+        drawRingedCircle("background", -screenWidth/7, screenHeight/4, screenHeight/6);
+        drawRingedCircle("background", screenWidth/5, screenHeight, screenHeight/8);
+        drawRingedCircle("background", screenWidth, screenHeight * 7 / 8, screenHeight/8);
     }
 
+    private void drawRingedCircle(String type, float x, float y, float r){
+        if("background".equals(type)){
+            drawCircle(MusicGameConstants.DARK_BLUE, x, y, r);
+            drawCircle(MusicGameConstants.MEDIUM_GRAY, x, y, r * 2 / 3);
+        } else if("button".equals(type)){
+            drawCircle(MusicGameConstants.BRIGHT_ORANGE, x, y, r);
+            drawCircle(MusicGameConstants.LIGHT_YELLOW, x, y, r * 2 / 3);
+        }
+    }
+
+    private void drawCircle(Color color, float x, float y, float r){
+        renderer.setColor(color);
+        renderer.circle(x, y, r);
+    }
     /*private void postScore() {
         Net.HttpRequest httpPost = new Net.HttpRequest(Net.HttpMethods.POST);
         httpPost.setUrl("http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_recallgame_score.php");
