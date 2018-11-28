@@ -15,11 +15,16 @@ public class MusicGameConstants {
     public static final float MODE_LABEL_SCALE = .3f;
 
     public static final Color LOADING_COLOR = new Color(0.97f, 0.69f, 0.58f, 1);
-    public static final Color BACKGROUND_COLOR = new Color(Color.valueOf("#fccda2"));
+    public static final Color BACKGROUND_COLOR = Color.valueOf("#414a4f");
     public static final Color TITLE_COLOR = new Color(0.42f,0.36f,0.47f, 1);
 
     public static final Color LOCATION_COLOR = new Color(0.76f,0.42f,0.52f, 1);
     public static final Color RELATION_COLOR = LOCATION_COLOR;
+
+    public static final Color DARK_BLUE = Color.valueOf("#003c5a");
+    public static final Color LIGHT_GRAY = Color.valueOf("#555f63");
+    public static final Color BRIGHT_ORANGE = Color.valueOf("#ff6511");
+    public static final Color LIGHT_YELLOW = Color.valueOf("#fccda2");
 
     public static final String MODE_ONE = "Identify";
     public static final String MODE_ONE_SECOND = "Location";
