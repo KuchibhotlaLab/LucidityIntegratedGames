@@ -7,7 +7,9 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,8 +34,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AddTestMaterialActivity extends AppCompatActivity {
@@ -67,6 +73,8 @@ public class AddTestMaterialActivity extends AppCompatActivity {
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
+
+    private static final int READ_REQUEST_CODE = 1;  // The request code
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -322,7 +330,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
 
 
                 Button btnRecord = dialogLayout.findViewById(R.id.btn_add_recording);
-                Button btnSpotify = dialogLayout.findViewById(R.id.btn_add_online);
+                Button btnUpload = dialogLayout.findViewById(R.id.btn_add_online);
                 Button btnStored = dialogLayout.findViewById(R.id.btn_recording_gallery);
                 Button btnDismiss = dialogLayout.findViewById(R.id.btn_sound_dismiss);
 
@@ -341,7 +349,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                     }
                 });
 
-                btnSpotify.setOnClickListener(new View.OnClickListener() {
+                btnUpload.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //Do nothing if button was recently pressed
@@ -351,8 +359,11 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                         prevClickTime = SystemClock.elapsedRealtime();
 
                         //Intent intent = new Intent(getApplicationContext(), AddSpotify.class);
-                        Intent intent = new Intent(getApplicationContext(), Music.class);
-                        startActivity(intent);
+
+                        openFolder();
+
+                        //Intent intent = new Intent(getApplicationContext(), Music.class);
+                        //startActivity(intent);
                     }
                 });
 
@@ -670,5 +681,64 @@ public class AddTestMaterialActivity extends AppCompatActivity {
             return null;
         }
     }
+
+    public void openFolder()
+    {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Uri uri = Uri.parse(Environment.getExternalStorageDirectory().getPath()
+                + "/myFolder/");
+        intent.setDataAndType(uri, "audio/*");
+        //startActivity(Intent.createChooser(intent, "Open folder"));
+        startActivityForResult(intent, READ_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(data != null) {
+
+            Uri currFileURI = data.getData();
+            String path = currFileURI.getPath();
+            //System.out.println("filepath returned = " + path);
+            List folders = Arrays.asList(path.split("/"));
+            String name = folders.get(folders.size() - 1).toString();
+            if("mp3".equals(name.substring(name.length()-3))){
+                Intent intent = new Intent(getApplicationContext(), Music.class);
+                intent.putExtra("path", path);
+                startActivity(intent);
+            }
+            /*String Fpath = data.getDataString();
+            System.out.println("filepath returned = " + Fpath);
+            super.onActivityResult(requestCode, resultCode, data);*/
+        }
+    }
+
+    /*@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == READ_REQUEST_CODE && resultCode == RESULT_OK) {
+            File file = new File(data.getData().getPath()) ;
+            String path = file.getAbsolutePath() ;
+            StringBuilder text = new StringBuilder();
+
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(path));
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    text.append(line);
+                    text.append("\n");
+
+                }
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this) ;
+            builder.setMessage(path)
+                    .show() ;
+
+        }
+    }*/
 
 }
