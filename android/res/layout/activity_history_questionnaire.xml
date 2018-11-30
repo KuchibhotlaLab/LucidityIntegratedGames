@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HistoryQuestionnaireActivity">
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/questionnaire_prompt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/ostrich_sans_rounded_medium"
+                android:paddingBottom="18dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="@string/questionnaire_prompt"
+                android:textColor="#000000"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/history_question_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/kayak_sans_regular"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:text="@string/history_question_1"
+                android:textColor="#000000"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:paddingBottom="12dp">
+
+                <EditText
+                    android:id="@+id/history_answer_1_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/name_of_location"
+                    android:inputType="textCapWords"
+                    android:textSize="24sp" />
+
+                <EditText
+                    android:id="@+id/history_answer_1_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/years"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/history_question_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/kayak_sans_regular"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:text="@string/history_question_2"
+                android:textColor="#000000"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:paddingBottom="12dp">
+
+                <EditText
+                    android:id="@+id/history_answer_2_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/name_of_location"
+                    android:inputType="textCapWords"
+                    android:textSize="24sp" />
+
+                <EditText
+                    android:id="@+id/history_answer_2_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/years"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/history_question_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/kayak_sans_regular"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:text="@string/history_question_3"
+                android:textColor="#000000"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:paddingBottom="12dp">
+
+                <EditText
+                    android:id="@+id/history_answer_3_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/name_of_location"
+                    android:inputType="textCapWords"
+                    android:textSize="24sp" />
+
+                <EditText
+                    android:id="@+id/history_answer_3_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/years"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/history_question_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/kayak_sans_regular"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:text="@string/history_question_4"
+                android:textColor="#000000"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:paddingBottom="12dp">
+
+                <EditText
+                    android:id="@+id/history_answer_4_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/name_of_location"
+                    android:inputType="textCapWords"
+                    android:textSize="24sp" />
+
+                <EditText
+                    android:id="@+id/history_answer_4_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/years"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/history_question_5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/kayak_sans_regular"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:text="@string/history_question_5"
+                android:textColor="#000000"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:paddingBottom="12dp">
+
+                <EditText
+                    android:id="@+id/history_answer_5_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/name_of_location"
+                    android:inputType="textCapWords"
+                    android:textSize="24sp" />
+
+                <EditText
+                    android:id="@+id/history_answer_5_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/years"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/history_question_6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/kayak_sans_regular"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:text="@string/history_question_6"
+                android:textColor="#000000"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:paddingBottom="12dp">
+
+                <EditText
+                    android:id="@+id/history_answer_6_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/name_of_location"
+                    android:inputType="textCapWords"
+                    android:textSize="24sp" />
+
+                <EditText
+                    android:id="@+id/history_answer_6_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/years"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/history_question_7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/kayak_sans_regular"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:text="@string/history_question_7"
+                android:textColor="#000000"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:paddingBottom="12dp">
+
+                <EditText
+                    android:id="@+id/history_answer_7_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/name_of_location"
+                    android:inputType="textCapWords"
+                    android:textSize="24sp" />
+
+                <EditText
+                    android:id="@+id/history_answer_7_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/years"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/history_question_8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/kayak_sans_regular"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:text="@string/history_question_8"
+                android:textColor="#000000"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:paddingBottom="12dp">
+
+                <EditText
+                    android:id="@+id/history_answer_8_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/name_of_location"
+                    android:inputType="textCapWords"
+                    android:textSize="24sp" />
+
+                <EditText
+                    android:id="@+id/history_answer_8_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/years"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/history_question_9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/kayak_sans_regular"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:text="@string/history_question_9"
+                android:textColor="#000000"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:paddingBottom="12dp">
+
+                <EditText
+                    android:id="@+id/history_answer_9_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/name_of_location"
+                    android:inputType="textCapWords"
+                    android:textSize="24sp" />
+
+                <EditText
+                    android:id="@+id/history_answer_9_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/years"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/history_question_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/kayak_sans_regular"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:text="@string/history_question_10"
+                android:textColor="#000000"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:paddingBottom="12dp">
+
+                <EditText
+                    android:id="@+id/history_answer_10_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/name_of_location"
+                    android:inputType="textCapWords"
+                    android:textSize="24sp" />
+
+                <EditText
+                    android:id="@+id/history_answer_10_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/kayak_sans_regular"
+                    android:hint="@string/years"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/history_submit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/ostrich_sans_rounded_medium"
+                android:text="@string/submit"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>

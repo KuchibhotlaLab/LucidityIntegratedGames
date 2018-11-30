@@ -67,7 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
         EditText caregiverpw = (EditText)findViewById(R.id.signup_input_caregiver_password);
         return usernameEntered(username) &&
                 passwordConfirmed(pw1, pw2) &&
-                caregierpwConfirmed(caregiverpw) &&
+                caregiverpwConfirmed(caregiverpw) &&
                 nameEntered(name);
     }
 
@@ -88,7 +88,7 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
-    private boolean caregierpwConfirmed(EditText caregiverpw){
+    private boolean caregiverpwConfirmed(EditText caregiverpw){
         if(caregiverpw.getText().toString().trim().length() == 0){
             caregiverpw.setError("Please Enter Name");
             return false;

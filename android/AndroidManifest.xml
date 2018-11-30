@@ -87,7 +87,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".Music"></activity>
+        <activity android:name=".Music" />
+        <activity android:name=".HistoryQuestionnaireActivity"></activity>
     </application>
 
 </manifest>

@@ -1,79 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.lucidity.game.QuestionnaireActivity"
-    android:fillViewport="true">
+    android:orientation="vertical"
+    tools:context="com.lucidity.game.QuestionnaireActivity">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="8dp">
-            <TextView
-            android:id="@+id/history_page"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/ostrich_sans_rounded_medium"
-            android:paddingBottom="24dp"
-            android:paddingTop="24dp"
-            android:text="@string/histories"
-            android:textAlignment="center"
-            android:textColor="#4b4b4b"
-            android:textSize="48sp" />
+    <TextView
+        android:id="@+id/history_page"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ostrich_sans_rounded_medium"
+        android:paddingBottom="24dp"
+        android:paddingTop="24dp"
+        android:text="@string/histories"
+        android:textAlignment="center"
+        android:textColor="#4b4b4b"
+        android:textSize="48sp" />
 
-            <TextView
-                android:id="@+id/location_prompt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:textSize="28sp"
-                android:fontFamily="@font/ostrich_sans_rounded_medium"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp"
-                android:paddingBottom="18dp"
-                android:textColor="#000000"/>
+    <TextView
+        android:id="@+id/location_prompt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:fontFamily="@font/ostrich_sans_rounded_medium"
+        android:paddingBottom="18dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:textColor="#000000"
+        android:textSize="28sp" />
 
-            <EditText
-                android:id="@+id/addLoc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:textSize="20sp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:fontFamily="@font/kayak_sans_regular"
-                android:inputType="textCapWords"
-                android:hint="Add a new item to List View" />
+    <EditText
+        android:id="@+id/addLoc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:fontFamily="@font/kayak_sans_regular"
+        android:hint="Add a new item to List View"
+        android:inputType="textCapWords"
+        android:textSize="20sp" />
 
-            <Button
-                android:id="@+id/addLocBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add New Item"
-                android:fontFamily="@font/kayak_sans_regular"/>
+    <Button
+        android:id="@+id/addLocBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/kayak_sans_regular"
+        android:text="Add New Item"
+        android:textAlignment="center" />
 
-            <ListView
-                android:id="@+id/list_location"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/kayak_sans_regular">
-            </ListView>
+    <ListView
+        android:id="@+id/list_location"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/kayak_sans_regular"></ListView>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/ostrich_sans_rounded_medium"
-                android:paddingBottom="24dp"
-                android:paddingTop="24dp"
-                android:text="@string/histories"
-                android:textAlignment="center"
-                android:textColor="#4b4b4b"
-                android:textSize="48sp" />
-        </LinearLayout>
-
-</ScrollView>
+</LinearLayout>
