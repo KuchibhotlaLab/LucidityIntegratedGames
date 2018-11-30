@@ -30,7 +30,9 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -76,7 +78,7 @@ public class MusicScreen extends InputAdapter implements Screen {
     private Music music;
     private HashMap<String, Music> validSongs;
 
-    private String name, author, answer, attrOne, attrTwo;
+    private String name, author, answer, filler, attrOne, attrTwo;
     private int questionNumber = 0;
     private String promptOne, promptTwo;
 
@@ -134,20 +136,12 @@ public class MusicScreen extends InputAdapter implements Screen {
             for(File file : listOfFiles){
                 if(file.isFile()){
                     if("mp3".equals(file.getName().substring(file.getName().length()-3, file.getName().length()))){
-                        validSongs.put(file.getName(), Gdx.audio.newMusic(Gdx.files.absolute(locRoot+file.getName())));
+                        validSongs.put(file.getName().substring(0, file.getName().length()-4), Gdx.audio.newMusic(Gdx.files.absolute(locRoot+file.getName())));
                     }
                 }
             }
         }
-
-        System.out.println("number of songs: " + validSongs.entrySet().size());
-        for (Map.Entry<String, Music> entry : validSongs.entrySet()) {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-
-            System.out.println("Songs are: " + key);
-        }
-
+        setSong();
         generateQuestion();
     }
 
@@ -172,10 +166,10 @@ public class MusicScreen extends InputAdapter implements Screen {
             font.getData().setScale(FacialGameConstants.PROMPT_SCALE);
 
             if (trial == 1) {
-                final GlyphLayout promptLayout_two = new GlyphLayout(font, FacialGameConstants.PROMPT_TWO);
+                final GlyphLayout promptLayout_two = new GlyphLayout(font, MusicGameConstants.PROMPT_TWO);
                 font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2, screenHeight / 2);
 
-                final GlyphLayout promptLayout_one = new GlyphLayout(font, FacialGameConstants.PROMPT_ONE);
+                final GlyphLayout promptLayout_one = new GlyphLayout(font, MusicGameConstants.PROMPT_ONE);
                 font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
                         screenHeight / 2 + 1.5f * promptLayout_two.height);
             } else {
@@ -187,21 +181,29 @@ public class MusicScreen extends InputAdapter implements Screen {
             batch.end();
 
         } else {
+            batch.begin();
+            font.setColor(Color.WHITE);
+            font.getData().setScale(FacialGameConstants.PROMPT_SCALE);
+            final GlyphLayout promptLayout_two = new GlyphLayout(font, promptTwo);
+            final GlyphLayout promptLayout_one = new GlyphLayout(font, promptOne);
+            batch.end();
+
+
             renderer.begin(ShapeRenderer.ShapeType.Filled);
             drawBackground();
             drawAnswerButton(onSelectOne, answerOne);
             drawAnswerButton(onSelectTwo, answerTwo);
             drawRingedCircle("button", play.x, play.y, play.radius * 3 / 2);
+            renderer.setColor(MusicGameConstants.LIGHT_GRAY);
+            renderer.rect((screenWidth - promptLayout_two.width) / 2 - screenWidth/20, screenHeight * 3/ 4 -  1.5f * promptLayout_two.height,
+                    promptLayout_two.width + screenWidth/10, 1.75f * (promptLayout_two.height + promptLayout_one.height) );
             renderer.end();
+
 
             batch.begin();
             font.setColor(Color.WHITE);
             font.getData().setScale(FacialGameConstants.PROMPT_SCALE);
-
-            final GlyphLayout promptLayout_two = new GlyphLayout(font, promptTwo);
             font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2, screenHeight * 3/ 4);
-
-            final GlyphLayout promptLayout_one = new GlyphLayout(font, promptOne);
             font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
                     screenHeight * 3/ 4 + 1.5f * promptLayout_two.height);
 
@@ -360,16 +362,40 @@ public class MusicScreen extends InputAdapter implements Screen {
         generateQuestion();
     }
 
-    private void setSong(){
-        music = Gdx.audio.newMusic(Gdx.files.absolute("data/user/0/com.lucidity.game/app_audioDir/Observent.mp3"));
-        name = "Observent";
-        author = "Florent Mothe";
-        //TODO: fill in to random generate song
-        /*int position = (int) (Math.random() * validSongs.size());
-        int index = 0;
-        for (Map.Entry<String, Music> entry : validSongs.entrySet()) {
+    private void adjustButtonSize(GlyphLayout text){
 
-        }*/
+    }
+
+    private void setSong(){
+        music = null;
+        name = "";
+        author = "";
+        filler = "";
+        boolean filled = false;
+        int position = (int) (Math.random() * validSongs.size());
+        int index = -1;
+        for (Map.Entry<String, Music> entry : validSongs.entrySet()) {
+            index++;
+            //TODO: sanitize input
+            if(index == position){
+                List<String> info = Arrays.asList(entry.getKey().split(" - "));
+                for(String str : info){
+                    System.out.println("info we should have collected: " + str);
+                }
+                name = info.get(0);
+                author = info.get(1);
+                music = entry.getValue();
+                filled = true;
+            } else {
+                if("".equals(filler)){
+                    filler = entry.getKey();
+                }
+                if(filled){
+                    break;
+                }
+            }
+
+        }
 
 
     }
@@ -426,21 +452,28 @@ public class MusicScreen extends InputAdapter implements Screen {
         switch (questionNumber) {
             case 1:
                 answer = "I have";
+                putAnswerInPosition(answer, "I haven't");
                 break;
             case 2:
                 answer = name;
+                putAnswerInPosition(answer, Arrays.asList(filler.split(" - ")).get(0));
                 break;
             case 3:
                 answer = author;
+                putAnswerInPosition(answer, Arrays.asList(filler.split(" - ")).get(1));
                 break;
         }
+
+    }
+
+    private void putAnswerInPosition(String ans, String fil){
         int position = (int) (Math.random() * 2);
         if(position == 0) {
-            attrOne = answer;
-            attrTwo = "False";
+            attrOne = ans;
+            attrTwo = fil;
         } else {
-            attrOne = "False";
-            attrTwo = answer;
+            attrOne = fil;
+            attrTwo = ans;
         }
     }
 

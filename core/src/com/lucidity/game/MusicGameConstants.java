@@ -50,11 +50,8 @@ public class MusicGameConstants {
     public static final String INSTRUCT_TWO = "correct answer associated";
     public static final String INSTRUCT_THREE = "with each prompt given?";
 
-    public static final String PROMPT_ONE = "Select the ";
-    public static final String PROMPT_RELATION = "of this person to you.";
-    public static final String PROMPT_LOCATION = "that you lived in the past.";
-    public static final String PROMPT_TWO = " is ";
-
+    public static final String PROMPT_ONE = "Please identify the";
+    public static final String PROMPT_TWO = "song you are about to hear";
 
     public static final String[] RANDOM_LOCATION_NAMES = {"Arlington", "Baton Rouge", "San Diego", "Kansas City", "Henderson", "Houston"};
 
