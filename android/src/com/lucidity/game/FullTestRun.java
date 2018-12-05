@@ -6,9 +6,11 @@ import android.support.annotation.NonNull;
 
 @Entity(tableName = "FullTestRuns")
 public class FullTestRun {
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    int id;
     @NonNull
     private String username;
-    @PrimaryKey
     @NonNull
     private String time;
     private String menu;
@@ -23,6 +25,14 @@ public class FullTestRun {
     private String testtime4;
     private String testtype5;
     private String testtime5;
+
+    public int getId(){
+        return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
 
     @NonNull
     public String getUsername() {

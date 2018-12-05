@@ -6,14 +6,24 @@ import android.support.annotation.NonNull;
 
 @Entity(tableName = "Images")
 public class Image {
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    int id;
     @NonNull
     private String username;
-    @PrimaryKey
     @NonNull
     private String fileName;
     private String imageName;
     private String imageRelation;
     private char gender;
+
+    public int getId(){
+        return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
 
     @NonNull
     public String getUsername() {

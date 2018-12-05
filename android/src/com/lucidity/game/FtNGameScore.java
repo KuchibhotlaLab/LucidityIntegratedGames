@@ -6,9 +6,11 @@ import android.support.annotation.NonNull;
 
 @Entity(tableName = "FtNGameScores")
 public class FtNGameScore {
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    int id;
     @NonNull
     private String username;
-    @PrimaryKey
     @NonNull
     private String time;
     private String location;
@@ -24,6 +26,14 @@ public class FtNGameScore {
     private double trialtime4;
     private int trial5;
     private double trialtime5;
+
+    public int getId(){
+        return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
 
     @NonNull
     public String getUsername() {

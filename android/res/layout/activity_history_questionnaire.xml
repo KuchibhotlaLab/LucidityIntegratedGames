@@ -74,6 +74,7 @@
                     android:layout_weight="2"
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
+                    android:inputType="phone"
                     android:textSize="24sp" />
             </LinearLayout>
 
@@ -116,6 +117,7 @@
                     android:layout_weight="2"
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
+                    android:inputType="phone"
                     android:textSize="24sp" />
             </LinearLayout>
 
@@ -158,6 +160,7 @@
                     android:layout_weight="2"
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
+                    android:inputType="phone"
                     android:textSize="24sp" />
             </LinearLayout>
 
@@ -200,6 +203,7 @@
                     android:layout_weight="2"
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
+                    android:inputType="phone"
                     android:textSize="24sp" />
             </LinearLayout>
 
@@ -242,6 +246,7 @@
                     android:layout_weight="2"
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
+                    android:inputType="phone"
                     android:textSize="24sp" />
             </LinearLayout>
 
@@ -284,6 +289,7 @@
                     android:layout_weight="2"
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
+                    android:inputType="phone"
                     android:textSize="24sp" />
             </LinearLayout>
 
@@ -326,6 +332,7 @@
                     android:layout_weight="2"
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
+                    android:inputType="phone"
                     android:textSize="24sp" />
             </LinearLayout>
 
@@ -368,6 +375,7 @@
                     android:layout_weight="2"
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
+                    android:inputType="phone"
                     android:textSize="24sp" />
             </LinearLayout>
 
@@ -410,6 +418,7 @@
                     android:layout_weight="2"
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
+                    android:inputType="phone"
                     android:textSize="24sp" />
             </LinearLayout>
 
@@ -452,6 +461,7 @@
                     android:layout_weight="2"
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
+                    android:inputType="phone"
                     android:textSize="24sp" />
             </LinearLayout>
 

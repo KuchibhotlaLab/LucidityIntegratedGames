@@ -269,7 +269,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                         }
                         prevClickTime = SystemClock.elapsedRealtime();
 
-                        Intent intent = new Intent(getApplicationContext(), QuestionnaireActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), HistoryQuestionnaireActivity.class);
                         startActivity(intent);
                     }
                 });

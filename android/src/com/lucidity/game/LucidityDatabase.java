@@ -3,7 +3,7 @@ package com.lucidity.game;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
-@Database(entities = {Image.class, Location.class, BlockGameScore.class, ObjGameScore.class,
+@Database(entities = {Image.class, Location.class, History.class, BlockGameScore.class, ObjGameScore.class,
         SpGameScore.class, NtFGameScore.class, FtNGameScore.class, ReGameScore.class,
         FullTestRun.class}, version = 1)
 public abstract class LucidityDatabase extends RoomDatabase {
@@ -16,4 +16,5 @@ public abstract class LucidityDatabase extends RoomDatabase {
     public abstract FtNGameScoreDAO getFtNGameScoreDAO();
     public abstract ReGameScoreDAO getReGameScoreDAO();
     public abstract FullTestRunDAO getFullTestRunDAO();
+    public abstract HistoryDAO getHistoryDAO();
 }

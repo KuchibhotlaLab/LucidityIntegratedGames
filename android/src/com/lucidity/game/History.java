@@ -4,15 +4,18 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-@Entity(tableName = "Locations")
-public class Location {
+@Entity(tableName = "Histories")
+public class History{
     @PrimaryKey(autoGenerate = true)
     @NonNull
     int id;
+
     @NonNull
     private String username;
     @NonNull
     private String location;
+    private String event;
+    private String year;
 
     public int getId(){
         return id;
@@ -38,5 +41,21 @@ public class Location {
 
     public void setLocation(@NonNull String loc) {
         this.location = loc;
+    }
+
+    public String getEvent() {
+        return event;
+    }
+
+    public void setEvent(String eve) {
+        this.event = eve;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String y) {
+        this.year = y;
     }
 }
