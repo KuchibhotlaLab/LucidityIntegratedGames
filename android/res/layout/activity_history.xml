@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.lucidity.game.HistoryActivity">
+
+    <TextView
+        android:id="@+id/history_page"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ostrich_sans_rounded_medium"
+        android:paddingBottom="24dp"
+        android:paddingTop="24dp"
+        android:text="@string/histories"
+        android:textAlignment="center"
+        android:textColor="#4b4b4b"
+        android:textSize="48sp" />
+
+    <ListView
+        android:id="@+id/list_location"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/kayak_sans_regular"></ListView>
+
+</LinearLayout>

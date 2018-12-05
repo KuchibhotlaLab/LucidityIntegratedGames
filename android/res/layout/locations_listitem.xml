@@ -11,11 +11,13 @@
         android:id="@+id/location_names"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="6"
         android:layout_marginStart="1dp"
         android:textSize="28sp"
         android:gravity="center_horizontal"
-        android:layout_gravity="start"/>
+        android:layout_gravity="start"
+        android:onClick="onClick"
+        android:clickable="true"/>
 
     <ImageButton
         android:id="@+id/delete_loc"
