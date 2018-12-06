@@ -59,7 +59,7 @@ public class MusicScreen extends InputAdapter implements Screen {
 
     private Texture playBtn, stopBtn, homeBut, returnBut, musicBtn, volumn;
     private Rectangle end, back, answerOne, answerTwo;
-    private boolean onEnd, onBack, onplay, onSelectOne, onSelectTwo;
+    private boolean onEnd, onBack, onplay, onSelectOne, onSelectTwo, played;
     private boolean answerIsSelected, isCorrect;
     private Circle play;
 
@@ -129,9 +129,10 @@ public class MusicScreen extends InputAdapter implements Screen {
         validSongs = new HashMap<String, Music>();
 
         //TODO: add username as file
-        String locRoot = "data/user/0/com.lucidity.game/app_audioDir/";
+        String locRoot = "data/user/0/com.lucidity.game/app_audioDir/" + username + "/";
         File folder = new File(locRoot);
         File[] listOfFiles = folder.listFiles();
+
         if(listOfFiles != null){
             for(File file : listOfFiles){
                 if(file.isFile()){
@@ -186,6 +187,7 @@ public class MusicScreen extends InputAdapter implements Screen {
             font.getData().setScale(FacialGameConstants.PROMPT_SCALE);
             final GlyphLayout promptLayout_two = new GlyphLayout(font, promptTwo);
             final GlyphLayout promptLayout_one = new GlyphLayout(font, promptOne);
+            float largerWidth = Math.max(promptLayout_two.width, promptLayout_one.width);
             batch.end();
 
 
@@ -195,13 +197,20 @@ public class MusicScreen extends InputAdapter implements Screen {
             drawAnswerButton(onSelectTwo, answerTwo);
             drawRingedCircle("button", play.x, play.y, play.radius * 3 / 2);
             renderer.setColor(MusicGameConstants.LIGHT_GRAY);
-            renderer.rect((screenWidth - promptLayout_two.width) / 2 - screenWidth/20, screenHeight * 3/ 4 -  1.5f * promptLayout_two.height,
-                    promptLayout_two.width + screenWidth/10, 1.75f * (promptLayout_two.height + promptLayout_one.height) );
+            renderer.rect((screenWidth - largerWidth) / 2 - screenWidth/20, screenHeight * 3/ 4 -  1.5f * promptLayout_two.height,
+                    largerWidth + screenWidth/10, 1.75f * (promptLayout_two.height + promptLayout_one.height) );
             renderer.end();
-
 
             batch.begin();
             font.setColor(Color.WHITE);
+            font.getData().setScale(0.5f);
+            //TODO: finish
+            if(trial == 1 || !played){
+                final GlyphLayout promptLayout_once_one = new GlyphLayout(font, "Press to");
+                final GlyphLayout promptLayout_once_two= new GlyphLayout(font, "play music");
+                font.draw(batch, promptLayout_once_two, (screenWidth - promptLayout_two.width) / 2, screenHeight * 3/ 4);
+                font.draw(batch, promptLayout_once_one, (screenWidth - promptLayout_two.width) / 2, screenHeight * 3/ 4);
+            }
             font.getData().setScale(FacialGameConstants.PROMPT_SCALE);
             font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2, screenHeight * 3/ 4);
             font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
@@ -442,7 +451,7 @@ public class MusicScreen extends InputAdapter implements Screen {
                 promptTwo = "of this song?";
                 break;
             case 3:
-                promptOne = "Who is the author";
+                promptOne = "Who is the artist";
                 promptTwo = "of this song?";
                 break;
         }
@@ -451,8 +460,8 @@ public class MusicScreen extends InputAdapter implements Screen {
     private void setAnswer(){
         switch (questionNumber) {
             case 1:
-                answer = "I have";
-                putAnswerInPosition(answer, "I haven't");
+                answer = "Yes";
+                putAnswerInPosition(answer, "No");
                 break;
             case 2:
                 answer = name;

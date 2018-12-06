@@ -40,6 +40,8 @@ public class SoundGallery extends AppCompatActivity {
             }
 
         });
+        //TODO: implement audio player for gallery
+        //https://www.geeksforgeeks.org/play-audio-file-using-java/
     }
 
     private void getLocalAudio(){

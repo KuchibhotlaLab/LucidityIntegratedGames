@@ -6,9 +6,12 @@ import android.app.ProgressDialog;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
@@ -36,8 +39,13 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -703,14 +711,90 @@ public class AddTestMaterialActivity extends AppCompatActivity {
             List folders = Arrays.asList(path.split("/"));
             String name = folders.get(folders.size() - 1).toString();
             if("mp3".equals(name.substring(name.length()-3))){
-                Intent intent = new Intent(getApplicationContext(), Music.class);
+                /*Intent intent = new Intent(getApplicationContext(), Music.class);
                 intent.putExtra("path", path);
-                startActivity(intent);
+                startActivity(intent);*/
+                ContextWrapper cw = new ContextWrapper(getApplicationContext());
+                // path to /data/data/yourapp/app_data/audioDir
+                File directory = cw.getDir("audioDir", Context.MODE_PRIVATE);
+                File subfolder = new File(directory, username);
+                System.out.println("Path of file is currently: " + path);
+                System.out.println("Path of file to move is : " + subfolder.getPath() + "/");
+                copyFile(path, subfolder.getPath() + "/", name, currFileURI);
             }
             /*String Fpath = data.getDataString();
             System.out.println("filepath returned = " + Fpath);
             super.onActivityResult(requestCode, resultCode, data);*/
         }
+    }
+
+    private void copyFile(String inputPath, String outputPath, String name, Uri input) {
+        /*MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        mmr.setDataSource(inputPath);
+
+        String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+        System.out.println(albumName);*/
+
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+
+            //create output directory if it doesn't exist
+            File dir = new File (outputPath);
+            System.out.println("output path " + outputPath);
+            if (!dir.exists())
+            {
+                dir.mkdirs();
+            }
+
+            in = getContentResolver().openInputStream(input);
+
+            //in = new FileInputStream(inputPath);
+            System.out.println("output path " + outputPath + "/" + name);
+            out = new FileOutputStream(outputPath + "/" + name);
+
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+            in.close();
+            in = null;
+
+            // write the output file (You have now copied the file)
+            out.flush();
+            out.close();
+            out = null;
+
+            AlertDialog.Builder builder;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                builder = new AlertDialog.Builder(AddTestMaterialActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+            } else {
+                builder = new AlertDialog.Builder(AddTestMaterialActivity.this);
+            }
+            builder.setTitle("Success")
+                    .setMessage("The picture is uploaded into the app")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                            dialog.cancel();
+                        }
+                    })
+                    /*.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })*/
+                    //.setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+
+        }  catch (FileNotFoundException fnfe1) {
+            Log.e("tag", fnfe1.getMessage());
+        }
+        catch (Exception e) {
+            Log.e("tag", e.getMessage());
+        }
+
     }
 
     /*@Override
