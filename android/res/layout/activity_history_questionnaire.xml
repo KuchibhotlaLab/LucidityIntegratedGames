@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:fontFamily="@font/ostrich_sans_rounded_medium"
+                android:fontFamily="@font/kayak_sans_regular"
                 android:paddingBottom="18dp"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"

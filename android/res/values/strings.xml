@@ -68,17 +68,17 @@
     <string name="locationSync"> Sync with\nAccount </string>
     <string name="locationView"> View Current\nLocations </string>
     <string name="uploadNotif">Upload Results</string>
-    <string name="questionnaire_prompt">Please answer the following questions to get started on filling out your personal history.
-        \nTo skip a question just leave it blank. To enter a period of time, enter two years separated by a dash(-).</string>
-    <string name="history_question_1">Where and when were you born?</string>
-    <string name="history_question_2">Where and when did you attend primary school?</string>
-    <string name="history_question_3">Where and when did you attend high school?</string>
-    <string name="history_question_4">Where and when did you attend college?</string>
-    <string name="history_question_5">Where and when was your first job?</string>
-    <string name="history_question_6">Where and when did you get married?</string>
-    <string name="history_question_7">Where and when did you have your first child?</string>
-    <string name="history_question_8">List locations that you have lived in and the time period.</string>
-    <string name="history_question_9">List locations that you have lived in and the time period.</string>
-    <string name="history_question_10">List locations that you have lived in and the time period.</string>
+    <string name="questionnaire_prompt">Please fill in the city where each event occurred and the year(s) in which it occurred to get started on filling out your personal history.
+        \nTo skip a section just leave it blank. To enter a period of time, enter two years separated by a dash(-).</string>
+    <string name="history_question_1">Birth</string>
+    <string name="history_question_2">Primary School</string>
+    <string name="history_question_3">High School</string>
+    <string name="history_question_4">College</string>
+    <string name="history_question_5">First Job</string>
+    <string name="history_question_6">First Marriage</string>
+    <string name="history_question_7">First Child</string>
+    <string name="history_question_8">First Home</string>
+    <string name="history_question_9">Second Home</string>
+    <string name="history_question_10">Third Home</string>
 
 </resources>

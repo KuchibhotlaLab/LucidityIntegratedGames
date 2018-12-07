@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -92,20 +93,52 @@ public class HistoryActivity extends AppCompatActivity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             View view = convertView;
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if (view == null) {
-                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.locations_listitem, null);
             }
 
             //Handle TextView and display string from your list
             TextView listItemText = (TextView)view.findViewById(R.id.location_names);
             listItemText.setText(mListLocations.get(position));
+
+            final LinearLayout listItemInnerList = view.findViewById(R.id.location_event_list);
+            final Button addEventButton = view.findViewById(R.id.addEventBtn);
+
+            ArrayList<History> currLocHistories = mListEvents.get(position);
+            for (History e : currLocHistories) {
+                View eventView = inflater.inflate(R.layout.location_event_listitem, null);
+                TextView eventText = eventView.findViewById(R.id.event_details);
+                eventText.setText(e.getEvent() + "         " + e.getYear());
+                ImageButton eventDel = eventView.findViewById(R.id.delete_event);
+                eventDel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        System.out.println("delete event");
+                    }
+                });
+                listItemInnerList.addView(eventView);
+            }
+            listItemInnerList.setVisibility(View.GONE);
+
+            addEventButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    System.out.println("add event");
+                }
+            });
+            addEventButton.setVisibility(View.GONE);
+
+
             listItemText.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    ArrayList<History> currLocHistories = mListEvents.get(position);
-                    for (History e : currLocHistories) {
-                        System.out.println(e.getEvent() + " " + e.getYear());
+                    if (!listItemInnerList.isShown()) {
+                        listItemInnerList.setVisibility(View.VISIBLE);
+                        addEventButton.setVisibility(View.VISIBLE);
+                    } else {
+                        listItemInnerList.setVisibility(View.GONE);
+                        addEventButton.setVisibility(View.GONE);
                     }
                 }
             });
@@ -115,7 +148,7 @@ public class HistoryActivity extends AppCompatActivity {
             deleteBtn.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    //TODO: call dialoge
+                    System.out.println("delete event");
                 }
             });
 
