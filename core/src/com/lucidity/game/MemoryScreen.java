@@ -6,6 +6,7 @@ import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -37,6 +38,8 @@ public class MemoryScreen extends InputAdapter implements Screen {
     private ScreenViewport hudViewport;
 
     private ShapeRenderer renderer;
+
+    private Texture backdrop;
 
     private int screenWidth, screenHeight;
 
@@ -95,22 +98,30 @@ public class MemoryScreen extends InputAdapter implements Screen {
         screenWidth = Gdx.graphics.getWidth();
         screenHeight = Gdx.graphics.getHeight();
 
+        backdrop = new Texture(Gdx.files.internal("data/memoryBtn.png"));
+
         grid = new Rectangle[blocksHorizontal][blocksVertical];
         selected = new int[blocksHorizontal][blocksVertical];
         toRemember = new int[blocksHorizontal][blocksVertical];
         int offset = screenWidth / 40;
+        int width = (screenWidth * 5 / 6) / blocksHorizontal;
+        int startX = (screenWidth - offset * (blocksHorizontal - 1) - width * (blocksHorizontal - 1)) * 2 / 13;
+
 
         for (int i = 0; i < blocksHorizontal; i++) {
             for (int j = 0; j < blocksVertical; j++) {
                 Rectangle block = new Rectangle();
-                block.width = (screenWidth * 5 / 6) / blocksHorizontal;
+                block.width = width;
                 block.height = block.width;
-                block.x = i * block.width + screenWidth / 12 + offset * i;
-                block.y = j * block.height + screenHeight / 4 + offset * j;
+                if((i == 0 && j == 0) || (i == blocksHorizontal - 1 && j == blocksVertical - 1)){
+                    block.x = i * block.width + screenWidth / 12;
+                    block.y = j * block.height + screenHeight  / 4;
+                }
+                block.x = i * block.width + startX + offset * i;
+                block.y = j * block.height + screenHeight  / 4 + offset * j;
                 grid[i][j] = block;
             }
         }
-
         this.score = points;
         this.trial = trials;
 
@@ -162,13 +173,17 @@ public class MemoryScreen extends InputAdapter implements Screen {
     public void render(float delta) {
 
         memoryViewport.apply(true);
+        Gdx.gl.glClearColor(BlockGameConstants.BACKGROUND_COLOR.r, BlockGameConstants.BACKGROUND_COLOR.g, BlockGameConstants.BACKGROUND_COLOR.b, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        drawBackground();
+        renderer.end();
         elapsed += delta;
 
         if(elapsed > 0 && elapsed < 2) {
-            Gdx.gl.glClearColor(1, 1, 1, 1);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            //Gdx.gl.glClearColor(1, 1, 1, 1);
+            //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
             batch.begin();
             font.setColor(Color.valueOf("#026670"));
@@ -190,11 +205,8 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
             batch.end();
         } else if (elapsed > 4 && elapsed <6) {
-            Gdx.gl.glClearColor(BlockGameConstants.BACKGROUND_COLOR.r, BlockGameConstants.BACKGROUND_COLOR.g, BlockGameConstants.BACKGROUND_COLOR.b, 1);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-            renderer.begin(ShapeRenderer.ShapeType.Filled);
-            drawBackground();
-            renderer.end();
+            //Gdx.gl.glClearColor(BlockGameConstants.BACKGROUND_COLOR.r, BlockGameConstants.BACKGROUND_COLOR.g, BlockGameConstants.BACKGROUND_COLOR.b, 1);
+            //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
             batch.begin();
             font.getData().setScale(.6f);
@@ -222,8 +234,8 @@ public class MemoryScreen extends InputAdapter implements Screen {
                 disableTouchDown = false;
             }
 
-            Gdx.gl.glClearColor(BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b, 1);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            //Gdx.gl.glClearColor(BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b, 1);
+            //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 
             //This draws the grid in its two conditions:
@@ -232,9 +244,9 @@ public class MemoryScreen extends InputAdapter implements Screen {
             for (int i = 0; i < blocksHorizontal; i++) {
                 for (int j = 0; j < blocksVertical; j++) {
                     if (selected[i][j] == 1) {
-                        renderer.setColor(Color.valueOf("#9FEDD7"));
+                        renderer.setColor(BlockGameConstants.SELECTED_COLOR);
                     } else {
-                        renderer.setColor(Color.valueOf("#026670"));
+                        renderer.setColor(BlockGameConstants.NOT_SELECTED_COLOR);
                     }
                     renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                 }
@@ -271,22 +283,6 @@ public class MemoryScreen extends InputAdapter implements Screen {
                 }
                 renderer.rect(btnEnd.x, btnEnd.y, btnEnd.getWidth(), btnEnd.getHeight());
             }
-            renderer.end();
-
-
-            //draw the outline of the blocks
-            renderer.begin(ShapeRenderer.ShapeType.Line);
-            for (int i = 0; i < blocksHorizontal; i++) {
-                for (int j = 0; j < blocksVertical; j++) {
-                    if (selected[i][j] == 1) {
-                        renderer.setColor(Color.valueOf("#026670"));
-                    } else {
-                        renderer.setColor(Color.valueOf("#9FEDD7"));
-                    }
-                    renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
-                }
-            }
-
             renderer.end();
 
 
@@ -348,6 +344,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
             //prints the score on the screen of game
             font.draw(batch, BlockGameConstants.SCORE_LABEL + Integer.toString(score),
                     BlockGameConstants.SCORE_CENTER, screenHeight - BlockGameConstants.SCORE_CENTER);
+
 
             font.draw(batch, BlockGameConstants.TRIAL_LABEL + Integer.toString(trial),
                     BlockGameConstants.TRIAL_CENTER, screenHeight - BlockGameConstants.SCORE_CENTER);
@@ -434,11 +431,11 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
     private void drawBackground(){
         renderer.setColor(BlockGameConstants.CIRCLE_COLOR);
-        int r = screenWidth * 3 / 5;
+        int r = screenWidth * 3 / 10;
         renderer.circle(screenWidth * 3 / 10, screenHeight/12, r, r);
         renderer.circle(screenWidth, screenHeight/4, r, r);
-
-
+        renderer.circle(screenWidth / 10, screenHeight*3/4, r, r);
+        renderer.circle(screenWidth * 3 /4, screenHeight * 9/10, r, r);
     }
 
     private void generateTrial(int difficulty){

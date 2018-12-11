@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class BlockGameConstants {
     public static final float WORLD_SIZE = 10.0f;
-    public static final Color LOADING_COLOR = new Color(1.0f,0.98f,0.78f, 1);
+    public static final Color LOADING_COLOR = new Color().valueOf("edff9f");//new Color(1.0f,0.98f,0.78f, 1);
     public static final Color BACKGROUND_COLOR = new Color().valueOf("cddb45");//new Color(0.93f,0.92f,0.9f, 1);
     public static final Color CIRCLE_COLOR = new Color().valueOf("edff9f");
     public static final Color TITLE_COLOR = new Color(0.01f, 0.4f, 0.44f, 1);
@@ -21,6 +21,8 @@ public class BlockGameConstants {
     public static final Color EASY_COLOR = new Color(1.0f,0.98f,0.78f, 1);
     public static final Color MEDIUM_COLOR = new Color(0.98f,0.92f,0.72f, 1);
     public static final Color HARD_COLOR = new Color(1.0f,0.88f,0.51f, 1);
+    public static final Color SELECTED_COLOR = new Color().valueOf("f98c28");
+    public static final Color NOT_SELECTED_COLOR = new Color().valueOf("ffe757");
 
     public static final float DIFFICULTY_WORLD_SIZE = 480.0f;
     public static final float DIFFICULTY_BUBBLE_RADIUS = DIFFICULTY_WORLD_SIZE / 9;
