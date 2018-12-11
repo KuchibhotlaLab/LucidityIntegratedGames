@@ -718,9 +718,13 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                 // path to /data/data/yourapp/app_data/audioDir
                 File directory = cw.getDir("audioDir", Context.MODE_PRIVATE);
                 File subfolder = new File(directory, username);
-                System.out.println("Path of file is currently: " + path);
-                System.out.println("Path of file to move is : " + subfolder.getPath() + "/");
-                copyFile(path, subfolder.getPath() + "/", name, currFileURI);
+
+                MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+                mmr.setDataSource(this, currFileURI);
+
+                String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+
+                copyFile(subfolder.getPath() + "/", name.substring(0, name.length()-4) + " - " + artist + ".mp3", currFileURI);
             }
             /*String Fpath = data.getDataString();
             System.out.println("filepath returned = " + Fpath);
@@ -728,7 +732,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
         }
     }
 
-    private void copyFile(String inputPath, String outputPath, String name, Uri input) {
+    private void copyFile( String outputPath, String name, Uri input) {
         /*MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(inputPath);
 
@@ -741,16 +745,12 @@ public class AddTestMaterialActivity extends AppCompatActivity {
 
             //create output directory if it doesn't exist
             File dir = new File (outputPath);
-            System.out.println("output path " + outputPath);
             if (!dir.exists())
             {
                 dir.mkdirs();
             }
 
             in = getContentResolver().openInputStream(input);
-
-            //in = new FileInputStream(inputPath);
-            System.out.println("output path " + outputPath + "/" + name);
             out = new FileOutputStream(outputPath + "/" + name);
 
             byte[] buffer = new byte[1024];
@@ -773,8 +773,8 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                 builder = new AlertDialog.Builder(AddTestMaterialActivity.this);
             }
             builder.setTitle("Success")
-                    .setMessage("The picture is uploaded into the app")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    .setMessage("The song is uploaded into the app")
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // continue with delete
                             dialog.cancel();

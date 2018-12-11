@@ -98,14 +98,15 @@ public class MemoryScreen extends InputAdapter implements Screen {
         grid = new Rectangle[blocksHorizontal][blocksVertical];
         selected = new int[blocksHorizontal][blocksVertical];
         toRemember = new int[blocksHorizontal][blocksVertical];
+        int offset = screenWidth / 40;
 
         for (int i = 0; i < blocksHorizontal; i++) {
             for (int j = 0; j < blocksVertical; j++) {
                 Rectangle block = new Rectangle();
                 block.width = (screenWidth * 5 / 6) / blocksHorizontal;
                 block.height = block.width;
-                block.x = i * block.width + screenWidth / 12;
-                block.y = j * block.height + screenHeight / 4;
+                block.x = i * block.width + screenWidth / 12 + offset * i;
+                block.y = j * block.height + screenHeight / 4 + offset * j;
                 grid[i][j] = block;
             }
         }
@@ -189,8 +190,11 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
             batch.end();
         } else if (elapsed > 4 && elapsed <6) {
-            Gdx.gl.glClearColor(1, 1, 1, 1);
+            Gdx.gl.glClearColor(BlockGameConstants.BACKGROUND_COLOR.r, BlockGameConstants.BACKGROUND_COLOR.g, BlockGameConstants.BACKGROUND_COLOR.b, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            renderer.begin(ShapeRenderer.ShapeType.Filled);
+            drawBackground();
+            renderer.end();
 
             batch.begin();
             font.getData().setScale(.6f);
@@ -426,6 +430,15 @@ public class MemoryScreen extends InputAdapter implements Screen {
         }
 
         return true;
+    }
+
+    private void drawBackground(){
+        renderer.setColor(BlockGameConstants.CIRCLE_COLOR);
+        int r = screenWidth * 3 / 5;
+        renderer.circle(screenWidth * 3 / 10, screenHeight/12, r, r);
+        renderer.circle(screenWidth, screenHeight/4, r, r);
+
+
     }
 
     private void generateTrial(int difficulty){

@@ -42,6 +42,9 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
     BitmapFont font;
     float elapsed, delayed;
+
+    private Texture backdrop, bolt;
+
     ArrayList<ArrayList<Integer>> shapes;
     ArrayList<Color> colors;
     boolean hasColor = false;
@@ -99,6 +102,8 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
         batch = new SpriteBatch();
 
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
+        backdrop = new Texture(Gdx.files.internal("data/objectBtn.png"));
+        bolt = new Texture(Gdx.files.internal("data/bolt.png"));
         font.getData().setScale(ObjectGameConstants.MODE_LABEL_SCALE);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
@@ -141,6 +146,9 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
         Gdx.gl.glClearColor(ObjectGameConstants.LOADING_COLOR.r, ObjectGameConstants.LOADING_COLOR.g, ObjectGameConstants.LOADING_COLOR.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         elapsed += delta;
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        drawBackground();
+        renderer.end();
 
         if(elapsed <= 2){
 
@@ -486,8 +494,15 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             renderer.rect(back.x, back.y, back.width, back.height);
             renderer.end();
 
-
             batch.begin();
+            font.getData().setScale(ObjectGameConstants.ANSWER_SCALE);
+            font.setColor(ObjectGameConstants.TITLE_COLOR);
+
+            final GlyphLayout layout_scores = new GlyphLayout(font, FacialGameConstants.SCORE_LABEL);
+            drawButton(FacialGameConstants.SCORE_CENTER - layout_scores.width/4, screenHeight - FacialGameConstants.SCORE_CENTER - layout_scores.height *  5/ 4,
+                    FacialGameConstants.SCORE_CENTER + layout_scores.width * 3/ 2, 2f*layout_scores.height);
+
+
             font.getData().setScale(ObjectGameConstants.ANSWER_SCALE);
             font.setColor(Color.WHITE);
             //prints text on back button
@@ -502,8 +517,6 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             font.setColor(ObjectGameConstants.TITLE_COLOR);
             font.draw(batch, FacialGameConstants.SCORE_LABEL + Integer.toString(score),
                     FacialGameConstants.SCORE_CENTER, screenHeight - FacialGameConstants.SCORE_CENTER);
-
-            final GlyphLayout layout_scores = new GlyphLayout(font, FacialGameConstants.SCORE_LABEL);
 
             font.draw(batch, FacialGameConstants.TRIAL_LABEL + Integer.toString(trial),
                     FacialGameConstants.SCORE_CENTER,
@@ -770,6 +783,22 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
         }
         return false;
     }
+
+    private void drawBackground(){
+        renderer.setColor(ObjectGameConstants.BACKGROUND_COLOR);
+        renderer.rect(0, 0, screenWidth, screenHeight);
+        renderer.setColor(ObjectGameConstants.BACKGROUND_TRIANGLE_COLOR);
+        renderer.triangle(0, screenHeight, 0, screenHeight * 2/3, screenWidth/3, screenHeight);
+        renderer.triangle(screenWidth * 2/3, 0, screenWidth,  0, screenWidth, screenHeight /3);
+
+    }
+
+    private void drawButton(float x, float y, float width, float height){
+        batch.draw(backdrop, x, y,  width, height);
+        batch.draw(bolt, x + width * 3/4, y + height*3/5);
+        batch.draw(bolt, x + width /4, y + height/5);
+    }
+
 
 
     //Posts score and stats to MySQL database

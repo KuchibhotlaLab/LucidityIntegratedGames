@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -26,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -200,6 +202,36 @@ public class AndroidLauncher extends AndroidApplication {
         } else if(gameType.equals("space")){
             initialize(new SpatialMemoryGame(a, s, currentDateTimeString, coordinates), config);
         } else if(gameType.equals("music")){
+            ContextWrapper cw = new ContextWrapper(getApplicationContext());
+            File directory = cw.getDir("audioDir", Context.MODE_PRIVATE);
+            File subfolder = new File(directory, username);
+            File[] files = new File(subfolder.getAbsolutePath()).listFiles();
+            ArrayList<String> validSongs = new ArrayList<>();
+            for(int i = 0; i < files.length; i++){
+                if("mp3".equals(files[i].getName().substring(files[i].getName().length()-3, files[i].getName().length()))) {
+                    validSongs.add(files[i].getAbsolutePath());
+                }
+            }
+            if(validSongs.size() < 2){
+                final Context mContext = this;
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder
+                        .setMessage("Please provide at least \n " +
+                                "two songs that you have listened")
+                        .setCancelable(false)
+                        .setPositiveButton("ok",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                dialog.dismiss();
+                                ((Activity) mContext).finish();
+                            }
+                        });
+
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                // show it
+                alertDialog.show();
+            }
             initialize(new MusicGame(a, s, currentDateTimeString, coordinates), config);
         }
     }

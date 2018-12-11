@@ -128,7 +128,6 @@ public class MusicScreen extends InputAdapter implements Screen {
 
         validSongs = new HashMap<String, Music>();
 
-        //TODO: add username as file
         String locRoot = "data/user/0/com.lucidity.game/app_audioDir/" + username + "/";
         File folder = new File(locRoot);
         File[] listOfFiles = folder.listFiles();
@@ -208,8 +207,9 @@ public class MusicScreen extends InputAdapter implements Screen {
             if(trial == 1 || !played){
                 final GlyphLayout promptLayout_once_one = new GlyphLayout(font, "Press to");
                 final GlyphLayout promptLayout_once_two= new GlyphLayout(font, "play music");
-                font.draw(batch, promptLayout_once_two, (screenWidth - promptLayout_two.width) / 2, screenHeight * 3/ 4);
-                font.draw(batch, promptLayout_once_one, (screenWidth - promptLayout_two.width) / 2, screenHeight * 3/ 4);
+                font.draw(batch, promptLayout_once_two, play.x - play.radius *2, play.y - play.radius *2);
+                font.draw(batch, promptLayout_once_one, play.x - play.radius *2,
+                        play.y - play.radius *2 + 1.5f * promptLayout_two.height);
             }
             font.getData().setScale(FacialGameConstants.PROMPT_SCALE);
             font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2, screenHeight * 3/ 4);

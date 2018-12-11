@@ -11,13 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/longbutton"
-        android:text="Add Microphone Recording"
+        android:text="Add microphone Recording"
         android:layout_marginBottom="10dp"/>
     <Button
         android:id="@+id/btn_add_online"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add clips from spotify"
+        android:text="Add locally stored songs"
         android:background="@drawable/longbutton"
         android:layout_marginBottom="10dp"/>
     <Button

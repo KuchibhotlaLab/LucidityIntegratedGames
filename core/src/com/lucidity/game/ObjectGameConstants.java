@@ -16,7 +16,8 @@ public class ObjectGameConstants {
     public static final float MODE_LABEL_SCALE = .2f;
 
     public static final Color LOADING_COLOR = new Color(0.96f,0.94f,0.8f, 1);
-    public static final Color BACKGROUND_COLOR = new Color(0.87f,0.82f,0.62f, 1);
+    public static final Color BACKGROUND_COLOR = new Color().valueOf("f4f1c9");//new Color(0.87f,0.82f,0.62f, 1);
+    public static final Color BACKGROUND_TRIANGLE_COLOR = new Color().valueOf("eae5b9");
     public static final Color TITLE_COLOR = new Color(0.7f,0.65f,0.5f, 1);
     public static final Color DEFAULT_COLOR = new Color(0.68f, 0.78f, 0.81f, 1);
 
