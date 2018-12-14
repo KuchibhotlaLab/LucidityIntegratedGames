@@ -181,7 +181,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
         batch.end();
         elapsed += delta;
 
-        if(elapsed < 2f) {
+        if(elapsed < 3f) {
             disableTouchDown = true;
             batch.begin();
             font.getData().setScale(SpacialGameConstants.INSTRUCTION_SIZE);
@@ -209,9 +209,9 @@ public class SpatialScreen extends InputAdapter implements Screen {
             renderer.end();
 
 
-        } else if(elapsed == 2f) {
+        } else if(elapsed == 3f) {
             selected = new boolean[blocksHorizontal][blocksVertical];
-        } else if (elapsed < 3.5f) {
+        } else if (elapsed < 4.5f) {
 
             batch.begin();
 

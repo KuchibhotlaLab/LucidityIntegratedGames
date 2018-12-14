@@ -59,9 +59,10 @@ public class MusicScreen extends InputAdapter implements Screen {
 
     private Texture playBtn, stopBtn, homeBut, returnBut, musicBtn, volumn;
     private Rectangle end, back, answerOne, answerTwo;
-    private boolean onEnd, onBack, onplay, onSelectOne, onSelectTwo, played;
+    private boolean onEnd, onBack, onplay, onSelectOne, onSelectTwo;
     private boolean answerIsSelected, isCorrect;
     private Circle play;
+    private boolean played = false;
 
 
     private boolean timerStart;
@@ -163,6 +164,7 @@ public class MusicScreen extends InputAdapter implements Screen {
         elapsed += delta;
         if(elapsed < 2) {
             batch.begin();
+            font.setColor(Color.WHITE);
             font.getData().setScale(FacialGameConstants.PROMPT_SCALE);
 
             if (trial == 1) {
@@ -203,13 +205,12 @@ public class MusicScreen extends InputAdapter implements Screen {
             batch.begin();
             font.setColor(Color.WHITE);
             font.getData().setScale(0.5f);
-            //TODO: finish
-            if(trial == 1 || !played){
+            if(trial == 1 && !played){
                 final GlyphLayout promptLayout_once_one = new GlyphLayout(font, "Press to");
                 final GlyphLayout promptLayout_once_two= new GlyphLayout(font, "play music");
-                font.draw(batch, promptLayout_once_two, play.x - play.radius *2, play.y - play.radius *2);
-                font.draw(batch, promptLayout_once_one, play.x - play.radius *2,
-                        play.y - play.radius *2 + 1.5f * promptLayout_two.height);
+                font.draw(batch, promptLayout_once_two, play.x - play.radius * 1.25f, play.y - play.radius * 2.5f);
+                font.draw(batch, promptLayout_once_one, play.x - play.radius,
+                        play.y - play.radius * 2.5f + 1.5f * promptLayout_two.height);
             }
             font.getData().setScale(FacialGameConstants.PROMPT_SCALE);
             font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2, screenHeight * 3/ 4);
@@ -259,8 +260,15 @@ public class MusicScreen extends InputAdapter implements Screen {
             font.draw(batch, "Question Number:"+ Integer.toString(questionNumber),
                     FacialGameConstants.SCORE_CENTER,
                     screenHeight - FacialGameConstants.SCORE_CENTER - layout_scores.height * 1.5f - layout_trials.height * 1.5f);
-
             batch.end();
+
+            if(onSelectOne){
+                outputResponse(attrOne);
+            }
+            if(onSelectTwo){
+                outputResponse(attrTwo);
+            }
+
             if(elapsed - delayed >= 1f && delayOn) {
                 computeScore();
             }
@@ -306,6 +314,7 @@ public class MusicScreen extends InputAdapter implements Screen {
             } else {
                 music.play();
                 musicBtn = stopBtn;
+                played = true;
             }
         }
         if(!disableTouchDown) {
@@ -322,24 +331,28 @@ public class MusicScreen extends InputAdapter implements Screen {
                 onSelectTwo = false;
                 disableTouchDown = true;
                 answerIsSelected = true;
-                batch.begin();
+                /*batch.begin();
                 triggerNextRound(attrOne);
-                batch.end();
+                System.out.println("should print message for answer: " +  attrOne);
+                batch.end();*/
             }
             if (answerTwo.contains(screenX, screenHeight - screenY)) {
                 onSelectTwo = !onSelectTwo;
                 onSelectOne = false;
                 disableTouchDown = true;
                 answerIsSelected = true;
-                batch.begin();
+                /*batch.begin();
                 triggerNextRound(attrTwo);
-                batch.end();
+                System.out.println("should print message for answer: " +  attrTwo);
+                batch.end();*/
             }
         }
         return true;
     }
 
     private void computeScore(){
+        music.stop();
+        musicBtn = playBtn;
         if(questionNumber == 1 && !isCorrect){
             ++trial;
             setSong();
@@ -380,6 +393,8 @@ public class MusicScreen extends InputAdapter implements Screen {
         name = "";
         author = "";
         filler = "";
+        music = null;
+        musicBtn = playBtn;
         boolean filled = false;
         int position = (int) (Math.random() * validSongs.size());
         int index = -1;
@@ -517,22 +532,43 @@ public class MusicScreen extends InputAdapter implements Screen {
 
     }
 
-    private void triggerNextRound(String attr){
+    private void outputResponse(String attr){
         if(answer.equals(attr)){
-            font.setColor(BlockGameConstants.CORRECT_COLOR);
-            final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
-            font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight* 3 / 4);
 
-            final GlyphLayout promptLayout = new GlyphLayout(font, FacialGameConstants.CORRECT_MESSAGE);
-            font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight* 3 / 4 + 1.5f * reactionLayout.height);
+            renderer.begin(ShapeRenderer.ShapeType.Filled);
+            renderer.setColor(BlockGameConstants.CORRECT_COLOR);
+            renderer.rect(0, screenHeight / 3, screenWidth, screenHeight/4);
+
+            renderer.setColor(Color.valueOf("d8d8d8"));
+            renderer.rect(screenHeight/36, screenHeight / 3 + screenHeight/36, screenWidth - screenHeight/18, screenHeight/4 -  screenHeight/18);
+            renderer.end();
+
+            batch.begin();
+            font.getData().setScale(0.5f);
+            font.setColor(MusicGameConstants.DARK_BLUE);
+            final GlyphLayout promptLayout = new GlyphLayout(font, ObjectGameConstants.CORRECT_MESSAGE);
+            font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight / 3  + screenHeight/6);
+            final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+            font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2,  screenHeight / 3  + screenHeight/6- 1.5f * promptLayout.height);
             isCorrect = true;
+            batch.end();
         } else {
-            font.setColor(BlockGameConstants.INCORRECT_COLOR);
-            final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
-            font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight* 3 / 4);
+            renderer.begin(ShapeRenderer.ShapeType.Filled);
+            renderer.setColor(BlockGameConstants.INCORRECT_COLOR);
+            renderer.rect(0, screenHeight / 3, screenWidth, screenHeight/4);
 
-            final GlyphLayout promptLayout = new GlyphLayout(font, FacialGameConstants.INCORRECT_MESSAGE);
-            font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight * 3 / 4 + 1.5f * reactionLayout.height);
+            renderer.setColor(Color.valueOf("d8d8d8"));
+            renderer.rect(screenHeight/36, screenHeight / 3 + screenHeight/36, screenWidth - screenHeight/18, screenHeight/4 -  screenHeight/18);
+            renderer.end();
+
+            batch.begin();
+            font.setColor(MusicGameConstants.DARK_BLUE);
+            font.getData().setScale(0.5f);
+            final GlyphLayout promptLayout = new GlyphLayout(font, ObjectGameConstants.INCORRECT_MESSAGE);
+            font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight / 3  + screenHeight/6);
+            final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
+            font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight / 3  + screenHeight/6 +  - 1.5f * promptLayout.height);
+            batch.end();
         }
     }
 

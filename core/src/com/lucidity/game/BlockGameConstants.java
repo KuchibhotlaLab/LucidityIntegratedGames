@@ -8,7 +8,7 @@ public class BlockGameConstants {
     public static final Color LOADING_COLOR = new Color().valueOf("edff9f");//new Color(1.0f,0.98f,0.78f, 1);
     public static final Color BACKGROUND_COLOR = new Color().valueOf("cddb45");//new Color(0.93f,0.92f,0.9f, 1);
     public static final Color CIRCLE_COLOR = new Color().valueOf("edff9f");
-    public static final Color TITLE_COLOR = new Color(0.01f, 0.4f, 0.44f, 1);
+    public static final Color TITLE_COLOR = new Color().valueOf("f98c28");//new Color(0.01f, 0.4f, 0.44f, 1);
 
     public static final int DIFFICULTY_EASY = 0;
     public static final int DIFFICULTY_MEDIUM = 1;
@@ -51,12 +51,12 @@ public class BlockGameConstants {
     public static final String CORRECT_MESSAGE = "Correct!";
     public static final String INCORRECT_MESSAGE = "Incorrect!";
     public static final String PROMPT_ONE = "Remember the position";
-    public static final String PROMPT_TWO = "of the light blue boxes.";
+    public static final String PROMPT_TWO = "of the red boxes.";
     public static final String PROMPT_NEXT = "Starting next trial...";
     public static final String WAIT_ONE = "Select the blocks";
     public static final String WAIT_TWO = "after this screen ends";
     public static final String INSTRUCT_ONE = "Remember the position";
-    public static final String INSTRUCT_TWO = "of the light blue boxes,";
+    public static final String INSTRUCT_TWO = "of the red boxes,";
     public static final String INSTRUCT_THREE = "then select the correct ones.";
 
     public static final String END_INSTRUCTIONS_ONE = "Please tap anywhere";

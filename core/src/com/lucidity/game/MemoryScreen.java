@@ -186,7 +186,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
             //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
             batch.begin();
-            font.setColor(Color.valueOf("#026670"));
+            font.setColor(BlockGameConstants.TITLE_COLOR);
             font.getData().setScale(BlockGameConstants.NOTIFICATION_SCALE);
 
             if(trial == 1) {
@@ -210,7 +210,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
             batch.begin();
             font.getData().setScale(.6f);
-            font.setColor(Color.valueOf("#026670"));
+            font.setColor(BlockGameConstants.TITLE_COLOR);
 
             final GlyphLayout promptLayout_two = new GlyphLayout(font, BlockGameConstants.WAIT_TWO);
             font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width)/2,
@@ -251,11 +251,12 @@ public class MemoryScreen extends InputAdapter implements Screen {
                     renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                 }
             }
+            renderer.end();
 
 
             if (elapsed > 6) {
                 //change the color of the submit button when it is pressed
-                if (onSubmit) {
+                /*if (onSubmit) {
                     renderer.setColor(Color.valueOf("#9FEDD7"));
 
                     Timer.schedule(new Timer.Task() {
@@ -270,9 +271,41 @@ public class MemoryScreen extends InputAdapter implements Screen {
                 } else {
                     renderer.setColor(Color.valueOf("#026670"));
                 }
-                renderer.rect(btnSubmit.x, btnSubmit.y, btnSubmit.getWidth(), btnSubmit.getHeight());
+                renderer.rect(btnSubmit.x, btnSubmit.y, btnSubmit.getWidth(), btnSubmit.getHeight());*/
+                batch.begin();
+                if (onSubmit) {
+                    backdrop = new Texture(Gdx.files.internal("data/memoryBtnPressed.png"));
 
+                    Timer.schedule(new Timer.Task() {
+                                       @Override
+                                       public void run() {
+                                           onSubmit = false;
+                                       }
+                                   },
+                            30 / 30.0f);
+                } else {
+                    backdrop = new Texture(Gdx.files.internal("data/memoryBtn.png"));
+                }
+                batch.draw(backdrop, btnSubmit.x, btnSubmit.y, btnSubmit.width, btnSubmit.height);
 
+                if (onEnd) {
+                    //END THE GAME
+                    backdrop = new Texture(Gdx.files.internal("data/memoryBtnPressed.png"));
+                    Timer.schedule(new Timer.Task() {
+                                       @Override
+                                       public void run() {
+                                           //onSubmit = false;
+                                           game.setScreen(new EndScreen(game, score, trial));
+                                       }
+                                   },
+                            30 / 30.0f);
+                } else {
+                    backdrop = new Texture(Gdx.files.internal("data/memoryBtn.png"));
+                }
+                batch.draw(backdrop, btnEnd.x, btnEnd.y, btnEnd.width, btnEnd.height);
+                batch.end();
+
+                /*renderer.begin(ShapeRenderer.ShapeType.Filled);
                 if (onEnd) {
                     //END THE GAME
                     renderer.setColor(Color.valueOf("#9FEDD7"));
@@ -282,8 +315,8 @@ public class MemoryScreen extends InputAdapter implements Screen {
                     renderer.setColor(Color.valueOf("#026670"));
                 }
                 renderer.rect(btnEnd.x, btnEnd.y, btnEnd.getWidth(), btnEnd.getHeight());
+                renderer.end();*/
             }
-            renderer.end();
 
 
             //draws all the texts (submit and correct/incorrect message)
@@ -295,10 +328,20 @@ public class MemoryScreen extends InputAdapter implements Screen {
 
             if (elapsed > 6) {
                 //prints text on submit button
+                if(onSubmit) {
+                    font.setColor(BlockGameConstants.NOT_SELECTED_COLOR);
+                } else {
+                    font.setColor(BlockGameConstants.SELECTED_COLOR);
+                }
                 font.draw(batch, "Submit",
                         (int) (btnSubmit.x + 0.25 * btnSubmit.getWidth()),
                         (int) (btnSubmit.y + 0.6 * btnSubmit.getHeight()));
 
+                if(onEnd) {
+                    font.setColor(BlockGameConstants.NOT_SELECTED_COLOR);
+                } else {
+                    font.setColor(BlockGameConstants.SELECTED_COLOR);
+                }
                 //prints text on end button
                 font.draw(batch, "End",
                         (int) (btnEnd.x + 0.4 * btnEnd.getWidth()),
@@ -339,7 +382,10 @@ public class MemoryScreen extends InputAdapter implements Screen {
             }
 
             font.getData().setScale(BlockGameConstants.LABEL_SCALE);
-            font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
+            font.setColor(BlockGameConstants.TITLE_COLOR);
+
+            batch.draw(backdrop, BlockGameConstants.SCORE_CENTER, screenHeight - BlockGameConstants.SCORE_CENTER - screenHeight/24, screenWidth / 5, screenHeight/18);
+            batch.draw(backdrop, BlockGameConstants.TRIAL_CENTER, screenHeight - BlockGameConstants.SCORE_CENTER  - screenHeight/24,  screenWidth/7, screenHeight/18);
 
             //prints the score on the screen of game
             font.draw(batch, BlockGameConstants.SCORE_LABEL + Integer.toString(score),
@@ -433,7 +479,7 @@ public class MemoryScreen extends InputAdapter implements Screen {
         renderer.setColor(BlockGameConstants.CIRCLE_COLOR);
         int r = screenWidth * 3 / 10;
         renderer.circle(screenWidth * 3 / 10, screenHeight/12, r, r);
-        renderer.circle(screenWidth, screenHeight/4, r, r);
+        renderer.circle(screenWidth, screenHeight/3, r, r);
         renderer.circle(screenWidth / 10, screenHeight*3/4, r, r);
         renderer.circle(screenWidth * 3 /4, screenHeight * 9/10, r, r);
     }
