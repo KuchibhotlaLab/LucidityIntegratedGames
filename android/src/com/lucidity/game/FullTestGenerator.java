@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class FullTestGenerator {
     static final int NUM_GAMES = 4;
-    static final int NUM_GAME_TYPES = 5;
+    static final int NUM_GAME_TYPES = 4;
     int[] gameOrder;
 
     public FullTestGenerator(){

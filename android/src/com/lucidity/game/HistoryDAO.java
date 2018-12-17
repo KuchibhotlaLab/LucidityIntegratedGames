@@ -15,9 +15,9 @@ public interface HistoryDAO {
     @Delete
     void delete(History history);
 
-    @Query("SELECT * FROM Histories WHERE username = :uname")
+    @Query("SELECT * FROM Histories WHERE username = :uname ORDER BY year ASC")
     List<History> getUserHistories(String uname);
 
-    @Query("SELECT * FROM Histories WHERE username = :uname AND location = :loc AND event = :eve")
-    History getEvent(String uname, String loc, String eve);
+    @Query("SELECT * FROM Histories WHERE username = :uname AND location = :loc AND event = :eve AND year = :years")
+    History getEvent(String uname, String loc, String eve, String years);
 }

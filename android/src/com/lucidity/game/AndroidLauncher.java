@@ -275,13 +275,15 @@ public class AndroidLauncher extends AndroidApplication {
          * Getting everything from local SQLite database
          * */
         protected String doInBackground(String... args) {
-            LucidityDatabase database = Room.databaseBuilder(getApplicationContext(), LucidityDatabase.class, "db-Locations")
+            LucidityDatabase database = Room.databaseBuilder(getApplicationContext(), LucidityDatabase.class, "db-Histories")
                     .build();
-            LocationDAO locationDAO = database.getLocationDAO();
+            HistoryDAO historyDAO = database.getHistoryDAO();
 
-            List<com.lucidity.game.Location> locations = locationDAO.getUserLocations(username);
-            for(com.lucidity.game.Location loc : locations) {
-                livedLocations.add(loc.getLocation());
+            List<com.lucidity.game.History> events = historyDAO.getUserHistories(username);
+            for(com.lucidity.game.History event : events) {
+                if (!livedLocations.contains(event.getLocation())) {
+                    livedLocations.add(event.getLocation());
+                }
             }
             database.close();
 

@@ -19,6 +19,18 @@
         android:textColor="#4b4b4b"
         android:textSize="48sp" />
 
+    <Button
+        android:id="@+id/addEventBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/longbutton"
+        android:fontFamily="@font/kayak_sans_regular"
+        android:text="Add New Event"
+        android:textAlignment="center"
+        android:textSize="18sp" />
+
     <ListView
         android:id="@+id/list_location"
         android:layout_width="match_parent"

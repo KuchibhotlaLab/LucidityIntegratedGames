@@ -71,13 +71,13 @@ public class AddTestMaterialActivity extends AppCompatActivity {
 
     //JSONArray of results
     JSONArray picturesJSON = null;
-    JSONArray locationsJSON = null;
+    JSONArray eventsJSON = null;
 
     // url to get pictures and tags
     private static String url_get_pictures_and_tags = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/get_pictures_and_tags.php";
 
     // url to get locations
-    private static String url_get_locations = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/get_locations.php";
+    private static String url_get_events = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/get_events.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
@@ -111,8 +111,8 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                                 if (checker.isConnected()){
                                     SyncPic syncPicTask = new SyncPic();
                                     syncPicTask.execute();
-                                    SyncLoc syncLocTask = new SyncLoc();
-                                    syncLocTask.execute();
+                                    SyncEvent syncEventTask = new SyncEvent();
+                                    syncEventTask.execute();
                                 } else {
                                     checker.displayNoConnectionDialog();
                                 }
@@ -264,9 +264,9 @@ public class AddTestMaterialActivity extends AppCompatActivity {
 
 
                 Button btnView = dialogLayout.findViewById(R.id.btn_view_location);
+                Button btnInitiate = dialogLayout.findViewById(R.id.btn_open_questionnaire);
                 Button btnSync = dialogLayout.findViewById(R.id.btn_sync_location);
                 Button btnDismiss = dialogLayout.findViewById(R.id.btn_cancel_location_dialog);
-
 
                 btnView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -277,11 +277,24 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                         }
                         prevClickTime = SystemClock.elapsedRealtime();
 
-                        Intent intent = new Intent(getApplicationContext(), QuestionnaireActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), HistoryActivity.class);
                         startActivity(intent);
                     }
                 });
 
+                btnInitiate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Do nothing if button was recently pressed
+                        if (SystemClock.elapsedRealtime() - prevClickTime < 1000){
+                            return;
+                        }
+                        prevClickTime = SystemClock.elapsedRealtime();
+
+                        Intent intent = new Intent(getApplicationContext(), HistoryQuestionnaireActivity.class);
+                        startActivity(intent);
+                    }
+                });
 
                 btnSync.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -295,8 +308,8 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                         //Check for internet connection before uploading
                         ConnectivityChecker checker = ConnectivityChecker.getInstance(AddTestMaterialActivity.this);
                         if (checker.isConnected()){
-                            SyncLoc syncLocTask = new SyncLoc();
-                            syncLocTask.execute();
+                            SyncEvent syncEventTask = new SyncEvent();
+                            syncEventTask.execute();
                         } else {
                             checker.displayNoConnectionDialog();
                         }
@@ -510,9 +523,9 @@ public class AddTestMaterialActivity extends AppCompatActivity {
     }
 
     /**
-     * Background Async Task to sync locations on phone with user's account
+     * Background Async Task to sync events on phone with user's account
      * */
-    class SyncLoc extends AsyncTask<String, String, String> {
+    class SyncEvent extends AsyncTask<String, String, String> {
 
         /**
          * Before starting background thread Show Progress Dialog
@@ -521,7 +534,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog2 = new ProgressDialog(AddTestMaterialActivity.this);
-            pDialog2.setMessage("Syncing Locations...");
+            pDialog2.setMessage("Syncing Events...");
             pDialog2.setIndeterminate(false);
             pDialog2.setCancelable(false);
             pDialog2.show();
@@ -532,8 +545,6 @@ public class AddTestMaterialActivity extends AppCompatActivity {
          */
         protected String doInBackground(String... args) {
 
-            final ArrayList<String> locations = new ArrayList<>();
-
             // Check for success tag
             int success;
             try {
@@ -543,54 +554,41 @@ public class AddTestMaterialActivity extends AppCompatActivity {
 
                 // getting pictures from web
                 JSONObject json = jsonParser.makeHttpRequest(
-                        url_get_locations, "GET", params);
+                        url_get_events, "GET", params);
 
                 // check your log for json response
-                Log.d("get locations", json.toString());
+                Log.d("get events", json.toString());
 
                 // json success tag
                 success = json.getInt(TAG_SUCCESS);
                 if (success == 1) {
 
-                    // Get array of locations
-                    locationsJSON = json.getJSONArray("locations");
+                    // Get array of events
+                    eventsJSON = json.getJSONArray("events");
 
-                    // loop through locations found
-                    for (int i = 0; i < locationsJSON.length(); i++) {
-                        JSONObject locObject = locationsJSON.getJSONObject(i);
-
-                        // add locations to arraylists
-                        locations.add(locObject.getString("location"));
-                    }
-
-                    LucidityDatabase database = Room.databaseBuilder(getApplicationContext(), LucidityDatabase.class, "db-Locations")
+                    LucidityDatabase database = Room.databaseBuilder(getApplicationContext(), LucidityDatabase.class, "db-Histories")
                             .build();
-                    LocationDAO locationDAO = database.getLocationDAO();
+                    HistoryDAO historyDAO = database.getHistoryDAO();
 
-                    List<Location> localLocations = locationDAO.getUserLocations(username);
-
-                    //Delete locations on local device but not on web server
-                    for (Location e: localLocations) {
-                        if(!locations.contains(e.getLocation())) {
-                            locationDAO.delete(e);
-                        }
+                    //delete and re-add events
+                    List<History> histories = historyDAO.getUserHistories(username);
+                    for(History e : histories) {
+                        historyDAO.delete(e);
                     }
 
-                    ArrayList<String> localLocationsStrings = new ArrayList<>();
-                    localLocations = locationDAO.getUserLocations(username);
-                    for (Location e: localLocations) {
-                        localLocationsStrings.add(e.getLocation());
+                    // loop through events found
+                    for (int i = 0; i < eventsJSON.length(); i++) {
+                        JSONObject eventsObject = eventsJSON.getJSONObject(i);
+
+                        History history = new History();
+                        history.setUsername(username);
+                        history.setLocation(eventsObject.getString("location"));
+                        history.setEvent(eventsObject.getString("eventname"));
+                        history.setYear(eventsObject.getString("year"));
+
+                        historyDAO.insert(history);
                     }
 
-                    for (String e: locations) {
-                        if (!localLocationsStrings.contains(e)){
-                            Location location = new Location();
-                            location.setUsername(username);
-                            location.setLocation(e);
-
-                            locationDAO.insert(location);
-                        }
-                    }
                     database.close();
                 }
             } catch (JSONException e) {
@@ -605,7 +603,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once done
             pDialog2.dismiss();
-            Toast.makeText(getApplicationContext(), "Locations Synced!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Personal History Synced!", Toast.LENGTH_SHORT).show();
         }
     }
 

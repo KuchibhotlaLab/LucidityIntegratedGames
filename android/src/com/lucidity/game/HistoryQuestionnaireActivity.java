@@ -134,7 +134,7 @@ public class HistoryQuestionnaireActivity extends AppCompatActivity {
     }
 
     /**
-     * Background Async Task to Add new User
+     * Background Async Task to Add new Events
      * */
     class AddEvents extends AsyncTask<String, String, String> {
 
@@ -152,7 +152,7 @@ public class HistoryQuestionnaireActivity extends AppCompatActivity {
         }
 
         /**
-         * Adding User
+         * Adding Histories
          */
         protected String doInBackground(String... args) {
             // Building Parameters

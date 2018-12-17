@@ -66,7 +66,8 @@
     <string name="photoSync"> Sync with\nAccount </string>
     <string name="photoGal"> Current\nGallery </string>
     <string name="locationSync"> Sync with\nAccount </string>
-    <string name="locationView"> View Current\nLocations </string>
+    <string name="locationView"> View Personal\nHistory </string>
+    <string name="historyStart"> Initiate Personal\nHistory </string>
     <string name="uploadNotif">Upload Results</string>
     <string name="questionnaire_prompt">Please fill in the city where each event occurred and the year(s) in which it occurred to get started on filling out your personal history.
         \nTo skip a section just leave it blank. To enter a period of time, enter two years separated by a dash(-).</string>
@@ -80,5 +81,6 @@
     <string name="history_question_8">First Home</string>
     <string name="history_question_9">Second Home</string>
     <string name="history_question_10">Third Home</string>
-
+    <string name="event">Event</string>
+    <string name="location">Location</string>
 </resources>

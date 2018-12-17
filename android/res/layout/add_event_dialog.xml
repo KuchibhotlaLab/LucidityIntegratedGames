@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content">
+
+    <EditText
+        android:id="@+id/event_to_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:ems="10"
+        android:hint="@string/event"
+        android:inputType="textCapWords"/>
+
+    <EditText
+        android:id="@+id/location_to_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:ems="10"
+        android:hint="@string/location"
+        android:inputType="textCapWords"/>
+
+    <EditText
+        android:id="@+id/years_to_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:ems="10"
+        android:hint="@string/years"
+        android:inputType="phone"/>
+</LinearLayout>
