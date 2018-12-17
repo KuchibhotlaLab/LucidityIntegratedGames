@@ -119,9 +119,6 @@ public class HistoryQuestionnaireActivity extends AppCompatActivity {
                     responses.add(new String[]{answer10_1.getText().toString(), "Lived Here", answer10_2.getText().toString()});
                 }
 
-                System.out.println(responses.get(0)[0] + " " + responses.get(0)[1] + " " + responses.get(0)[2]);
-                System.out.println(responses.get(2)[0] + " " + responses.get(2)[1] + " " + responses.get(2)[2]);
-
                 ConnectivityChecker checker = ConnectivityChecker.getInstance(HistoryQuestionnaireActivity.this);
                 if (checker.isConnected()){
                     //Add locations and events based on questionnaire
@@ -211,6 +208,8 @@ public class HistoryQuestionnaireActivity extends AppCompatActivity {
             // dismiss the dialog once done
             pDialog.dismiss();
             finish();
+            Intent intent = new Intent(getApplicationContext(), HistoryActivity.class);
+            startActivity(intent);
         }
     }
 }

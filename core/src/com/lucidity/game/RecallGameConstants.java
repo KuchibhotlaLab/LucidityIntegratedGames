@@ -43,8 +43,8 @@ public class RecallGameConstants {
 
     public static final String PROMPT_ONE = "Select the ";
     public static final String PROMPT_RELATION = "of this person to you.";
-    public static final String PROMPT_LOCATION = "that you lived in the past.";
-    public static final String PROMPT_TWO = " is ";
+    public static final String PROMPT_LOCATION = "that you've been to before.";
+    public static final String PROMPT_TWO = "";
 
 
     public static final String[] RANDOM_LOCATION_NAMES = {"Arlington", "Baton Rouge", "San Diego", "Kansas City", "Henderson", "Houston"};

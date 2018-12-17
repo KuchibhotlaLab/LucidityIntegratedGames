@@ -97,7 +97,6 @@ public class SpatialScreen extends InputAdapter implements Screen {
         resizedBg = new Sprite(textureRegion);
         resizedBg.setSize(1f,  resizedBg.getHeight() / resizedBg.getWidth());
 
-        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
         homeBut = new Texture(Gdx.files.internal("data/homeBtn.png"));
         returnBut = new Texture(Gdx.files.internal("data/returnBtn.png"));
 

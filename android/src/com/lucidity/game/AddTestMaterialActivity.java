@@ -4,16 +4,19 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.arch.persistence.room.Room;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -706,8 +710,16 @@ public class AddTestMaterialActivity extends AppCompatActivity {
             Uri currFileURI = data.getData();
             String path = currFileURI.getPath();
             //System.out.println("filepath returned = " + path);
-            List folders = Arrays.asList(path.split("/"));
-            String name = folders.get(folders.size() - 1).toString();
+            String name;
+            if(currFileURI.getScheme().equals("file")) {
+                List folders = Arrays.asList(path.split("/"));
+                name = folders.get(folders.size() - 1).toString();
+            } else {
+                ContentResolver resolver = this.getApplicationContext().getContentResolver();
+                MimeTypeMap mimeMap = MimeTypeMap.getSingleton();
+                name = getFileName(currFileURI) + "." + mimeMap.getExtensionFromMimeType(resolver.getType(currFileURI));
+            }
+            System.out.println(name);
             if("mp3".equals(name.substring(name.length()-3))){
                 /*Intent intent = new Intent(getApplicationContext(), Music.class);
                 intent.putExtra("path", path);
@@ -721,13 +733,36 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                 mmr.setDataSource(this, currFileURI);
 
                 String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+                String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
 
-                copyFile(subfolder.getPath() + "/", name.substring(0, name.length()-4) + " - " + artist + ".mp3", currFileURI);
+                copyFile(subfolder.getPath() + "/", title + " - " + artist + ".mp3", currFileURI);
             }
             /*String Fpath = data.getDataString();
             System.out.println("filepath returned = " + Fpath);
             super.onActivityResult(requestCode, resultCode, data);*/
         }
+    }
+
+    private String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
     }
 
     private void copyFile( String outputPath, String name, Uri input) {

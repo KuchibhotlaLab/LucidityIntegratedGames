@@ -32,7 +32,8 @@ public class SoundGallery extends AppCompatActivity {
     private ListItemAdapter adapter;
     private String username;
     private static MediaPlayer mMediaPlayer;
-    private boolean[] isPlaying;
+    private ArrayList<Boolean> isPlaying;
+    ImageButton playing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,6 @@ public class SoundGallery extends AppCompatActivity {
 
         final ListView gallery = (ListView) findViewById(R.id.sound_gallery);
         getLocalAudio();
-        isPlaying = new boolean[audioName.size()];
         displayAudio(gallery);
 
         /*gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -70,9 +70,20 @@ public class SoundGallery extends AppCompatActivity {
         });*/
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(!isPlaying.isEmpty()){
+            if(isPlaying.contains(true)){
+                mMediaPlayer.release();
+            }
+        }
+    }
+
     private void getLocalAudio(){
         audioName = new ArrayList<String>();
         audioPath = new ArrayList<String>();
+        isPlaying = new ArrayList<>();
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         // path to /data/data/yourapp/app_data/audioDir
         File directory = cw.getDir("audioDir", Context.MODE_PRIVATE);
@@ -83,6 +94,7 @@ public class SoundGallery extends AppCompatActivity {
                 if ("mp3".equals(files[i].getName().substring(files[i].getName().length() - 3, files[i].getName().length()))) {
                     audioPath.add(files[i].getAbsolutePath());
                     audioName.add(files[i].getName());
+                    isPlaying.add(false);
                 }
             }
         }
@@ -126,7 +138,7 @@ public class SoundGallery extends AppCompatActivity {
         }
 
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, final View convertView, final ViewGroup parent) {
             View view = convertView;
             if (view == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -145,9 +157,12 @@ public class SoundGallery extends AppCompatActivity {
                     //TODO: call dialoge
                     File file = new File(audioPath.get(position));
                     file.delete();
+                    if (isPlaying.get(position)) {
+                        mMediaPlayer.release();
+                    }
                     audioName.remove(position);
                     audioPath.remove(position);
-                    notifyDataSetChanged();
+                    isPlaying.remove(position);
 
                     AlertDialog.Builder builder;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -159,7 +174,8 @@ public class SoundGallery extends AppCompatActivity {
                             .setMessage("The song is deleted from the app")
                             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    // continue with delete
+                                    finish();
+                                    startActivity(getIntent());
                                     dialog.cancel();
                                 }
                             })
@@ -171,14 +187,22 @@ public class SoundGallery extends AppCompatActivity {
             playBtn.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
-                    if(isPlaying[position]){
+                    if(isPlaying.get(position)){
                         mMediaPlayer.release();
-                        isPlaying[position] = false;
+                        isPlaying.set(position, false);
                         ((ImageButton) v).setImageResource(R.drawable.play);
                     } else {
+                        for (int i = 0; i < audioPath.size(); i++) {
+                            if(isPlaying.get(i)) {
+                                isPlaying.set(i, false);
+                                mMediaPlayer.release();
+                                playing.setImageResource(R.drawable.play);
+                            }
+                        }
                         mMediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.parse(audioPath.get(position)));
                         mMediaPlayer.start();
-                        isPlaying[position] = true;
+                        isPlaying.set(position, true);
+                        playing = (ImageButton) v;
                         ((ImageButton) v).setImageResource(R.drawable.stop);
                     }
                     mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {

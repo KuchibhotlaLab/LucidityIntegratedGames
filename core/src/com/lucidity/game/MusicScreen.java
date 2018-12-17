@@ -183,6 +183,12 @@ public class MusicScreen extends InputAdapter implements Screen {
             batch.end();
 
         } else {
+            if (timerStart) {
+                trialStartTime = TimeUtils.nanoTime();
+                timerStart = false;
+                disableTouchDown = false;
+            }
+
             batch.begin();
             font.setColor(Color.WHITE);
             font.getData().setScale(FacialGameConstants.PROMPT_SCALE);
@@ -428,6 +434,7 @@ public class MusicScreen extends InputAdapter implements Screen {
         questionNumber++;
         delayed = -10000;
         delayOn = false;
+        onplay = true;
 
         onSelectOne = false;
         onSelectTwo = false;
@@ -458,8 +465,8 @@ public class MusicScreen extends InputAdapter implements Screen {
     private void setQuestion(){
         switch (questionNumber) {
             case 1:
-                promptOne = "Have your heard";
-                promptTwo = "of this song before?";
+                promptOne = "Have you heard";
+                promptTwo = "this song before?";
                 break;
             case 2:
                 promptOne = "What is the name";

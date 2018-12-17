@@ -184,9 +184,10 @@ public class RecallScreen extends InputAdapter implements Screen {
             String prompt = "";
 
             if(gameMode.equals("relation")){
-                prompt  = "Who" +  RecallGameConstants.PROMPT_TWO + correctPrompt + "?";
+                prompt  = "Who is " +
+                        "" +  RecallGameConstants.PROMPT_TWO + correctPrompt + "?";
             } else if (gameMode.equals("location")){
-                prompt  = "Where" +  RecallGameConstants.PROMPT_TWO + "?";
+                prompt  = "Where have you been to before" +  RecallGameConstants.PROMPT_TWO + "?";
             }
 
             final GlyphLayout promptLayout_next = new GlyphLayout(font, prompt);
