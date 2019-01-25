@@ -55,16 +55,14 @@
                 android:layout_marginRight="18dp"
                 android:paddingBottom="12dp">
 
-                <EditText
+                <fragment
                     android:id="@+id/history_answer_1_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:fontFamily="@font/kayak_sans_regular"
-                    android:hint="@string/name_of_location"
-                    android:inputType="textCapWords"
-                    android:textSize="24sp" />
+                    android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                    />
 
                 <EditText
                     android:id="@+id/history_answer_1_2"
@@ -98,16 +96,14 @@
                 android:layout_marginRight="18dp"
                 android:paddingBottom="12dp">
 
-                <EditText
+                <fragment
                     android:id="@+id/history_answer_2_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:fontFamily="@font/kayak_sans_regular"
-                    android:hint="@string/name_of_location"
-                    android:inputType="textCapWords"
-                    android:textSize="24sp" />
+                    android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                    />
 
                 <EditText
                     android:id="@+id/history_answer_2_2"
@@ -141,16 +137,14 @@
                 android:layout_marginRight="18dp"
                 android:paddingBottom="12dp">
 
-                <EditText
+                <fragment
                     android:id="@+id/history_answer_3_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:fontFamily="@font/kayak_sans_regular"
-                    android:hint="@string/name_of_location"
-                    android:inputType="textCapWords"
-                    android:textSize="24sp" />
+                    android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                    />
 
                 <EditText
                     android:id="@+id/history_answer_3_2"
@@ -184,16 +178,14 @@
                 android:layout_marginRight="18dp"
                 android:paddingBottom="12dp">
 
-                <EditText
+                <fragment
                     android:id="@+id/history_answer_4_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:fontFamily="@font/kayak_sans_regular"
-                    android:hint="@string/name_of_location"
-                    android:inputType="textCapWords"
-                    android:textSize="24sp" />
+                    android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                    />
 
                 <EditText
                     android:id="@+id/history_answer_4_2"
@@ -227,16 +219,14 @@
                 android:layout_marginRight="18dp"
                 android:paddingBottom="12dp">
 
-                <EditText
+                <fragment
                     android:id="@+id/history_answer_5_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:fontFamily="@font/kayak_sans_regular"
-                    android:hint="@string/name_of_location"
-                    android:inputType="textCapWords"
-                    android:textSize="24sp" />
+                    android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                    />
 
                 <EditText
                     android:id="@+id/history_answer_5_2"
@@ -270,16 +260,14 @@
                 android:layout_marginRight="18dp"
                 android:paddingBottom="12dp">
 
-                <EditText
+                <fragment
                     android:id="@+id/history_answer_6_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:fontFamily="@font/kayak_sans_regular"
-                    android:hint="@string/name_of_location"
-                    android:inputType="textCapWords"
-                    android:textSize="24sp" />
+                    android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                    />
 
                 <EditText
                     android:id="@+id/history_answer_6_2"
@@ -313,16 +301,14 @@
                 android:layout_marginRight="18dp"
                 android:paddingBottom="12dp">
 
-                <EditText
+                <fragment
                     android:id="@+id/history_answer_7_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:fontFamily="@font/kayak_sans_regular"
-                    android:hint="@string/name_of_location"
-                    android:inputType="textCapWords"
-                    android:textSize="24sp" />
+                    android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                    />
 
                 <EditText
                     android:id="@+id/history_answer_7_2"
@@ -356,16 +342,14 @@
                 android:layout_marginRight="18dp"
                 android:paddingBottom="12dp">
 
-                <EditText
+                <fragment
                     android:id="@+id/history_answer_8_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:fontFamily="@font/kayak_sans_regular"
-                    android:hint="@string/name_of_location"
-                    android:inputType="textCapWords"
-                    android:textSize="24sp" />
+                    android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                    />
 
                 <EditText
                     android:id="@+id/history_answer_8_2"
@@ -399,16 +383,14 @@
                 android:layout_marginRight="18dp"
                 android:paddingBottom="12dp">
 
-                <EditText
+                <fragment
                     android:id="@+id/history_answer_9_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:fontFamily="@font/kayak_sans_regular"
-                    android:hint="@string/name_of_location"
-                    android:inputType="textCapWords"
-                    android:textSize="24sp" />
+                    android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                    />
 
                 <EditText
                     android:id="@+id/history_answer_9_2"
@@ -442,16 +424,14 @@
                 android:layout_marginRight="18dp"
                 android:paddingBottom="12dp">
 
-                <EditText
+                <fragment
                     android:id="@+id/history_answer_10_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:fontFamily="@font/kayak_sans_regular"
-                    android:hint="@string/name_of_location"
-                    android:inputType="textCapWords"
-                    android:textSize="24sp" />
+                    android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                    />
 
                 <EditText
                     android:id="@+id/history_answer_10_2"

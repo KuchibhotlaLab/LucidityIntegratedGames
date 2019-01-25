@@ -54,6 +54,9 @@ android {
         implementation 'com.github.bumptech.glide:glide:4.0.0-RC1'
         implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
         implementation 'com.google.android.gms:play-services:7.8+'
+        implementation 'com.google.android.gms:play-services-places:16.0.0'
+        implementation 'com.google.android.gms:play-services-location:16.0.0'
+        implementation 'com.google.android.gms:play-services-maps:16.0.0'
         implementation "android.arch.persistence.room:runtime:1.0.0"
         annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
         implementation project(':spotify-app-remote-release-0.5.0')

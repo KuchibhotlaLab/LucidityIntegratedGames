@@ -90,6 +90,10 @@
         <activity android:name=".Music" />
         <activity android:name=".HistoryQuestionnaireActivity" />
         <activity android:name=".HistoryActivity"></activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyArNZUMFzSqrsMcZ5OR0jYfgkxRNvwL8QU"/>
     </application>
 
 </manifest>
