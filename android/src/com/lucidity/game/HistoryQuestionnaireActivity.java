@@ -97,7 +97,6 @@ public class HistoryQuestionnaireActivity extends AppCompatActivity {
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_REGIONS)
                 .build();
-
         Typeface font = Typeface.createFromAsset(getAssets(),"data/Kayak-Sans-Regular.ttf");
         final EditText answer1_2 = findViewById(R.id.history_answer_1_2);
         int hintColor = answer1_2.getCurrentHintTextColor();

@@ -15,15 +15,12 @@
         android:hint="@string/event"
         android:inputType="textCapWords"/>
 
-    <EditText
+    <fragment
         android:id="@+id/location_to_add"
-        android:layout_width="wrap_content"
+        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:ems="10"
-        android:hint="@string/location"
-        android:inputType="textCapWords"/>
+        android:layout_gravity="center" />
 
     <EditText
         android:id="@+id/years_to_add"

@@ -5,11 +5,13 @@ import android.app.ProgressDialog;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,12 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -224,10 +232,42 @@ public class HistoryActivity extends AppCompatActivity {
 
         final EditText eventInput = (EditText) promptsView
                 .findViewById(R.id.event_to_add);
-        final EditText locInput = (EditText) promptsView
-                .findViewById(R.id.location_to_add);
+        final PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.location_to_add);
         final EditText yearsInput = (EditText) promptsView
                 .findViewById(R.id.years_to_add);
+
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_REGIONS)
+                .build();
+        Typeface font = Typeface.createFromAsset(getAssets(),"data/Kayak-Sans-Regular.ttf");
+        int hintColor = eventInput.getCurrentHintTextColor();
+
+        autocompleteFragment.setFilter(typeFilter);
+
+        autocompleteFragment.setHint("Name of Location");
+        autocompleteFragment.getView().findViewById(R.id.place_autocomplete_search_button).setVisibility(View.GONE);
+        final EditText locationText = autocompleteFragment.getView().findViewById(R.id.place_autocomplete_search_input);
+        locationText.setTypeface(font);
+        locationText.setTextSize(18);
+        locationText.setGravity(Gravity.CENTER);
+        locationText.setHintTextColor(hintColor);
+        locationText.setPadding(4,0,0,0);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                Log.i("success", "Place: " + place.getName());
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i("failure", "An error occurred: " + status);
+            }
+        });
 
         // set dialog message
         alertDialogBuilder
@@ -265,7 +305,7 @@ public class HistoryActivity extends AppCompatActivity {
                 prevClickTime = SystemClock.elapsedRealtime();
 
                 String eventText = (eventInput.getText()).toString();
-                String locText = (locInput.getText()).toString();
+                String locText = (locationText.getText()).toString();
                 String yearsText = (yearsInput.getText()).toString();
                 final int[] succeed = new int[1];
                 boolean filled = true;
@@ -276,7 +316,7 @@ public class HistoryActivity extends AppCompatActivity {
                 }
                 if (locText.trim().length() == 0)
                 {
-                    locInput.setError("Please enter a location");
+                    locationText.setError("Please enter a location");
                     filled = false;
                 }
                 if (yearsText.trim().length() == 0)
