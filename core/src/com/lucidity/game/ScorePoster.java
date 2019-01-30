@@ -17,7 +17,7 @@ public interface ScorePoster {
                       int score, int[] trialSuccess, double[] trialTime);
 
     void postScoreRe(String username, String dateTime, String location, String menu,
-                     String mode, int score, int[] trialSuccess, double[] trialTime);
+                     int score, int[] trialSuccess, double[] trialTime);
 
     void postOnline(String username);
 

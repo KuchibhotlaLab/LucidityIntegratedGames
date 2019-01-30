@@ -37,14 +37,13 @@ public class RecallGameConstants {
     public static final Vector2 RELATION_CENTER_NAME = new Vector2(MODE_WORLD_SIZE * 3 /4,MODE_WORLD_SIZE * 3 /4);
     public static final Vector2 RELATION_CENTER_ATTR = new Vector2(MODE_WORLD_SIZE * 3 /4,MODE_WORLD_SIZE / 4);
 
-    public static final String INSTRUCT_ONE = "Can you select the";
-    public static final String INSTRUCT_TWO = "correct answer associated";
-    public static final String INSTRUCT_THREE = "with each prompt given?";
+    public static final String INSTRUCT_ONE = "Can you recall where";
+    public static final String INSTRUCT_TWO = "each event in your";
+    public static final String INSTRUCT_THREE = "personal life occured?";
 
-    public static final String PROMPT_ONE = "Select the ";
-    public static final String PROMPT_RELATION = "of this person to you.";
-    public static final String PROMPT_LOCATION = "that you've been to before.";
-    public static final String PROMPT_TWO = "";
+    public static final String PROMPT_ONE = "Select the location where";
+    public static final String PROMPT_LOCATION = "the following event occured.";
+    public static final String PROMPT_TWO = "Where did this occur?";
 
 
     public static final String[] RANDOM_LOCATION_NAMES = {"Arlington", "Baton Rouge", "San Diego", "Kansas City", "Henderson", "Houston"};

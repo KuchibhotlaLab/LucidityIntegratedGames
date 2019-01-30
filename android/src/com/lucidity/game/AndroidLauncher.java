@@ -65,7 +65,8 @@ public class AndroidLauncher extends AndroidApplication {
     private ArrayList<ArrayList<String>> tagsForGame;
     //gives an arraylist of genders for each picture in the picture list, ordered the same way
     private ArrayList<String> gendersForGame;
-    private ArrayList<String> livedLocations;
+    private ArrayList<String> locations;
+    private ArrayList<String> personalEvents;
 
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
@@ -137,11 +138,10 @@ public class AndroidLauncher extends AndroidApplication {
 
         if(gameType.equals("memory")){
             initialize(new WorkingMemoryGame(a, s, currentDateTimeString, coordinates), config);
-        } else if(gameType.equals("dep") || gameType.equals("recall")){
+        } else if(gameType.equals("dep")){
             picturesForGame = new ArrayList<>();
             tagsForGame = new ArrayList<>();
             gendersForGame = new ArrayList<>();
-            livedLocations = new ArrayList<>();
             GetPicturesAndTags picTask = new GetPicturesAndTags();
             picTask.execute();
 
@@ -156,25 +156,12 @@ public class AndroidLauncher extends AndroidApplication {
                 e.printStackTrace();
             }
 
-            GetStoredLocation locTask = new GetStoredLocation();
-            locTask.execute();
-            try {
-                locTask.get(1000, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
-            }
-
-            if(picturesForGame.size() < 4 || livedLocations.size() < 2){
+            if(picturesForGame.size() < 4){
                 final Context mContext = this;
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
                 alertDialogBuilder
                         .setMessage("Please provide at least \n " +
-                                "two pictures of each sex \n" +
-                                "and two past lived locations.")
+                                "two pictures of each sex \n")
                         .setCancelable(false)
                         .setPositiveButton("ok",new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
@@ -189,18 +176,50 @@ public class AndroidLauncher extends AndroidApplication {
                 // show it
                 alertDialog.show();
             }
-            if(gameType.equals("dep")) {
-                initialize(new FacialMemoryGame(a, s, picturesForGame, tagsForGame, gendersForGame,
+            initialize(new FacialMemoryGame(a, s, picturesForGame, tagsForGame, gendersForGame,
                     currentDateTimeString, coordinates), config);
-            } else if(gameType.equals("recall")){
-                initialize(new RecallGame(a, s, picturesForGame, tagsForGame, gendersForGame, livedLocations,
-                        currentDateTimeString, coordinates), config);
-            }
-
         } else if(gameType.equals("object")) {
             initialize(new ObjectRecognitionGame(a, s, currentDateTimeString, coordinates), config);
         } else if(gameType.equals("space")){
             initialize(new SpatialMemoryGame(a, s, currentDateTimeString, coordinates), config);
+        } else if(gameType.equals("recall")) {
+            personalEvents = new ArrayList<>();
+            locations = new ArrayList<>();
+
+            GetStoredLocation locTask = new GetStoredLocation();
+            locTask.execute();
+            try {
+                locTask.get(1000, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            }
+
+            if(personalEvents.size() < 2){
+                final Context mContext = this;
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder
+                        .setMessage("Please provide at least two\n" +
+                                "events in your personal history.")
+                        .setCancelable(false)
+                        .setPositiveButton("ok",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                dialog.dismiss();
+                                ((Activity) mContext).finish();
+                            }
+                        });
+
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                // show it
+                alertDialog.show();
+            }
+            initialize(new RecallGame(a, s, personalEvents, locations, currentDateTimeString,
+                    coordinates), config);
         } else if(gameType.equals("music")){
             ContextWrapper cw = new ContextWrapper(getApplicationContext());
             File directory = cw.getDir("audioDir", Context.MODE_PRIVATE);
@@ -281,9 +300,8 @@ public class AndroidLauncher extends AndroidApplication {
 
             List<com.lucidity.game.History> events = historyDAO.getUserHistories(username);
             for(com.lucidity.game.History event : events) {
-                if (!livedLocations.contains(event.getLocation())) {
-                    livedLocations.add(event.getLocation());
-                }
+                personalEvents.add(event.getEvent());
+                locations.add(event.getLocation());
             }
             database.close();
 

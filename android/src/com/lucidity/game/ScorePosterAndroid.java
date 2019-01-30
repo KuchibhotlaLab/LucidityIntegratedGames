@@ -196,7 +196,7 @@ public class ScorePosterAndroid implements ScorePoster {
     }
 
     public void postScoreRe(String username, String dateTime, String location, String menu,
-                            String mode, int score, int[] trialSuccess, double[] trialTime) {
+                            int score, int[] trialSuccess, double[] trialTime) {
 
         LucidityDatabase database = Room.databaseBuilder(context, LucidityDatabase.class, "db-ReGameScores")
                 .build();
@@ -207,7 +207,6 @@ public class ScorePosterAndroid implements ScorePoster {
         gameScore.setTime(dateTime);
         gameScore.setLocation(location);
         gameScore.setMenu(menu);
-        gameScore.setMode(mode);
         gameScore.setScore(String.valueOf(score));
         gameScore.setTrial1(trialSuccess[0]);
         gameScore.setTrialtime1(trialTime[0]);
@@ -566,7 +565,6 @@ public class ScorePosterAndroid implements ScorePoster {
         params.add(new BasicNameValuePair("time", s.getTime()));
         params.add(new BasicNameValuePair("location", s.getLocation()));
         params.add(new BasicNameValuePair("menu", s.getMenu()));
-        params.add(new BasicNameValuePair("mode", s.getMode()));
         params.add(new BasicNameValuePair("score", s.getScore()));
         params.add(new BasicNameValuePair("trial1", String.valueOf(s.getTrial1())));
         params.add(new BasicNameValuePair("trial1time", String.valueOf(s.getTrialtime1())));

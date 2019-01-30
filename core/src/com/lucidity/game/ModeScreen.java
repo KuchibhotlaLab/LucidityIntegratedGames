@@ -21,9 +21,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public class ModeScreen extends InputAdapter implements Screen {
 
     private FacialMemoryGame facialMemoryGame;
-    private RecallGame recallGame;
 
-    private boolean isFacialGame, isRecallGame = false;
+    private boolean isFacialGame = false;
 
     ShapeRenderer renderer;
     SpriteBatch batch;
@@ -37,10 +36,6 @@ public class ModeScreen extends InputAdapter implements Screen {
         isFacialGame = true;
     }
 
-    public ModeScreen(RecallGame game) {
-        this.recallGame = game;
-        isRecallGame = true;
-    }
     @Override
     public void show() {
         renderer = new ShapeRenderer();
@@ -120,44 +115,6 @@ public class ModeScreen extends InputAdapter implements Screen {
             font.draw(batch, FacialGameConstants.MODE_TWO_THIRD, FacialGameConstants.W2F_CENTER_ATTR.x,
                     FacialGameConstants.W2F_CENTER_ATTR.y + mode_two_third.height / 3 + mode_two_second_two.height, 0, Align.center, false);
             batch.end();
-        } else if(isRecallGame){
-            Gdx.gl.glClearColor(RecallGameConstants.BACKGROUND_COLOR.r, RecallGameConstants.BACKGROUND_COLOR.g, RecallGameConstants.BACKGROUND_COLOR.b, 1);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-            renderer.setProjectionMatrix(viewport.getCamera().combined);
-
-            renderer.begin(ShapeRenderer.ShapeType.Filled);
-
-            renderer.setColor(RecallGameConstants.LOCATION_COLOR);
-            renderer.circle(RecallGameConstants.LOCATION_CENTER_NAME.x, RecallGameConstants.LOCATION_CENTER_NAME.y, RecallGameConstants.MODE_BUBBLE_RADIUS);
-
-            renderer.setColor(RecallGameConstants.RELATION_COLOR);
-            renderer.circle(RecallGameConstants.RELATION_CENTER_NAME.x, RecallGameConstants.RELATION_CENTER_NAME.y, RecallGameConstants.MODE_BUBBLE_RADIUS);
-
-            renderer.end();
-
-            batch.setProjectionMatrix(viewport.getCamera().combined);
-
-            batch.begin();
-            font.getData().setScale(.2f);
-            font.setColor(Color.WHITE);
-
-            final GlyphLayout mode_one_second = new GlyphLayout(font, RecallGameConstants.MODE_ONE_SECOND);
-            font.draw(batch, RecallGameConstants.MODE_ONE_SECOND, RecallGameConstants.LOCATION_CENTER_NAME.x, RecallGameConstants.LOCATION_CENTER_NAME.y + mode_one_second.height / 3, 0, Align.center, false);
-
-            final GlyphLayout mode_one_first = new GlyphLayout(font, RecallGameConstants.MODE_ONE);
-            font.draw(batch, RecallGameConstants.MODE_ONE, RecallGameConstants.LOCATION_CENTER_NAME.x,
-                    RecallGameConstants.LOCATION_CENTER_NAME.y + mode_one_first.height / 3 + mode_one_second.height, 0, Align.center, false);
-
-
-            final GlyphLayout mode_one_third = new GlyphLayout(font, RecallGameConstants.MODE_ONE_THIRD);
-            font.draw(batch, RecallGameConstants.MODE_ONE_THIRD, RecallGameConstants.RELATION_CENTER_NAME.x, RecallGameConstants.RELATION_CENTER_NAME.y + mode_one_third.height / 3, 0, Align.center, false);
-
-            final GlyphLayout mode_one_first_two = new GlyphLayout(font, RecallGameConstants.MODE_ONE);
-            font.draw(batch, RecallGameConstants.MODE_ONE, RecallGameConstants.RELATION_CENTER_NAME.x,
-                    RecallGameConstants.RELATION_CENTER_NAME.y + mode_one_first_two.height / 3 + mode_one_third.height, 0, Align.center, false);
-
-            batch.end();
         }
     }
 
@@ -207,16 +164,7 @@ public class ModeScreen extends InputAdapter implements Screen {
             if (worldTouch.dst(FacialGameConstants.W2F_CENTER_ATTR) < FacialGameConstants.MODE_BUBBLE_RADIUS) {
                 facialMemoryGame.setScreen(new NameToFaceScreen(facialMemoryGame, 0, 1, FacialGameConstants.MODE_ATTR));
             }
-        } else if(isRecallGame){
-            if (worldTouch.dst(RecallGameConstants.LOCATION_CENTER_NAME) < RecallGameConstants.MODE_BUBBLE_RADIUS) {
-                recallGame.setScreen(new RecallScreen(recallGame, "location"));
-            }
-            if (worldTouch.dst(RecallGameConstants.RELATION_CENTER_NAME) < RecallGameConstants.MODE_BUBBLE_RADIUS) {
-                recallGame.setScreen(new RecallScreen(recallGame, "relation"));
-            }
-
         }
-
 
         return true;
     }

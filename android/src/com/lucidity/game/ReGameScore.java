@@ -15,7 +15,6 @@ public class ReGameScore {
     private String time;
     private String location;
     private String menu;
-    private String mode;
     private String score;
     private int trial1;
     private double trialtime1;
@@ -53,9 +52,6 @@ public class ReGameScore {
 
     public String getMenu() {return menu;}
     public void setMenu(String m) {this.menu = m;}
-
-    public String getMode() {return mode;}
-    public void setMode(String m) {this.mode = m;}
 
     public String getScore() {return score;}
     public void setScore(String s) {score = s;}

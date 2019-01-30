@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.net.HttpParametersUtils;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -25,6 +26,7 @@ import org.w3c.dom.css.Rect;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -48,10 +50,9 @@ public class RecallScreen extends InputAdapter implements Screen {
     private ShapeRenderer renderer;
 
     String username;
-    ArrayList<String> imgNames;
-    ArrayList<ArrayList<String>> imgTags;
-    ArrayList<String> imgGenders;
+    ArrayList<String> events;
     ArrayList<String> locations;
+    ArrayList<String> wrongLocations;
 
     Rectangle end, back;
     Rectangle[] answers;
@@ -59,10 +60,9 @@ public class RecallScreen extends InputAdapter implements Screen {
     int numOfAnswer = 3;
     boolean[] onSelectAns;
     boolean onEnd, onBack, hasAdded, isCorrect = false;
+    int correctPos;
     String correct;
     String correctPrompt;
-    String gameMode;
-
 
     Sprite display;
     SpriteBatch batch;
@@ -72,6 +72,7 @@ public class RecallScreen extends InputAdapter implements Screen {
     private long trialStartTime;
     private int[] trialSuccess;
     private double[] trialTime;
+    private ArrayList<Integer> eventOrder;
 
     float elapsed = 0;
     //cheap fix
@@ -80,9 +81,8 @@ public class RecallScreen extends InputAdapter implements Screen {
 
     private boolean disableTouchDown=true;
 
-    public RecallScreen(RecallGame game, String mode) {
+    public RecallScreen(RecallGame game) {
         this.game = game;
-        this.gameMode = mode;
 
         screenWidth = Gdx.graphics.getWidth();
         screenHeight = Gdx.graphics.getHeight();
@@ -109,21 +109,34 @@ public class RecallScreen extends InputAdapter implements Screen {
         end.x = screenWidth / 2;
         back.x = screenWidth * 3 / 4;
 
-
-        imgNames = game.getPicturenames();
-        imgTags = game.getPicturetags();
-        imgGenders = game.getPicturegenders();
         username = game.getUsername();
+        events = game.getEvents();
         locations = game.getLivedlocations();
+        wrongLocations = new ArrayList<String>();
+        wrongLocations.addAll(locations);
+        wrongLocations.addAll(Arrays.asList(RecallGameConstants.RANDOM_LOCATION_NAMES));
 
         timerStart = true;
         trialTime = new double[maxTrial];
         trialSuccess = new int[maxTrial];
         trial = 1;
-
+        eventOrder = new ArrayList<Integer>();
 
         batch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
+
+        //Initializes ordering of five events for trials with no repeats
+        int numEvents = events.size();
+        for (int i = 0; i < maxTrial; i++) {
+            int temp = (int) (Math.random() * numEvents);
+            if (i < numEvents) {
+                while (eventOrder.contains(temp)) {
+                    temp = (int) (Math.random() * numEvents);
+                }
+            }
+            eventOrder.add(temp);
+        }
+
         generateTrial();
     }
 
@@ -149,23 +162,12 @@ public class RecallScreen extends InputAdapter implements Screen {
             font.getData().setScale(RecallGameConstants.INSTRUCTION_SIZE);
             font.setColor(RecallGameConstants.TITLE_COLOR);
 
-            if (gameMode.equals("relation")) {
-                final GlyphLayout promptLayout_two = new GlyphLayout(font, RecallGameConstants.PROMPT_RELATION);
-                font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2, screenHeight / 2);
+            final GlyphLayout promptLayout_two = new GlyphLayout(font, RecallGameConstants.PROMPT_LOCATION);
+            font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2, screenHeight / 2);
 
-                final GlyphLayout promptLayout_one = new GlyphLayout(font, RecallGameConstants.PROMPT_ONE + gameMode);
-                font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
+            final GlyphLayout promptLayout_one = new GlyphLayout(font, RecallGameConstants.PROMPT_ONE);
+            font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
                         screenHeight / 2 + 1.5f * promptLayout_two.height);
-
-            } else if (gameMode.equals("location")) {
-                final GlyphLayout promptLayout_two = new GlyphLayout(font, RecallGameConstants.PROMPT_LOCATION);
-                font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2, screenHeight / 2);
-
-                final GlyphLayout promptLayout_one = new GlyphLayout(font, RecallGameConstants.PROMPT_ONE + gameMode);
-                font.draw(batch, promptLayout_one, (screenWidth - promptLayout_one.width) / 2,
-                        screenHeight / 2 + 1.5f * promptLayout_two.height);
-
-            }
 
             batch.end();
 
@@ -183,16 +185,15 @@ public class RecallScreen extends InputAdapter implements Screen {
             font.setColor(RecallGameConstants.TITLE_COLOR);
             String prompt = "";
 
-            if(gameMode.equals("relation")){
-                prompt  = "Who is " +
-                        "" +  RecallGameConstants.PROMPT_TWO + correctPrompt + "?";
-            } else if (gameMode.equals("location")){
-                prompt  = "Where have you been to before" +  RecallGameConstants.PROMPT_TWO + "?";
-            }
+            prompt  = RecallGameConstants.PROMPT_TWO;
 
             final GlyphLayout promptLayout_next = new GlyphLayout(font, prompt);
             font.draw(batch, promptLayout_next, (screenWidth - promptLayout_next.width) / 2,
                     screenHeight * 7 / 8);
+
+            final GlyphLayout promptLayout_ques = new GlyphLayout(font, events.get(correctPos));
+            font.draw(batch, promptLayout_ques, (screenWidth - promptLayout_ques.width) / 2,
+                    screenHeight * 7 / 8 - 1.5f * promptLayout_next.height);
             batch.end();
 
 
@@ -218,20 +219,20 @@ public class RecallScreen extends InputAdapter implements Screen {
                     if(choices[i].equals(correct)){
                         font.setColor(BlockGameConstants.CORRECT_COLOR);
                         final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
-                        font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight* 3 / 4);
+                        font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight* 2 / 3);
 
                         final GlyphLayout promptLayout = new GlyphLayout(font, FacialGameConstants.CORRECT_MESSAGE);
-                        font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight* 3 / 4 + 1.5f * reactionLayout.height);
+                        font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight* 2 / 3 + 1.5f * reactionLayout.height);
                         isCorrect = true;
 
 
                     } else {
                         font.setColor(BlockGameConstants.INCORRECT_COLOR);
                         final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
-                        font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight* 3 / 4);
+                        font.draw(batch, reactionLayout, (screenWidth - reactionLayout.width) / 2, screenHeight* 2 / 3);
 
                         final GlyphLayout promptLayout = new GlyphLayout(font, FacialGameConstants.INCORRECT_MESSAGE);
-                        font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight * 3 / 4 + 1.5f * reactionLayout.height);
+                        font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight * 2 / 3 + 1.5f * reactionLayout.height);
                     }
                     batch.end();
                     renderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -255,8 +256,7 @@ public class RecallScreen extends InputAdapter implements Screen {
 
             renderer.rect(end.x, end.y, end.width, end.height);
 
-
-            if(!onBack){
+            /*if(!onBack){
                 renderer.setColor(FacialGameConstants.W2F_COLOR);
             } else {
                 renderer.setColor(FacialGameConstants.CHOICE_COLOR);
@@ -266,7 +266,7 @@ public class RecallScreen extends InputAdapter implements Screen {
                                    }
                                },
                         1);
-            }
+            }*/
             renderer.rect(back.x, back.y, back.width, back.height);
 
             renderer.end();
@@ -385,42 +385,23 @@ public class RecallScreen extends InputAdapter implements Screen {
 
     private void populateChoices(){
         HashSet<String> selected = new HashSet<String>();
-        if(gameMode.equals("relation")){
-            int correctPos = (int )(Math.random() * imgTags.size());
-            correct = imgTags.get(correctPos).get(1);
-            correctPrompt = imgTags.get(correctPos).get(0);
-            choices[(int)(Math.random() * numOfAnswer)] = correct;
-            selected.add(correct);
+        correctPos = eventOrder.get(trial - 1);
+        correct = locations.get(correctPos);
+        choices[(int)(Math.random() * numOfAnswer)] = correct;
+        selected.add(correct);
 
-            for(int i = 0; i < numOfAnswer; i++){
-                if(choices[i] == null){
-                    String filler = imgTags.get((int )(Math.random() * imgTags.size())).get(1);
-                    while(selected.contains(filler)){
-                        filler = imgTags.get((int )(Math.random() * imgTags.size())).get(1);
-                    }
-                    choices[i] = filler;
-                    selected.add(filler);
+        for(int i = 0; i < numOfAnswer; i++){
+            if(choices[i] == null){
+                String filler = wrongLocations.get((int )(Math.random() * wrongLocations.size()));
+                while(selected.contains(filler)){
+                    filler = wrongLocations.get((int )(Math.random() * wrongLocations.size()));
                 }
-            }
-        } else if(gameMode.equals("location")){
-            int correctPos = (int )(Math.random() * locations.size());
-            correct = locations.get(correctPos);
-            choices[(int)(Math.random() * numOfAnswer)] = correct;
-            selected.add(correct);
-
-            for(int i = 0; i < numOfAnswer; i++){
-                if(choices[i] == null){
-                    String filler = RecallGameConstants.RANDOM_LOCATION_NAMES[(int )(Math.random() * RecallGameConstants.RANDOM_LOCATION_NAMES.length)];
-                    while(selected.contains(filler)){
-                        filler = RecallGameConstants.RANDOM_LOCATION_NAMES[(int )(Math.random() * RecallGameConstants.RANDOM_LOCATION_NAMES.length)];
-                    }
-                    choices[i] = filler;
-                    selected.add(filler);
-                }
+                choices[i] = filler;
+                selected.add(filler);
             }
         }
-
     }
+
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if(!disableTouchDown) {
@@ -461,7 +442,6 @@ public class RecallScreen extends InputAdapter implements Screen {
             menu = "CareGiver";
         }
         json.put("menu", menu);
-        json.put("mode", gameMode);
         json.put("score", String.valueOf(score));
         for (int i = 0; i < trial; i++) {
             String trialNum = "trial" + (i + 1);
@@ -486,7 +466,7 @@ public class RecallScreen extends InputAdapter implements Screen {
                 } else {
                     // save scores locally
                     game.scorePoster.postScoreRe(game.getUsername(), game.getDateTime(), game.getLocation(),
-                            menu, gameMode, score, trialSuccess, trialTime);
+                            menu, score, trialSuccess, trialTime);
                 }
             }
 
@@ -494,7 +474,7 @@ public class RecallScreen extends InputAdapter implements Screen {
                 String status = "failed";
                 // save scores locally
                 game.scorePoster.postScoreRe(game.getUsername(), game.getDateTime(), game.getLocation(),
-                        menu, gameMode, score, trialSuccess, trialTime);
+                        menu, score, trialSuccess, trialTime);
             }
 
             @Override
