@@ -7,13 +7,14 @@
 
     <EditText
         android:id="@+id/event_to_add"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:ems="10"
+        android:fontFamily="@font/kayak_sans_regular"
         android:hint="@string/event"
-        android:inputType="textCapWords"/>
+        android:inputType="textCapWords"
+        android:background="@android:drawable/edit_text"/>
 
     <fragment
         android:id="@+id/location_to_add"
@@ -24,11 +25,12 @@
 
     <EditText
         android:id="@+id/years_to_add"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:ems="10"
+        android:fontFamily="@font/kayak_sans_regular"
         android:hint="@string/years"
-        android:inputType="phone"/>
+        android:inputType="phone"
+        android:background="@android:drawable/edit_text"/>
 </LinearLayout>

@@ -73,7 +73,8 @@
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
                     android:inputType="phone"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:background="@android:drawable/edit_text"/>
             </LinearLayout>
 
             <TextView
@@ -114,7 +115,8 @@
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
                     android:inputType="phone"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:background="@android:drawable/edit_text"/>
             </LinearLayout>
 
             <TextView
@@ -155,7 +157,8 @@
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
                     android:inputType="phone"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:background="@android:drawable/edit_text"/>
             </LinearLayout>
 
             <TextView
@@ -196,7 +199,8 @@
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
                     android:inputType="phone"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:background="@android:drawable/edit_text"/>
             </LinearLayout>
 
             <TextView
@@ -237,7 +241,8 @@
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
                     android:inputType="phone"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:background="@android:drawable/edit_text"/>
             </LinearLayout>
 
             <TextView
@@ -278,7 +283,8 @@
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
                     android:inputType="phone"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:background="@android:drawable/edit_text"/>
             </LinearLayout>
 
             <TextView
@@ -319,7 +325,8 @@
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
                     android:inputType="phone"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:background="@android:drawable/edit_text"/>
             </LinearLayout>
 
             <TextView
@@ -360,7 +367,8 @@
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
                     android:inputType="phone"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:background="@android:drawable/edit_text"/>
             </LinearLayout>
 
             <TextView
@@ -401,7 +409,8 @@
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
                     android:inputType="phone"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:background="@android:drawable/edit_text"/>
             </LinearLayout>
 
             <TextView
@@ -442,7 +451,8 @@
                     android:fontFamily="@font/kayak_sans_regular"
                     android:hint="@string/years"
                     android:inputType="phone"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:background="@android:drawable/edit_text"/>
             </LinearLayout>
 
             <Button

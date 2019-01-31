@@ -1,6 +1,9 @@
 package com.lucidity.game;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.arch.persistence.room.Room;
 import android.content.Context;
@@ -254,17 +257,16 @@ public class HistoryActivity extends AppCompatActivity {
         locationText.setGravity(Gravity.CENTER);
         locationText.setHintTextColor(hintColor);
         locationText.setPadding(4,0,0,0);
+        locationText.setBackgroundResource(android.R.drawable.edit_text);
 
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
                 Log.i("success", "Place: " + place.getName());
             }
 
             @Override
             public void onError(Status status) {
-                // TODO: Handle the error.
                 Log.i("failure", "An error occurred: " + status);
             }
         });
@@ -281,10 +283,12 @@ public class HistoryActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
                                 dialog.dismiss();
+                                FragmentManager fragmentManager = getFragmentManager();
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.remove(autocompleteFragment);
+                                fragmentTransaction.commit();
                             }
-
                         }
-
                 );
 
         // create alert dialog

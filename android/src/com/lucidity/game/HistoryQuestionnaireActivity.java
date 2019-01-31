@@ -111,17 +111,16 @@ public class HistoryQuestionnaireActivity extends AppCompatActivity {
             locationText.setTextSize(24);
             locationText.setHintTextColor(hintColor);
             locationText.setPadding(4,0,0,0);
+            locationText.setBackgroundResource(android.R.drawable.edit_text);
 
             locationSearch.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                 @Override
                 public void onPlaceSelected(Place place) {
-                    // TODO: Get info about the selected place.
                     Log.i("success", "Place: " + place.getName());
                 }
 
                 @Override
                 public void onError(Status status) {
-                    // TODO: Handle the error.
                     Log.i("failure", "An error occurred: " + status);
                 }
             });
