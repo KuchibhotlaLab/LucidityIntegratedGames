@@ -32,9 +32,6 @@ public class LoadingScreen extends InputAdapter implements Screen {
 
 
     Texture background;
-    TextureRegion textureRegion;
-    Sprite resizedBg;
-
     BitmapFont font;
     float elapsed;
 
@@ -42,30 +39,25 @@ public class LoadingScreen extends InputAdapter implements Screen {
     int screenHeight = Gdx.graphics.getHeight();
 
     public LoadingScreen(WorkingMemoryGame game) {
-        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
         isMemGame = true;
         this.memGame = game;
     }
 
     public LoadingScreen(FacialMemoryGame game) {
-        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
         isFacGame = true;
         this.FacMemGame = game;
     }
     public LoadingScreen(ObjectRecognitionGame game) {
-        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
         isObjGame = true;
         this.ObjRecGame = game;
     }
 
     public LoadingScreen(SpatialMemoryGame game) {
-        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
         isSpGame = true;
         this.SpMemGame = game;
     }
 
     public LoadingScreen(RecallGame game){
-        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
         isRecGame = true;
         this.RecGame = game;
     }
@@ -76,11 +68,6 @@ public class LoadingScreen extends InputAdapter implements Screen {
         batch = new SpriteBatch();
 
         viewport = new FitViewport(FacialGameConstants.MODE_WORLD_SIZE, FacialGameConstants.MODE_WORLD_SIZE);
-
-        textureRegion= new TextureRegion(background, 0, 0, background.getWidth(), background.getHeight());
-        resizedBg = new Sprite(textureRegion);
-        resizedBg.setSize(1f,  resizedBg.getHeight() / resizedBg.getWidth());
-
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
         font.getData().setScale(FacialGameConstants.MODE_LABEL_SCALE);
         Gdx.input.setInputProcessor(this);
@@ -100,11 +87,13 @@ public class LoadingScreen extends InputAdapter implements Screen {
             Gdx.gl.glClearColor(ObjectGameConstants.LOADING_COLOR.r, ObjectGameConstants.LOADING_COLOR.g, ObjectGameConstants.LOADING_COLOR.b, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         } else if(isSpGame){
-            //Gdx.gl.glClearColor(SpacialGameConstants.LOADING_COLOR.r, SpacialGameConstants.LOADING_COLOR.g, SpacialGameConstants.LOADING_COLOR.b, 1);
-            //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-            batch.begin();
-            batch.draw(resizedBg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            batch.end();
+            renderer.begin(ShapeRenderer.ShapeType.Filled);
+            renderer.rect(
+                    0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
+                    SpacialGameConstants.BACKGROUND_COLOR_BOT, SpacialGameConstants.BACKGROUND_COLOR_BOT,
+                    SpacialGameConstants.BACKGROUND_COLOR_TOP, SpacialGameConstants.BACKGROUND_COLOR_TOP
+            );
+            renderer.end();
         } else if(isRecGame){
             Gdx.gl.glClearColor(RecallGameConstants.LOADING_COLOR.r, RecallGameConstants.LOADING_COLOR.g, RecallGameConstants.LOADING_COLOR.b, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

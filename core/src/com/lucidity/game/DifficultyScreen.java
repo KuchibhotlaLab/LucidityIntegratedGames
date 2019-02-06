@@ -29,8 +29,6 @@ public class DifficultyScreen extends InputAdapter implements Screen {
     FitViewport viewport;
 
     Texture background;
-    TextureRegion textureRegion;
-    Sprite resizedBg;
 
     BitmapFont font;
     private float elapsed;
@@ -42,13 +40,6 @@ public class DifficultyScreen extends InputAdapter implements Screen {
     public DifficultyScreen(SpatialMemoryGame game) {
         isSpa = true;
         this.spaGame = game;
-
-        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
-        textureRegion= new TextureRegion(background, 0, 0, background.getWidth(), background.getHeight());
-        resizedBg = new Sprite(textureRegion);
-        resizedBg.setSize(1f,  resizedBg.getHeight() / resizedBg.getWidth());
-
-
     }
     public DifficultyScreen(ObjectRecognitionGame game) {
         isOb = true;
@@ -154,10 +145,6 @@ public class DifficultyScreen extends InputAdapter implements Screen {
 
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-            //TODO: This is butchered, fixed background image
-            /*batch.begin();
-            batch.draw(background, 0, 0, viewport.getCamera().viewportWidth, viewport.getCamera().viewportHeight);
-            batch.end();*/
             renderer.setProjectionMatrix(viewport.getCamera().combined);
 
 

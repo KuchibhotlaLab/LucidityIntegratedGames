@@ -13,6 +13,8 @@ public class SpacialGameConstants {
     //https://openglcolor.mpeters.me/
     public static final Color LOADING_COLOR = new Color(0.89f, 0.95f, 1, 1);
     public static final Color BACKGROUND_COLOR = new Color(0.54f, 0.75f, 0.97f, 1);
+    public static final Color BACKGROUND_COLOR_TOP = new Color(0.196f, 0.298f, 0.404f, 1);
+    public static final Color BACKGROUND_COLOR_BOT = new Color(0.200f, 0.451f, 0.530f, 1);
 
 
     public static final Color TITLE_COLOR = new Color(0.11f,0.46f,0.75f, 1);

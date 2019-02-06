@@ -46,8 +46,6 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
     SpriteBatch batch;
     Texture background, homeBut, returnBut;
-    TextureRegion textureRegion;
-    Sprite resizedBg;
     BitmapFont font;
 
     Pixmap pm;
@@ -92,11 +90,6 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
         batch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
-        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
-        textureRegion= new TextureRegion(background, 0, 0, background.getWidth(), background.getHeight());
-        resizedBg = new Sprite(textureRegion);
-        resizedBg.setSize(1f,  resizedBg.getHeight() / resizedBg.getWidth());
-
         homeBut = new Texture(Gdx.files.internal("data/homeBtn.png"));
         returnBut = new Texture(Gdx.files.internal("data/returnBtn.png"));
 
@@ -172,8 +165,14 @@ public class SpatialScreen extends InputAdapter implements Screen {
     public void render(float delta) {
         viewport.apply(true);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        renderer.rect(
+                0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
+                SpacialGameConstants.BACKGROUND_COLOR_BOT, SpacialGameConstants.BACKGROUND_COLOR_BOT,
+                SpacialGameConstants.BACKGROUND_COLOR_TOP, SpacialGameConstants.BACKGROUND_COLOR_TOP
+        );
+        renderer.end();
         batch.begin();
-        batch.draw(resizedBg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         float width = (float)(sqrt(2) * (grid[blocksVertical-1][blocksHorizontal-1].x + grid[blocksVertical-1][blocksHorizontal-1].width - grid[0][0].x));
         batch.draw(new TextureRegion(tx), grid[blocksHorizontal-1][0].x + grid[blocksHorizontal-1][0].width, grid[0][blocksVertical-1].y+grid[0][blocksVertical-1].height, 0, 0,  width, screenHeight, 1f, 1f, 225, false);
 
