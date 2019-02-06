@@ -153,7 +153,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
     }
     @Override
     public void show() {
-        viewport = new ExtendViewport(SpacialGameConstants.WORLD_SIZE, SpacialGameConstants.WORLD_SIZE);
+        viewport = new ExtendViewport(SpatialGameConstants.WORLD_SIZE, SpatialGameConstants.WORLD_SIZE);
         hudViewport = new ScreenViewport();
 
         renderer = new ShapeRenderer();
@@ -168,8 +168,8 @@ public class SpatialScreen extends InputAdapter implements Screen {
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         renderer.rect(
                 0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
-                SpacialGameConstants.BACKGROUND_COLOR_BOT, SpacialGameConstants.BACKGROUND_COLOR_BOT,
-                SpacialGameConstants.BACKGROUND_COLOR_TOP, SpacialGameConstants.BACKGROUND_COLOR_TOP
+                SpatialGameConstants.BACKGROUND_COLOR_BOT, SpatialGameConstants.BACKGROUND_COLOR_BOT,
+                SpatialGameConstants.BACKGROUND_COLOR_TOP, SpatialGameConstants.BACKGROUND_COLOR_TOP
         );
         renderer.end();
         batch.begin();
@@ -182,9 +182,9 @@ public class SpatialScreen extends InputAdapter implements Screen {
         if(elapsed < 3f) {
             disableTouchDown = true;
             batch.begin();
-            font.getData().setScale(SpacialGameConstants.INSTRUCTION_SIZE);
+            font.getData().setScale(SpatialGameConstants.INSTRUCTION_SIZE);
             font.setColor(Color.WHITE);
-            final GlyphLayout hardLayout = new GlyphLayout(font, SpacialGameConstants.INSTRUCTIONS);
+            final GlyphLayout hardLayout = new GlyphLayout(font, SpatialGameConstants.INSTRUCTIONS);
             font.draw(batch, hardLayout, (screenWidth - hardLayout.width) / 2, screenHeight  / 7);
             batch.end();
 
@@ -200,7 +200,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
             renderer.begin(ShapeRenderer.ShapeType.Line);
             for (int i = 0; i < blocksHorizontal; i++) {
                 for (int j = 0; j < blocksVertical; j++) {
-                    renderer.setColor(SpacialGameConstants.HARD_COLOR);
+                    renderer.setColor(SpatialGameConstants.HARD_COLOR);
                     renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                 }
             }
@@ -213,7 +213,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
             batch.begin();
 
-            final GlyphLayout layout_two = new GlyphLayout(font, SpacialGameConstants.INSTRUCTIONS_TWO);
+            final GlyphLayout layout_two = new GlyphLayout(font, SpatialGameConstants.INSTRUCTIONS_TWO);
             font.draw(batch, layout_two, (screenWidth - layout_two.width) / 2, screenHeight  / 8);
 
             batch.end();
@@ -225,9 +225,9 @@ public class SpatialScreen extends InputAdapter implements Screen {
             for (int i = 0; i < blocksHorizontal; i++) {
                 for (int j = 0; j < blocksVertical; j++) {
                     if(!selected[i][j]){
-                        renderer.setColor(SpacialGameConstants.SQUARE_COLOR);
+                        renderer.setColor(SpatialGameConstants.SQUARE_COLOR);
                     } else {
-                        renderer.setColor(SpacialGameConstants.START_END_COLOR);
+                        renderer.setColor(SpatialGameConstants.START_END_COLOR);
                     }
                     renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                 }
@@ -237,7 +237,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
             renderer.begin(ShapeRenderer.ShapeType.Line);
             for (int i = 0; i < blocksHorizontal; i++) {
                 for (int j = 0; j < blocksVertical; j++) {
-                    renderer.setColor(SpacialGameConstants.HARD_COLOR);
+                    renderer.setColor(SpatialGameConstants.HARD_COLOR);
                     renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                 }
             }
@@ -258,7 +258,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
                         selectState(selected[i][j]);
                         renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                     } else {
-                        renderer.setColor(SpacialGameConstants.START_END_COLOR);
+                        renderer.setColor(SpatialGameConstants.START_END_COLOR);
                         renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                     }
                 }
@@ -269,7 +269,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
             renderer.begin(ShapeRenderer.ShapeType.Line);
             for (int i = 0; i < blocksHorizontal; i++) {
                 for (int j = 0; j < blocksVertical; j++) {
-                    renderer.setColor(SpacialGameConstants.HARD_COLOR);
+                    renderer.setColor(SpatialGameConstants.HARD_COLOR);
                     renderer.rect(grid[i][j].x, grid[i][j].y, grid[i][j].getWidth(), grid[i][j].getHeight());
                 }
             }
@@ -277,9 +277,9 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
 
             if(!onSubmit){
-                renderer.setColor(SpacialGameConstants.SQUARE_COLOR);
+                renderer.setColor(SpatialGameConstants.SQUARE_COLOR);
             } else {
-                renderer.setColor(SpacialGameConstants.SELECTED_COLOR);
+                renderer.setColor(SpatialGameConstants.SELECTED_COLOR);
                 onSubmit = false;
                 delayed = elapsed;
                 delayOn = true;
@@ -289,7 +289,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
                 }
             }
             if(delayOn){
-                renderer.setColor(SpacialGameConstants.SQUARE_COLOR);
+                renderer.setColor(SpatialGameConstants.SQUARE_COLOR);
             }
 
             renderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -305,10 +305,10 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
             /*renderer.begin();
             if(!onEnd){
-                renderer.setColor(SpacialGameConstants.SQUARE_COLOR);
+                renderer.setColor(SpatialGameConstants.SQUARE_COLOR);
             } else {
                 disableTouchDown = true;
-                renderer.setColor(SpacialGameConstants.SELECTED_COLOR);
+                renderer.setColor(SpatialGameConstants.SELECTED_COLOR);
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {
@@ -322,10 +322,10 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
 
             if(!onBack){
-                renderer.setColor(SpacialGameConstants.SQUARE_COLOR);
+                renderer.setColor(SpatialGameConstants.SQUARE_COLOR);
             } else {
                 disableTouchDown = true;
-                renderer.setColor(SpacialGameConstants.SELECTED_COLOR);
+                renderer.setColor(SpatialGameConstants.SELECTED_COLOR);
                 Timer.schedule(new Timer.Task() {
                                    @Override
                                    public void run() {game.setScreen(new DifficultyScreen(game));
@@ -359,7 +359,7 @@ public class SpatialScreen extends InputAdapter implements Screen {
                     screenHeight - FacialGameConstants.SCORE_CENTER - layout_scores.height * 1.5f);
 
 
-            final GlyphLayout layout_one = new GlyphLayout(font, SpacialGameConstants.SUBMIT_TEXT);
+            final GlyphLayout layout_one = new GlyphLayout(font, SpatialGameConstants.SUBMIT_TEXT);
             final float fontX_one = (screenWidth - layout_one.width) / 2;
             final float fontY_one = (btnSubmit.height * 0.6f + btnSubmit.y);
             font.draw(batch, layout_one, fontX_one, fontY_one);
@@ -501,17 +501,17 @@ public class SpatialScreen extends InputAdapter implements Screen {
 
     private void selectState(boolean blockSelected){
         if(!blockSelected){
-            renderer.setColor(SpacialGameConstants.SQUARE_COLOR);
+            renderer.setColor(SpatialGameConstants.SQUARE_COLOR);
         } else {
-            renderer.setColor(SpacialGameConstants.SELECTED_COLOR);
+            renderer.setColor(SpatialGameConstants.SELECTED_COLOR);
         }
     }
 
     private void drawRoadBlock(boolean blockSelected){
         if(!blockSelected){
-            renderer.setColor(SpacialGameConstants.SQUARE_COLOR);
+            renderer.setColor(SpatialGameConstants.SQUARE_COLOR);
         } else {
-            renderer.setColor(SpacialGameConstants.ROADBLOCK_COLOR);
+            renderer.setColor(SpatialGameConstants.ROADBLOCK_COLOR);
         }
     }
 
@@ -526,8 +526,8 @@ public class SpatialScreen extends InputAdapter implements Screen {
             renderer.end();
 
             batch.begin();
-            font.getData().setScale(SpacialGameConstants.RESULT_SIZE);
-            font.setColor(SpacialGameConstants.ROADBLOCK_COLOR);
+            font.getData().setScale(SpatialGameConstants.RESULT_SIZE);
+            font.setColor(SpatialGameConstants.ROADBLOCK_COLOR);
             final GlyphLayout promptLayout = new GlyphLayout(font, ObjectGameConstants.CORRECT_MESSAGE);
             font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight / 3  + screenHeight/6);
             final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");
@@ -543,8 +543,8 @@ public class SpatialScreen extends InputAdapter implements Screen {
             renderer.end();
 
             batch.begin();
-            font.setColor(SpacialGameConstants.ROADBLOCK_COLOR);
-            font.getData().setScale(SpacialGameConstants.RESULT_SIZE);
+            font.setColor(SpatialGameConstants.ROADBLOCK_COLOR);
+            font.getData().setScale(SpatialGameConstants.RESULT_SIZE);
             final GlyphLayout promptLayout = new GlyphLayout(font, ObjectGameConstants.INCORRECT_MESSAGE);
             font.draw(batch, promptLayout, (screenWidth - promptLayout.width) / 2, screenHeight / 3  + screenHeight/6);
             final GlyphLayout reactionLayout = new GlyphLayout(font, ObjectGameConstants.REACTION_TIME_PROMPT + Math.round(trialTime[trial - 1] * 100.0) / 100.0 + " seconds!");

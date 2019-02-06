@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Color;
  * Created by lixiaoyan on 7/20/18.
  */
 
-public class SpacialGameConstants {
+public class SpatialGameConstants {
     public static final float WORLD_SIZE = 10.0f;
 
     //https://loading.io/color/feature/Blue

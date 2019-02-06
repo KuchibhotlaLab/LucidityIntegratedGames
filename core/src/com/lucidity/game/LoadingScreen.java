@@ -90,8 +90,8 @@ public class LoadingScreen extends InputAdapter implements Screen {
             renderer.begin(ShapeRenderer.ShapeType.Filled);
             renderer.rect(
                     0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
-                    SpacialGameConstants.BACKGROUND_COLOR_BOT, SpacialGameConstants.BACKGROUND_COLOR_BOT,
-                    SpacialGameConstants.BACKGROUND_COLOR_TOP, SpacialGameConstants.BACKGROUND_COLOR_TOP
+                    SpatialGameConstants.BACKGROUND_COLOR_BOT, SpatialGameConstants.BACKGROUND_COLOR_BOT,
+                    SpatialGameConstants.BACKGROUND_COLOR_TOP, SpatialGameConstants.BACKGROUND_COLOR_TOP
             );
             renderer.end();
         } else if(isRecGame){
@@ -147,11 +147,11 @@ public class LoadingScreen extends InputAdapter implements Screen {
                         BlockGameConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_two.height + 1.5f * promptLayout_three.height);
             } else if (isSpGame){
                 font.setColor(Color.WHITE);
-                final GlyphLayout promptLayout_three = new GlyphLayout(font, SpacialGameConstants.TITLE_ONE);
+                final GlyphLayout promptLayout_three = new GlyphLayout(font, SpatialGameConstants.TITLE_ONE);
                 font.draw(batch, promptLayout_three, (screenWidth - promptLayout_three.width) / 2,
                         screenHeight * 0.75f);
 
-                final GlyphLayout promptLayout_two = new GlyphLayout(font, SpacialGameConstants.TITLE_TWO);
+                final GlyphLayout promptLayout_two = new GlyphLayout(font, SpatialGameConstants.TITLE_TWO);
                 font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2,
                         screenHeight * 0.75f - 2f * promptLayout_three.height);
             } else if(isRecGame){
@@ -214,34 +214,34 @@ public class LoadingScreen extends InputAdapter implements Screen {
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height);
             } else if (isSpGame) {
                 font.setColor(Color.WHITE);
-                final GlyphLayout instructLayout_one = new GlyphLayout(font, SpacialGameConstants.INSTRUCT_ONE);
+                final GlyphLayout instructLayout_one = new GlyphLayout(font, SpatialGameConstants.INSTRUCT_ONE);
                 font.draw(batch, instructLayout_one, (screenWidth - instructLayout_one.width) / 2,
                         screenHeight * 0.75f);
 
-                final GlyphLayout instructLayout_two = new GlyphLayout(font, SpacialGameConstants.INSTRUCT_TWO);
+                final GlyphLayout instructLayout_two = new GlyphLayout(font, SpatialGameConstants.INSTRUCT_TWO);
                 font.draw(batch, instructLayout_two, (screenWidth - instructLayout_two.width) / 2,
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height);
 
-                final GlyphLayout instructLayout_three = new GlyphLayout(font, SpacialGameConstants.INSTRUCT_THREE);
+                final GlyphLayout instructLayout_three = new GlyphLayout(font, SpatialGameConstants.INSTRUCT_THREE);
                 font.draw(batch, instructLayout_three, (screenWidth - instructLayout_three.width) / 2,
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height);
 
-                final GlyphLayout instructLayout_four = new GlyphLayout(font, SpacialGameConstants.INSTRUCT_FOUR);
+                final GlyphLayout instructLayout_four = new GlyphLayout(font, SpatialGameConstants.INSTRUCT_FOUR);
                 font.draw(batch, instructLayout_four, (screenWidth - instructLayout_four.width) / 2,
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height - 2.0f * instructLayout_three.height);
 
-                final GlyphLayout instructLayout_five = new GlyphLayout(font, SpacialGameConstants.INSTRUCT_FIVE);
+                final GlyphLayout instructLayout_five = new GlyphLayout(font, SpatialGameConstants.INSTRUCT_FIVE);
                 font.draw(batch, instructLayout_five, (screenWidth - instructLayout_five.width) / 2,
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height
                                 - 2.0f * instructLayout_three.height - 2.0f * instructLayout_four.height);
 
-                final GlyphLayout instructLayout_six = new GlyphLayout(font, SpacialGameConstants.INSTRUCT_SIX);
+                final GlyphLayout instructLayout_six = new GlyphLayout(font, SpatialGameConstants.INSTRUCT_SIX);
                 font.draw(batch, instructLayout_six, (screenWidth - instructLayout_six.width) / 2,
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height
                                 - 2.0f * instructLayout_three.height - 2.0f * instructLayout_four.height
                                 - 2.0f * instructLayout_five.height);
 
-                final GlyphLayout instructLayout_seven = new GlyphLayout(font, SpacialGameConstants.INSTRUCT_SEVEN);
+                final GlyphLayout instructLayout_seven = new GlyphLayout(font, SpatialGameConstants.INSTRUCT_SEVEN);
                 font.draw(batch, instructLayout_seven, (screenWidth - instructLayout_seven.width) / 2,
                         screenHeight * 0.75f - 2.0f * instructLayout_one.height - 2.0f * instructLayout_two.height
                                 - 2.0f * instructLayout_three.height - 2.0f * instructLayout_four.height

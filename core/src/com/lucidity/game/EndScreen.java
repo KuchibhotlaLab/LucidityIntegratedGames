@@ -88,7 +88,7 @@ public class EndScreen extends InputAdapter implements Screen {
         isGameFour = true;
         background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
 
-        memoryViewport = new ExtendViewport(SpacialGameConstants.WORLD_SIZE, SpacialGameConstants.WORLD_SIZE);
+        memoryViewport = new ExtendViewport(SpatialGameConstants.WORLD_SIZE, SpatialGameConstants.WORLD_SIZE);
 
     }
 
@@ -99,7 +99,7 @@ public class EndScreen extends InputAdapter implements Screen {
         isGameFive = true;
         background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
 
-        memoryViewport = new ExtendViewport(SpacialGameConstants.WORLD_SIZE, SpacialGameConstants.WORLD_SIZE);
+        memoryViewport = new ExtendViewport(SpatialGameConstants.WORLD_SIZE, SpatialGameConstants.WORLD_SIZE);
 
     }
 
@@ -145,7 +145,7 @@ public class EndScreen extends InputAdapter implements Screen {
         } else if(isGameThree) {
             Gdx.gl.glClearColor(ObjectGameConstants.BACKGROUND_COLOR.r, ObjectGameConstants.BACKGROUND_COLOR.g, ObjectGameConstants.BACKGROUND_COLOR.b, 1);
         } else if(isGameFour){
-            Gdx.gl.glClearColor(SpacialGameConstants.BACKGROUND_COLOR.r, SpacialGameConstants.BACKGROUND_COLOR.g, SpacialGameConstants.BACKGROUND_COLOR.b, 1);
+            Gdx.gl.glClearColor(SpatialGameConstants.BACKGROUND_COLOR.r, SpatialGameConstants.BACKGROUND_COLOR.g, SpatialGameConstants.BACKGROUND_COLOR.b, 1);
             batch.begin();
             batch.draw(resizedBg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             batch.end();
@@ -155,9 +155,9 @@ public class EndScreen extends InputAdapter implements Screen {
 
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         if(isGameFour) {
-            renderer.setColor(SpacialGameConstants.SQUARE_COLOR);
+            renderer.setColor(SpatialGameConstants.SQUARE_COLOR);
             renderer.rect(0, screenHeight / 3, screenWidth, screenHeight/3);
-            renderer.setColor(SpacialGameConstants.SELECTED_COLOR);
+            renderer.setColor(SpatialGameConstants.SELECTED_COLOR);
         }
 
         renderer.rect(screenHeight/36, screenHeight / 3 + screenHeight/36, screenWidth - screenHeight/18, screenHeight/3 -  screenHeight/18);
@@ -172,7 +172,7 @@ public class EndScreen extends InputAdapter implements Screen {
         } else if(isGameThree) {
             font.setColor(ObjectGameConstants.TITLE_COLOR);
         } else if(isGameFour){
-            //font.setColor(SpacialGameConstants.TITLE_COLOR);
+            //font.setColor(SpatialGameConstants.TITLE_COLOR);
             font.setColor(Color.WHITE);
         } else if(isGameFive) {
             font.setColor(RecallGameConstants.TITLE_COLOR);

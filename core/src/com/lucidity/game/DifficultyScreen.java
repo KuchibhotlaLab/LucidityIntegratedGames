@@ -140,7 +140,7 @@ public class DifficultyScreen extends InputAdapter implements Screen {
 
             batch.end();
         } else if(isSpa) {
-            Gdx.gl.glClearColor(SpacialGameConstants.BACKGROUND_COLOR.r, SpacialGameConstants.BACKGROUND_COLOR.g, SpacialGameConstants.BACKGROUND_COLOR.b, 1);
+            Gdx.gl.glClearColor(SpatialGameConstants.BACKGROUND_COLOR.r, SpatialGameConstants.BACKGROUND_COLOR.g, SpatialGameConstants.BACKGROUND_COLOR.b, 1);
             //Gdx.gl.glClearColor(0.65f, 0.81f, 0.91f, 1);
 
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -149,13 +149,13 @@ public class DifficultyScreen extends InputAdapter implements Screen {
 
 
             renderer.begin(ShapeRenderer.ShapeType.Filled);
-            renderer.setColor(SpacialGameConstants.EASY_COLOR);
+            renderer.setColor(SpatialGameConstants.EASY_COLOR);
             renderer.circle(BlockGameConstants.EASY_CENTER.x, BlockGameConstants.EASY_CENTER.y, BlockGameConstants.DIFFICULTY_BUBBLE_RADIUS);
 
-            renderer.setColor(SpacialGameConstants.MEDIUM_COLOR);
+            renderer.setColor(SpatialGameConstants.MEDIUM_COLOR);
             renderer.circle(BlockGameConstants.MEDIUM_CENTER.x, BlockGameConstants.MEDIUM_CENTER.y, BlockGameConstants.DIFFICULTY_BUBBLE_RADIUS);
 
-            renderer.setColor(SpacialGameConstants.HARD_COLOR);
+            renderer.setColor(SpatialGameConstants.HARD_COLOR);
             renderer.circle(BlockGameConstants.HARD_CENTER.x, BlockGameConstants.HARD_CENTER.y, BlockGameConstants.DIFFICULTY_BUBBLE_RADIUS);
 
             renderer.end();
@@ -243,18 +243,18 @@ public class DifficultyScreen extends InputAdapter implements Screen {
             }
         } else if(isSpa){
             if (worldTouch.dst(BlockGameConstants.EASY_CENTER) < BlockGameConstants.DIFFICULTY_BUBBLE_RADIUS) {
-                spaGame.actionResolver.setDifficulty(SpacialGameConstants.DIFFICULTY_EASY);
-                spaGame.setScreen(new SpatialScreen(spaGame, SpacialGameConstants.DIFFICULTY_EASY));
+                spaGame.actionResolver.setDifficulty(SpatialGameConstants.DIFFICULTY_EASY);
+                spaGame.setScreen(new SpatialScreen(spaGame, SpatialGameConstants.DIFFICULTY_EASY));
             }
 
             if (worldTouch.dst(BlockGameConstants.MEDIUM_CENTER) < BlockGameConstants.DIFFICULTY_BUBBLE_RADIUS) {
-                spaGame.actionResolver.setDifficulty(SpacialGameConstants.DIFFICULTY_MEDIUM);
-                spaGame.setScreen(new SpatialScreen(spaGame,  SpacialGameConstants.DIFFICULTY_MEDIUM));
+                spaGame.actionResolver.setDifficulty(SpatialGameConstants.DIFFICULTY_MEDIUM);
+                spaGame.setScreen(new SpatialScreen(spaGame,  SpatialGameConstants.DIFFICULTY_MEDIUM));
             }
 
             if (worldTouch.dst(BlockGameConstants.HARD_CENTER) < BlockGameConstants.DIFFICULTY_BUBBLE_RADIUS) {
-                spaGame.actionResolver.setDifficulty(SpacialGameConstants.DIFFICULTY_HARD);
-                spaGame.setScreen(new SpatialScreen(spaGame,  SpacialGameConstants.DIFFICULTY_HARD));
+                spaGame.actionResolver.setDifficulty(SpatialGameConstants.DIFFICULTY_HARD);
+                spaGame.setScreen(new SpatialScreen(spaGame,  SpatialGameConstants.DIFFICULTY_HARD));
             }
         }
 
