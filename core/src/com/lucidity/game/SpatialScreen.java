@@ -146,8 +146,6 @@ public class SpatialScreen extends InputAdapter implements Screen {
         tx = new Texture(pm);
         tx.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
-
-
         generateTrial();
 
     }

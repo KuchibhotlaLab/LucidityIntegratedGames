@@ -35,14 +35,15 @@ public class BlockGameConstants {
     public static final String SCORE_LABEL = "Score: ";
     public static final String DEATHS_LABEL = "Deaths: ";
     public static final String TOP_SCORE_LABEL = "Top Score: ";
-    public static final int SCORE_CENTER = 70;
+    public static final int SCORE_CENTER = 50;
 
     public static final float TITLE_SCALE = .8f;
     public static final float NOTIFICATION_SCALE = .6f;
     public static final float LABEL_SCALE = .4f;
+    public static final float ANSWER_SCALE = .5f;
 
     public static final String TRIAL_LABEL = "Trial: ";
-    public static final int TRIAL_CENTER = 400;
+    public static final int TRIAL_CENTER = 50;
 
     public static final int SECONDS_DElAYED = 1;
 

@@ -103,7 +103,7 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
         font = new BitmapFont(Gdx.files.internal("data/Kayak-Sans-Regular-large.fnt"), false);
         backdrop = new Texture(Gdx.files.internal("data/objectBtn.png"));
-        bolt = new Texture(Gdx.files.internal("data/bolt.png"));
+        //bolt = new Texture(Gdx.files.internal("data/bolt.png"));
         font.getData().setScale(ObjectGameConstants.MODE_LABEL_SCALE);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
@@ -499,9 +499,8 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
             font.setColor(ObjectGameConstants.TITLE_COLOR);
 
             final GlyphLayout layout_scores = new GlyphLayout(font, FacialGameConstants.SCORE_LABEL);
-            drawButton(FacialGameConstants.SCORE_CENTER - layout_scores.width/4, screenHeight - FacialGameConstants.SCORE_CENTER - layout_scores.height *  5/ 4,
-                    FacialGameConstants.SCORE_CENTER + layout_scores.width * 3/ 2, 2f*layout_scores.height);
-
+            //drawButton(FacialGameConstants.SCORE_CENTER - layout_scores.width/4, screenHeight - FacialGameConstants.SCORE_CENTER - layout_scores.height *  5/ 4,
+            //        FacialGameConstants.SCORE_CENTER + layout_scores.width * 3/ 2, 2f*layout_scores.height);
 
             font.getData().setScale(ObjectGameConstants.ANSWER_SCALE);
             font.setColor(Color.WHITE);
@@ -795,8 +794,8 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
 
     private void drawButton(float x, float y, float width, float height){
         batch.draw(backdrop, x, y,  width, height);
-        batch.draw(bolt, x + width * 3/4, y + height*3/5);
-        batch.draw(bolt, x + width /4, y + height/5);
+        //batch.draw(bolt, x + width * 3/4, y + height*3/5);
+        //batch.draw(bolt, x + width /4, y + height/5);
     }
 
 

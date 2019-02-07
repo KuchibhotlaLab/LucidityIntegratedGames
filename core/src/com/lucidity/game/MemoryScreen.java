@@ -381,19 +381,21 @@ public class MemoryScreen extends InputAdapter implements Screen {
                 font.draw(batch, promptLayout, (screenWidth - promptLayout.width)/2, screenHeight / 10);
             }
 
-            font.getData().setScale(BlockGameConstants.LABEL_SCALE);
+            font.getData().setScale(BlockGameConstants.ANSWER_SCALE);
             font.setColor(BlockGameConstants.TITLE_COLOR);
 
-            batch.draw(backdrop, BlockGameConstants.SCORE_CENTER, screenHeight - BlockGameConstants.SCORE_CENTER - screenHeight/24, screenWidth / 5, screenHeight/18);
-            batch.draw(backdrop, BlockGameConstants.TRIAL_CENTER, screenHeight - BlockGameConstants.SCORE_CENTER  - screenHeight/24,  screenWidth/7, screenHeight/18);
+            //batch.draw(backdrop, BlockGameConstants.SCORE_CENTER, screenHeight - BlockGameConstants.SCORE_CENTER - screenHeight/24, screenWidth / 5, screenHeight/18);
+            //batch.draw(backdrop, BlockGameConstants.TRIAL_CENTER, screenHeight - BlockGameConstants.SCORE_CENTER  - screenHeight/24,  screenWidth/7, screenHeight/18);
 
             //prints the score on the screen of game
             font.draw(batch, BlockGameConstants.SCORE_LABEL + Integer.toString(score),
                     BlockGameConstants.SCORE_CENTER, screenHeight - BlockGameConstants.SCORE_CENTER);
 
+            final GlyphLayout layout_scores = new GlyphLayout(font, FacialGameConstants.SCORE_LABEL);
 
             font.draw(batch, BlockGameConstants.TRIAL_LABEL + Integer.toString(trial),
-                    BlockGameConstants.TRIAL_CENTER, screenHeight - BlockGameConstants.SCORE_CENTER);
+                    BlockGameConstants.TRIAL_CENTER,
+                    screenHeight - BlockGameConstants.SCORE_CENTER - layout_scores.height * 1.5f);
 
 
             batch.end();
