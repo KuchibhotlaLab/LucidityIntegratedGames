@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -155,12 +156,15 @@ public class RecallScreen extends InputAdapter implements Screen {
         viewport.apply(true);
         Gdx.gl.glClearColor(RecallGameConstants.BACKGROUND_COLOR.r, RecallGameConstants.BACKGROUND_COLOR.g, RecallGameConstants.BACKGROUND_COLOR.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        drawBackground();
+        renderer.end();
         elapsed += delta;
 
         if(elapsed < 2) {
             batch.begin();
             font.getData().setScale(RecallGameConstants.INSTRUCTION_SIZE);
-            font.setColor(RecallGameConstants.TITLE_COLOR);
+            font.setColor(Color.WHITE);
 
             final GlyphLayout promptLayout_two = new GlyphLayout(font, RecallGameConstants.PROMPT_LOCATION);
             font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2, screenHeight / 2);
@@ -182,7 +186,7 @@ public class RecallScreen extends InputAdapter implements Screen {
 
             batch.begin();
             font.getData().setScale(RecallGameConstants.INSTRUCTION_SIZE);
-            font.setColor(RecallGameConstants.TITLE_COLOR);
+            font.setColor(Color.WHITE);
             String prompt = "";
 
             prompt  = RecallGameConstants.PROMPT_TWO;
@@ -283,7 +287,7 @@ public class RecallScreen extends InputAdapter implements Screen {
             renderer.end();
 
             batch.begin();
-            font.setColor(RecallGameConstants.TITLE_COLOR);
+            font.setColor(Color.WHITE);
             for(int i  = 0; i < numOfAnswer; i++){
                 final GlyphLayout answerLayout = new GlyphLayout(font, choices[i]);
                 font.draw(batch, choices[i], answers[i].x + answers[i].width/2, answers[i].y + answers[i].height/2 + answerLayout.height/3, 0, Align.center, false);
@@ -421,6 +425,21 @@ public class RecallScreen extends InputAdapter implements Screen {
             }
         }
         return true;
+    }
+
+    private void drawBackground(){
+        renderer.setColor(RecallGameConstants.X_COLOR);
+        int r = screenWidth * 1 / 10;
+        renderer.circle(0, 0, r);
+        renderer.circle(screenWidth * 1 / 8, 0, r);
+        renderer.circle(screenWidth * 2 / 8, 0, r);
+        renderer.circle(screenWidth * 3 / 8, 0, r);
+        renderer.circle(screenWidth * 4 / 8, 0, r);
+        renderer.circle(screenWidth * 5 / 8, 0, r);
+        renderer.circle(screenWidth * 6 / 8, 0, r);
+        renderer.circle(screenWidth * 7 / 8, 0, r);
+        renderer.circle(screenWidth, 0, r);
+
     }
 
     //Posts score and stats to MySQL database

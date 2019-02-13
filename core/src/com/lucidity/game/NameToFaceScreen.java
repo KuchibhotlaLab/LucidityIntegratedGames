@@ -172,6 +172,9 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
         viewport.apply(true);
         Gdx.gl.glClearColor(FacialGameConstants.BACKGROUND_COLOR.r, FacialGameConstants.BACKGROUND_COLOR.g, FacialGameConstants.BACKGROUND_COLOR.b, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        drawBackground();
+        renderer.end();
         elapsed += delta;
 
 
@@ -513,6 +516,14 @@ public class NameToFaceScreen extends InputAdapter implements Screen {
         answerOne.x = interval/4;
 
         answerTwo.x = answerOne.getWidth() + interval*3/4;
+    }
+
+    private void drawBackground(){
+        renderer.setColor(FacialGameConstants.BACKGROUND_COLOR);
+        renderer.rect(0, 0, screenWidth, screenHeight);
+        renderer.setColor(FacialGameConstants.BACKGROUND_TRIANGLE_COLOR);
+        renderer.triangle(0, screenHeight, screenWidth, screenHeight, screenWidth, screenHeight * 3/4);
+        renderer.triangle(0,0, screenWidth,  0, 0, screenHeight * 1/4);
     }
 
     //Posts score and stats to MySQL database

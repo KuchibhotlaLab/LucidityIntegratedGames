@@ -789,7 +789,6 @@ public class ObjectRecognitionScreen extends InputAdapter implements Screen {
         renderer.setColor(ObjectGameConstants.BACKGROUND_TRIANGLE_COLOR);
         renderer.triangle(0, screenHeight, 0, screenHeight * 2/3, screenWidth/3, screenHeight);
         renderer.triangle(screenWidth * 2/3, 0, screenWidth,  0, screenWidth, screenHeight /3);
-
     }
 
     private void drawButton(float x, float y, float width, float height){

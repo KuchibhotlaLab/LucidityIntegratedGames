@@ -118,7 +118,7 @@ public class LoadingScreen extends InputAdapter implements Screen {
                 font.draw(batch, promptLayout_one, -(BlockGameConstants.DIFFICULTY_WORLD_SIZE - promptLayout_one.width) ,
                         BlockGameConstants.DIFFICULTY_WORLD_SIZE * 2 + 1.5f * promptLayout_two.height);
             } else if(isFacGame){
-                font.setColor(FacialGameConstants.TITLE_COLOR);
+                font.setColor(Color.WHITE);
                 final GlyphLayout promptLayout_three = new GlyphLayout(font, FacialGameConstants.TITLE_THREE);
                 font.draw(batch, promptLayout_three, -(BlockGameConstants.DIFFICULTY_WORLD_SIZE - promptLayout_three.width) / 2,
                         BlockGameConstants.DIFFICULTY_WORLD_SIZE * 2);
@@ -155,7 +155,7 @@ public class LoadingScreen extends InputAdapter implements Screen {
                 font.draw(batch, promptLayout_two, (screenWidth - promptLayout_two.width) / 2,
                         screenHeight * 0.75f - 2f * promptLayout_three.height);
             } else if(isRecGame){
-                font.setColor(RecallGameConstants.TITLE_COLOR);
+                font.setColor(Color.WHITE);
                 final GlyphLayout promptLayout_three = new GlyphLayout(font, RecallGameConstants.TITLE_ONE);
                 font.draw(batch, promptLayout_three, (screenWidth - promptLayout_three.width) / 2,
                         screenHeight * 0.75f);

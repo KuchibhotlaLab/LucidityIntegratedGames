@@ -23,7 +23,8 @@ public class FacialGameConstants {
     public static final String MODE_TWO_SECOND = "to faces";
 
 
-    public static final Color BACKGROUND_COLOR = new Color(0.97f,0.69f,0.58f, 1);
+    public static final Color BACKGROUND_COLOR = new Color().valueOf("cb83ef");
+    public static final Color BACKGROUND_TRIANGLE_COLOR = new Color().valueOf("8e32bc");
     public static final Color F2W_COLOR = new Color(0.96f, 0.45f, 0.5f, 1);
     public static final Color W2F_COLOR = new Color(0.75f, 0.42f, 0.52f, 1);
     public static final Color CHOICE_COLOR = new Color(0.96f, 0.45f, 0.5f, 1);

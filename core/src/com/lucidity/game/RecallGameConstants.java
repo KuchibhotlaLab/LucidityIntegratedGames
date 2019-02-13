@@ -16,6 +16,7 @@ public class RecallGameConstants {
 
     public static final Color LOADING_COLOR = new Color(0.97f, 0.69f, 0.58f, 1);
     public static final Color BACKGROUND_COLOR = new Color(0.98f, 0.76f, 0.7f, 1);
+    public static final Color X_COLOR = new Color().valueOf("d66673");
     public static final Color TITLE_COLOR = new Color(0.42f,0.36f,0.47f, 1);
 
     public static final Color LOCATION_COLOR = new Color(0.76f,0.42f,0.52f, 1);
