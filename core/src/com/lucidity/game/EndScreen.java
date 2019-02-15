@@ -32,10 +32,6 @@ public class EndScreen extends InputAdapter implements Screen {
     ScreenViewport hudViewport;
     ShapeRenderer renderer;
 
-    Texture background;
-    TextureRegion textureRegion;
-    Sprite resizedBg;
-
     boolean isGameOne, isGameTwo, isGameThree, isGameFour, isGameFive = false;
 
 
@@ -55,7 +51,6 @@ public class EndScreen extends InputAdapter implements Screen {
         this.score = points;
         this.trial = trials;
         isGameOne = true;
-        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
 
         memoryViewport = new ExtendViewport(BlockGameConstants.WORLD_SIZE, BlockGameConstants.WORLD_SIZE);
     }
@@ -66,7 +61,6 @@ public class EndScreen extends InputAdapter implements Screen {
         this.score = points;
         this.trial = trials;
         isGameTwo = true;
-        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
 
         memoryViewport = new ExtendViewport(FacialGameConstants.WORLD_SIZE, FacialGameConstants.WORLD_SIZE);
     }
@@ -76,7 +70,6 @@ public class EndScreen extends InputAdapter implements Screen {
         this.score = points;
         this.trial = trials;
         isGameThree = true;
-        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
 
         memoryViewport = new ExtendViewport(ObjectGameConstants.WORLD_SIZE, ObjectGameConstants.WORLD_SIZE);
     }
@@ -86,7 +79,6 @@ public class EndScreen extends InputAdapter implements Screen {
         this.score = points;
         this.trial = trials;
         isGameFour = true;
-        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
 
         memoryViewport = new ExtendViewport(SpatialGameConstants.WORLD_SIZE, SpatialGameConstants.WORLD_SIZE);
 
@@ -97,7 +89,6 @@ public class EndScreen extends InputAdapter implements Screen {
         this.score = points;
         this.trial = trials;
         isGameFive = true;
-        background = new Texture(Gdx.files.internal("data/bg-space-intro.jpg"));
 
         memoryViewport = new ExtendViewport(SpatialGameConstants.WORLD_SIZE, SpatialGameConstants.WORLD_SIZE);
 
@@ -112,10 +103,6 @@ public class EndScreen extends InputAdapter implements Screen {
         screenHeight = Gdx.graphics.getHeight();
 
         hudViewport = new ScreenViewport();
-
-        textureRegion= new TextureRegion(background, 0, 0, background.getWidth(), background.getHeight());
-        resizedBg = new Sprite(textureRegion);
-        resizedBg.setSize(1f,  resizedBg.getHeight() / resizedBg.getWidth());
 
         renderer = new ShapeRenderer();
 
@@ -139,26 +126,25 @@ public class EndScreen extends InputAdapter implements Screen {
         memoryViewport.apply(true);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         if(isGameOne){
-            Gdx.gl.glClearColor(1.0f,0.98f,0.78f, 1);
+            Gdx.gl.glClearColor(BlockGameConstants.BACKGROUND_COLOR.r,BlockGameConstants.BACKGROUND_COLOR.g,BlockGameConstants.BACKGROUND_COLOR.b, 1);
         } else if(isGameTwo) {
             Gdx.gl.glClearColor(FacialGameConstants.BACKGROUND_COLOR.r, FacialGameConstants.BACKGROUND_COLOR.g, FacialGameConstants.BACKGROUND_COLOR.b, 1);
         } else if(isGameThree) {
             Gdx.gl.glClearColor(ObjectGameConstants.BACKGROUND_COLOR.r, ObjectGameConstants.BACKGROUND_COLOR.g, ObjectGameConstants.BACKGROUND_COLOR.b, 1);
         } else if(isGameFour){
-            Gdx.gl.glClearColor(SpatialGameConstants.BACKGROUND_COLOR.r, SpatialGameConstants.BACKGROUND_COLOR.g, SpatialGameConstants.BACKGROUND_COLOR.b, 1);
-            batch.begin();
-            batch.draw(resizedBg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            batch.end();
+            renderer.begin(ShapeRenderer.ShapeType.Filled);
+            renderer.rect(
+                    0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
+                    SpatialGameConstants.BACKGROUND_COLOR_BOT, SpatialGameConstants.BACKGROUND_COLOR_BOT,
+                    SpatialGameConstants.BACKGROUND_COLOR_TOP, SpatialGameConstants.BACKGROUND_COLOR_TOP
+            );
+            renderer.end();
+            //Gdx.gl.glClearColor(SpatialGameConstants.BACKGROUND_COLOR.r, SpatialGameConstants.BACKGROUND_COLOR.g, SpatialGameConstants.BACKGROUND_COLOR.b, 1);
         } else if(isGameFive) {
             Gdx.gl.glClearColor(RecallGameConstants.BACKGROUND_COLOR.r, RecallGameConstants.BACKGROUND_COLOR.g, RecallGameConstants.BACKGROUND_COLOR.b, 1);
         }
 
         renderer.begin(ShapeRenderer.ShapeType.Filled);
-        if(isGameFour) {
-            renderer.setColor(SpatialGameConstants.SQUARE_COLOR);
-            renderer.rect(0, screenHeight / 3, screenWidth, screenHeight/3);
-            renderer.setColor(SpatialGameConstants.SELECTED_COLOR);
-        }
 
         renderer.rect(screenHeight/36, screenHeight / 3 + screenHeight/36, screenWidth - screenHeight/18, screenHeight/3 -  screenHeight/18);
         renderer.end();
@@ -172,8 +158,8 @@ public class EndScreen extends InputAdapter implements Screen {
         } else if(isGameThree) {
             font.setColor(ObjectGameConstants.TITLE_COLOR);
         } else if(isGameFour){
-            //font.setColor(SpatialGameConstants.TITLE_COLOR);
-            font.setColor(Color.WHITE);
+            font.setColor(SpatialGameConstants.TITLE_COLOR);
+            //font.setColor(Color.WHITE);
         } else if(isGameFive) {
             font.setColor(RecallGameConstants.TITLE_COLOR);
         }
