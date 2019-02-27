@@ -309,13 +309,15 @@ public class LoadingScreen extends InputAdapter implements Screen {
                         FacMemGame.setScreen(new FaceToNameScreen(FacMemGame, 0, 1, FacialGameConstants.MODE_NAME));
                         break;
                     case 1:
-                        FacMemGame.setScreen(new FaceToNameScreen(FacMemGame, 0, 1, FacialGameConstants.MODE_ATTR));
+                        FacMemGame.setScreen(new FaceToNameScreen(FacMemGame, 0, 1, FacialGameConstants.MODE_NAME));
+                        //FacMemGame.setScreen(new FaceToNameScreen(FacMemGame, 0, 1, FacialGameConstants.MODE_ATTR));
                         break;
                     case 2:
                         FacMemGame.setScreen(new NameToFaceScreen(FacMemGame, 0, 1, FacialGameConstants.MODE_NAME));
                         break;
                     case 3:
-                        FacMemGame.setScreen(new NameToFaceScreen(FacMemGame, 0, 1, FacialGameConstants.MODE_ATTR));
+                        FacMemGame.setScreen(new NameToFaceScreen(FacMemGame, 0, 1, FacialGameConstants.MODE_NAME));
+                        //FacMemGame.setScreen(new NameToFaceScreen(FacMemGame, 0, 1, FacialGameConstants.MODE_ATTR));
                         break;
                 }
             } else {

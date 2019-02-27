@@ -69,6 +69,7 @@ public class MusicScreen extends InputAdapter implements Screen {
     private long trialStartTime;
     private int[] trialSuccess;
     private double[] trialTime;
+    private ArrayList<Integer> songOrder;
 
     private float elapsed = 0;
     private boolean delayOn= false;
@@ -126,6 +127,7 @@ public class MusicScreen extends InputAdapter implements Screen {
         timerStart = true;
         trialTime = new double[5];
         trialSuccess = new int[5];
+        songOrder = new ArrayList<Integer>();
 
         validSongs = new HashMap<String, Music>();
 
@@ -142,6 +144,19 @@ public class MusicScreen extends InputAdapter implements Screen {
                 }
             }
         }
+        //Initializes ordering of five songs for trials with no repeats
+        int numValidFiles = validSongs.size();
+        for (int i = 0; i < 5; i++) {
+            int temp = (int) (Math.random() * numValidFiles);
+            if (i < numValidFiles) {
+                while (songOrder.contains(temp)) {
+                    temp = (int) (Math.random() * numValidFiles);
+                }
+            }
+            songOrder.add(temp);
+
+        }
+
         setSong();
         generateQuestion();
     }
@@ -402,7 +417,10 @@ public class MusicScreen extends InputAdapter implements Screen {
         music = null;
         musicBtn = playBtn;
         boolean filled = false;
-        int position = (int) (Math.random() * validSongs.size());
+        int position = 0;
+        if (trial < 6) {
+            position = songOrder.get(trial - 1);
+        }
         int index = -1;
         for (Map.Entry<String, Music> entry : validSongs.entrySet()) {
             index++;

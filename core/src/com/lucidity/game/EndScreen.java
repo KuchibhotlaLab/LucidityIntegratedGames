@@ -159,7 +159,7 @@ public class EndScreen extends InputAdapter implements Screen {
             font.setColor(ObjectGameConstants.TITLE_COLOR);
         } else if(isGameFour){
             font.setColor(SpatialGameConstants.TITLE_COLOR);
-            //font.setColor(Color.WHITE);
+            // font.setColor(Color.WHITE);
         } else if(isGameFive) {
             font.setColor(RecallGameConstants.TITLE_COLOR);
         }

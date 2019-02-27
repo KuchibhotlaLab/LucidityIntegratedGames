@@ -110,7 +110,7 @@ public class AndroidLauncher extends AndroidApplication {
                         gameType = "space";
                         break;
                     case 4:
-                        gameType = "recall";
+                        gameType = "music";
                 }
             }
         }
